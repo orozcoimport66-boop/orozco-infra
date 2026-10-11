@@ -1,0 +1,108 @@
+#!/usr/bin/env bash
+# oi-site — añade, cambia o quita sitios de Caddy sin riesgo de tirar el servidor.
+# Antes de aplicar nada valida la configuración completa; si falla, deja la anterior.
+#
+#   oi-site static <dominio>            Web estática servida desde /srv/sites/<dominio>
+#   oi-site proxy  <dominio> <puerto>   Redirige el dominio a un servicio local (n8n, mcp…)
+#   oi-site remove <dominio>
+#   oi-site list
+set -euo pipefail
+
+SITES=/etc/caddy/sites
+BACKUPS=/etc/caddy/backups
+CADDYFILE=/etc/caddy/Caddyfile
+
+die() { printf '\033[1;31mERROR: %s\033[0m\n' "$*" >&2; exit 1; }
+ok()  { printf '\033[1;32mOK: %s\033[0m\n' "$*"; }
+
+[ "$(id -u)" -eq 0 ] || die "Ejecuta como root."
+
+valid_domain() {
+  [[ "$1" =~ ^([a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,}$ ]] || die "Dominio no válido: $1"
+}
+
+# Aplica un cambio de forma segura: $1 = dominio, $2 = contenido nuevo ("" para borrar)
+apply() {
+  local domain="$1" content="$2" file="$SITES/$1.caddy" stamp backup=""
+  stamp="$(date +%Y%m%d-%H%M%S)"
+  mkdir -p "$BACKUPS"
+  if [ -f "$file" ]; then
+    backup="$BACKUPS/$domain.caddy.$stamp"
+    cp -p "$file" "$backup"
+  fi
+
+  if [ -n "$content" ]; then
+    printf '%s\n' "$content" > "$file.tmp" && mv "$file.tmp" "$file"
+  else
+    rm -f "$file"
+  fi
+
+  restore() {
+    if [ -n "$backup" ]; then cp -p "$backup" "$file"; else rm -f "$file"; fi
+  }
+
+  if ! caddy validate --config "$CADDYFILE" --adapter caddyfile >/tmp/oi-site-validate.log 2>&1; then
+    restore
+    tail -n 5 /tmp/oi-site-validate.log >&2
+    die "La configuración no es válida. Se ha restaurado la anterior; no ha cambiado nada."
+  fi
+
+  if ! systemctl reload caddy; then
+    restore
+    systemctl reload caddy || true
+    die "Caddy no aceptó el cambio. Se ha restaurado la configuración anterior."
+  fi
+  ls -1t "$BACKUPS/$domain.caddy."* 2>/dev/null | tail -n +11 | xargs -r rm -f
+}
+
+cmd="${1:-}"; domain="${2:-}"
+case "$cmd" in
+  static)
+    valid_domain "$domain"
+    mkdir -p "/srv/sites/$domain"
+    if [ -z "$(ls -A "/srv/sites/$domain")" ]; then
+      printf '<!doctype html><meta charset="utf-8"><title>%s</title><p>%s funcionando.</p>\n' \
+        "$domain" "$domain" > "/srv/sites/$domain/index.html"
+    fi
+    apply "$domain" "$domain {
+	import seguridad
+	root * /srv/sites/$domain
+	try_files {path} {path}/ {path}.html
+	file_server
+	handle_errors {
+		rewrite * /404.html
+		file_server
+	}
+	log {
+		output file /var/log/caddy/$domain.log {
+			roll_size 10MiB
+			roll_keep 5
+		}
+	}
+}"
+    ok "$domain sirve /srv/sites/$domain (el certificado HTTPS se pide solo en unos segundos)"
+    ;;
+  proxy)
+    valid_domain "$domain"
+    port="${3:-}"
+    [[ "$port" =~ ^[0-9]{2,5}$ ]] || die "Indica el puerto local: oi-site proxy <dominio> <puerto>"
+    apply "$domain" "$domain {
+	import seguridad
+	reverse_proxy 127.0.0.1:$port
+}"
+    ok "$domain → servicio local en el puerto $port"
+    ;;
+  remove)
+    valid_domain "$domain"
+    [ -f "$SITES/$domain.caddy" ] || die "No existe el sitio $domain"
+    apply "$domain" ""
+    ok "$domain retirado (los archivos de /srv/sites se conservan)"
+    ;;
+  list)
+    for f in "$SITES"/*.caddy; do [ -e "$f" ] && basename "$f" .caddy; done
+    ;;
+  *)
+    sed -n '2,8p' "$0" | sed 's/^# \{0,1\}//'
+    exit 1
+    ;;
+esac
