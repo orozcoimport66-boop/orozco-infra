@@ -5,7 +5,7 @@
 # Es idempotente: se puede volver a lanzar sin romper nada.
 set -euo pipefail
 
-REPO_RAW="${REPO_RAW:-}"   # base raw de GitHub, la fija quien lanza el script (opcional)
+REPO_RAW="${REPO_RAW:-https://raw.githubusercontent.com/orozcoimport66-boop/orozco-infra/main}"
 TZ_NAME="Europe/Madrid"
 SWAP_SIZE="2G"
 
