@@ -2,7 +2,7 @@
 # oi-site — añade, cambia o quita sitios de Caddy sin riesgo de tirar el servidor.
 # Antes de aplicar nada valida la configuración completa; si falla, deja la anterior.
 #
-#   oi-site static <dominio>            Web estática servida desde /srv/sites/<dominio>
+#   oi-site static <dominio> [noindex]  Web estática servida desde /srv/sites/<dominio>
 #   oi-site proxy  <dominio> <puerto>   Redirige el dominio a un servicio local (n8n, mcp…)
 #   oi-site remove <dominio>
 #   oi-site list
@@ -69,8 +69,10 @@ case "$cmd" in
         "$domain" "$domain" > "/srv/sites/$domain/index.html"
       id mcp >/dev/null 2>&1 && chown mcp:mcp "/srv/sites/$domain/index.html"
     fi
+    extra=""
+    [ "${3:-}" = "noindex" ] && extra=$'\n\theader X-Robots-Tag "noindex, nofollow"'
     apply "$domain" "$domain {
-	import seguridad
+	import seguridad${extra}
 	root * /srv/sites/$domain
 	try_files {path} {path}/ {path}.html
 	file_server

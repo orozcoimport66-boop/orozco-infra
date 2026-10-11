@@ -28,6 +28,7 @@ const MAX_READ = 2 * 1024 * 1024;       // 2 MB de texto por lectura
 const MAX_WRITE = 8 * 1024 * 1024;      // 8 MB por escritura
 const MAX_DOWNLOAD = 150 * 1024 * 1024; // 150 MB por descarga
 const KEEP_VERSIONS = 30;
+const GH_REPO = process.env.GH_REPO || 'orozcoimport66-boop/orozco-infra';
 
 fs.mkdirSync(HISTORY_DIR, { recursive: true });
 
@@ -404,6 +405,50 @@ function buildServer() {
     await atomicWrite(abs, buf);
     await audit({ op: 'restaurar', ruta: rel, version, antes: before, despues: sha256(buf), guardada: saved });
     return ok({ ruta: rel, restaurada: version, sha256: sha256(buf), version_previa_guardada: saved });
+  }));
+
+  server.registerTool('publicar_lote', {
+    title: 'Publicar lote desde GitHub', annotations: { ...RW, openWorldHint: true },
+    description: `Publica varios archivos de una vez descargándolos del repositorio ${GH_REPO} en un commit concreto. `
+      + 'Cada archivo se verifica con su sha256. Si el destino ya existe y su sha no coincide con base_sha256 (o no se pasa), '
+      + 'ese archivo se salta como conflicto y el resto continúa. Los archivos idénticos se omiten.',
+    inputSchema: {
+      commit: z.string().regex(/^[a-f0-9]{7,40}$/).describe('Commit del repositorio'),
+      origen: z.string().describe('Carpeta del repositorio, p. ej. "sites/orozcoimport.es"'),
+      destino: P.describe('Carpeta en /srv/sites, p. ej. "pre.orozcoimport.es"'),
+      archivos: z.array(z.object({
+        ruta: z.string().describe('Ruta relativa dentro de origen/destino'),
+        sha256: z.string().regex(/^[a-f0-9]{64}$/).describe('sha256 del archivo en el repositorio'),
+        base_sha256: z.string().regex(/^[a-f0-9]{64}$/).optional().describe('sha256 actual en el servidor si se sobrescribe'),
+      })).min(1).max(300),
+    },
+  }, wrap(async ({ commit, origen, destino, archivos }) => {
+    const cleanOrigen = origen.replace(/^\/+|\/+$/g, '');
+    if (cleanOrigen.split('/').some((p) => p === '..' || p === '')) throw new Error('origen no válido');
+    const res = { publicados: [], identicos: [], conflictos: [], errores: [] };
+    for (const f of archivos) {
+      try {
+        const relFile = f.ruta.replace(/^\/+/, '');
+        const { abs, rel } = resolveSafe(`${destino.replace(/\/+$/, '')}/${relFile}`);
+        if (fs.existsSync(abs)) {
+          const current = await fileSha(abs);
+          if (current === f.sha256) { res.identicos.push(rel); continue; }
+          if (f.base_sha256 !== current) { res.conflictos.push({ ruta: rel, sha_servidor: current }); continue; }
+        }
+        const url = `https://raw.githubusercontent.com/${GH_REPO}/${commit}/${cleanOrigen}/${relFile.split('/').map(encodeURIComponent).join('/')}`;
+        const resp = await fetch(url, { signal: AbortSignal.timeout(120000) });
+        if (!resp.ok) throw new Error(`GitHub respondió ${resp.status}`);
+        const buf = Buffer.from(await resp.arrayBuffer());
+        if (buf.length > MAX_DOWNLOAD) throw new Error('Demasiado grande');
+        const got = sha256(buf);
+        if (got !== f.sha256) throw new Error(`sha256 no coincide (recibido ${got})`);
+        const version = await saveVersion(rel, abs);
+        await atomicWrite(abs, buf);
+        await audit({ op: 'publicar_lote', ruta: rel, commit, despues: got, version });
+        res.publicados.push(rel);
+      } catch (e) { res.errores.push({ ruta: f.ruta, error: e.message }); }
+    }
+    return ok({ commit, total: archivos.length, ...Object.fromEntries(Object.entries(res).map(([k, v]) => [k, v.length])), detalle: res });
   }));
 
   return server;
