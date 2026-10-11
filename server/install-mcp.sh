@@ -3,7 +3,7 @@
 # Uso (root): curl -fsSL https://raw.githubusercontent.com/orozcoimport66-boop/orozco-infra/<commit>/server/install-mcp.sh | bash
 set -euo pipefail
 REPO="orozcoimport66-boop/orozco-infra"
-REF="${REF:-main}"
+REF="${1:-${REF:-main}}"   # commit a instalar: curl … | bash -s <commit>
 DOMAIN="mcp.orozcoimport.es"
 APP=/opt/orozco-mcp
 DATA=/var/lib/orozco-mcp
