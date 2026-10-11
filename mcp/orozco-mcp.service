@@ -1,0 +1,38 @@
+[Unit]
+Description=Orozco Import - conector MCP de archivos
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=mcp
+Group=mcp
+WorkingDirectory=/opt/orozco-mcp
+Environment=NODE_ENV=production
+Environment=PUBLIC_URL=https://mcp.orozcoimport.es
+Environment=PORT=8787
+Environment=SITES_ROOT=/srv/sites
+Environment=DATA_DIR=/var/lib/orozco-mcp
+ExecStart=/usr/bin/node /opt/orozco-mcp/server.js
+Restart=on-failure
+RestartSec=3
+UMask=0022
+
+# Aislamiento: solo puede escribir en /srv/sites y en su carpeta de datos
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+CapabilityBoundingSet=
+ReadWritePaths=/srv/sites /var/lib/orozco-mcp
+SystemCallFilter=@system-service
+SystemCallErrorNumber=EPERM
+
+[Install]
+WantedBy=multi-user.target

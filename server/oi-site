@@ -63,9 +63,11 @@ case "$cmd" in
   static)
     valid_domain "$domain"
     mkdir -p "/srv/sites/$domain"
+    id mcp >/dev/null 2>&1 && chown mcp:mcp "/srv/sites/$domain"
     if [ -z "$(ls -A "/srv/sites/$domain")" ]; then
       printf '<!doctype html><meta charset="utf-8"><title>%s</title><p>%s funcionando.</p>\n' \
         "$domain" "$domain" > "/srv/sites/$domain/index.html"
+      id mcp >/dev/null 2>&1 && chown mcp:mcp "/srv/sites/$domain/index.html"
     fi
     apply "$domain" "$domain {
 	import seguridad
