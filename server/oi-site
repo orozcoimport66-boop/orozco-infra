@@ -41,7 +41,10 @@ apply() {
     if [ -n "$backup" ]; then cp -p "$backup" "$file"; else rm -f "$file"; fi
   }
 
-  if ! caddy validate --config "$CADDYFILE" --adapter caddyfile >/tmp/oi-site-validate.log 2>&1; then
+  # Validar como el usuario caddy: si se valida como root, Caddy crea archivos
+  # que luego el servicio no puede abrir.
+  chown -R caddy:caddy /var/log/caddy 2>/dev/null || true
+  if ! runuser -u caddy -- caddy validate --config "$CADDYFILE" --adapter caddyfile >/tmp/oi-site-validate.log 2>&1; then
     restore
     tail -n 5 /tmp/oi-site-validate.log >&2
     die "La configuración no es válida. Se ha restaurado la anterior; no ha cambiado nada."
@@ -72,12 +75,6 @@ case "$cmd" in
 	handle_errors {
 		rewrite * /404.html
 		file_server
-	}
-	log {
-		output file /var/log/caddy/$domain.log {
-			roll_size 10MiB
-			roll_keep 5
-		}
 	}
 }"
     ok "$domain sirve /srv/sites/$domain (el certificado HTTPS se pide solo en unos segundos)"
