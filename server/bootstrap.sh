@@ -58,6 +58,7 @@ KbdInteractiveAuthentication no
 PermitRootLogin prohibit-password
 X11Forwarding no
 EOF
+mkdir -p /run/sshd   # Ubuntu 24.04 arranca SSH bajo demanda y esta carpeta puede no existir
 sshd -t || fail "La configuración de SSH no es válida"
 systemctl reload ssh || systemctl reload sshd || true
 ok "SSH solo con clave (y el puerto 22 cerrado en el cortafuegos)"
