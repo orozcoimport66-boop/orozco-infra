@@ -61,7 +61,7 @@ log "3/4 Arrancando n8n (la primera vez descarga la imagen, 1-3 min)"
 cd "$DIR"
 docker compose pull -q
 docker compose up -d
-for i in $(seq 1 60); do
+for _ in $(seq 1 60); do
   curl -fsS http://127.0.0.1:5678/healthz >/dev/null 2>&1 && break
   sleep 3
 done
