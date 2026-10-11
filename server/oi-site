@@ -55,7 +55,7 @@ apply() {
     systemctl reload caddy || true
     die "Caddy no aceptó el cambio. Se ha restaurado la configuración anterior."
   fi
-  ls -1t "$BACKUPS/$domain.caddy."* 2>/dev/null | tail -n +11 | xargs -r rm -f
+  ls -1t "$BACKUPS/$domain.caddy."* 2>/dev/null | tail -n +11 | xargs -r rm -f || true
 }
 
 cmd="${1:-}"; domain="${2:-}"
