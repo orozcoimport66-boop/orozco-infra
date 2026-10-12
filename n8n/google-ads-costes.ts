@@ -10,17 +10,26 @@ const DESDE = '2026-01-01';
 const QUERY = `SELECT segments.date, campaign.id, campaign.name, metrics.impressions, metrics.clicks, metrics.cost_micros, metrics.conversions FROM campaign WHERE segments.date BETWEEN '${DESDE}' AND (hoy, se calcula en n8n) AND metrics.impressions > 0`;
 
 const MAPEAR_JS = `
+// EXP1 fue el 50 % de SEM_MAY_26: misma campaña, contenido exp1_formulario_hero. El «anuncio» = utm_content de cada campaña.
+const normaliza = (nombre) => {
+  const n = String(nombre || '');
+  if (/^SEM_MAY_26 EXP1/i.test(n)) return { campana: 'SEM_MAY_26', anuncio: 'exp1_formulario_hero' };
+  if (/^SEM_MAY_26$/i.test(n)) return { campana: 'SEM_MAY_26', anuncio: 'anuncio_general' };
+  if (/^GTI_SEP_26$/i.test(n)) return { campana: 'GTI_SEP_26', anuncio: 'anuncio_gti' };
+  return { campana: n, anuncio: '' };
+};
 const filas = [];
 const ahora = new Date().toISOString();
 for (const it of $input.all()) {
   for (const r of (it.json.results || [])) {
+    const c = normaliza(r.campaign.name);
     filas.push({
       fecha: r.segments.date,
       plataforma: 'google',
       campana_id: String(r.campaign.id),
-      campana: r.campaign.name,
+      campana: c.campana,
       grupo: '',
-      anuncio: '',
+      anuncio: c.anuncio,
       impresiones: Number(r.metrics.impressions || 0),
       clics: Number(r.metrics.clicks || 0),
       coste: Math.round(Number(r.metrics.costMicros || 0) / 10000) / 100,
