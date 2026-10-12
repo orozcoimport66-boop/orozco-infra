@@ -37,7 +37,7 @@ const manual = trigger({ type: 'n8n-nodes-base.manualTrigger', version: 1, confi
 const diario = trigger({
   type: 'n8n-nodes-base.scheduleTrigger',
   version: 1.2,
-  config: { name: 'Cada mañana 6:40', position: [240, 400], parameters: { rule: { interval: [{ field: 'days', daysInterval: 1, triggerAtHour: 6, triggerAtMinute: 40 }] } } },
+  config: { name: 'Cada 30 minutos', position: [240, 400], parameters: { rule: { interval: [{ field: 'minutes', minutesInterval: 30 }] } } },
   output: [{}]
 });
 
