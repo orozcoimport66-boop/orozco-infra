@@ -4,6 +4,7 @@
 #
 #   oi-site static <dominio> [noindex]  Web estática servida desde /srv/sites/<dominio>
 #   oi-site proxy  <dominio> <puerto>   Redirige el dominio a un servicio local (n8n, mcp…)
+#   oi-site redirect <dominio> <destino> Redirección 301 permanente (p. ej. www → dominio sin www)
 #   oi-site remove <dominio>
 #   oi-site list
 set -euo pipefail
@@ -92,6 +93,15 @@ case "$cmd" in
 	reverse_proxy 127.0.0.1:$port
 }"
     ok "$domain → servicio local en el puerto $port"
+    ;;
+  redirect)
+    valid_domain "$domain"
+    dest="${3:-}"
+    [[ "$dest" =~ ^https://[a-z0-9.-]+$ ]] || die "Indica el destino: oi-site redirect <dominio> https://<destino>"
+    apply "$domain" "$domain {
+	redir $dest{uri} permanent
+}"
+    ok "$domain → $dest (301)"
     ;;
   remove)
     valid_domain "$domain"
