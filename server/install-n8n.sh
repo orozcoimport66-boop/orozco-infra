@@ -66,7 +66,7 @@ for _ in $(seq 1 60); do
   sleep 3
 done
 curl -fsS http://127.0.0.1:5678/healthz >/dev/null 2>&1 || { docker compose logs --tail 30; fail "n8n no responde"; }
-ok "n8n $( (docker compose exec -T n8n n8n --version 2>/dev/null || true) | tail -1) funcionando"
+ok "n8n $( (docker compose exec -T n8n n8n --version </dev/null 2>/dev/null || true) | tail -1) funcionando"
 
 log "4/4 Publicando $DOMAIN"
 oi-site proxy "$DOMAIN" 5678
