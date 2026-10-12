@@ -4460,6 +4460,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
    SCRIPTS
    ============================================================ -->
 
+<script src="/js/oi-captacion.js"></script>
 <script>
   /* Slider mobile */
   (function() {
@@ -4569,37 +4570,22 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         }
         if (submitted) return;
         submitted = true;
-        var data = {};
-        var formData = new FormData(form);
-        formData.forEach(function(value, key) {
-          data[key] = value;
-        });
-        fetch('https://hook.eu1.make.com/ik8t18ruk1aj20rfsb9lhiad5hnnfkas', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    name: data.name,
-    phone: data.phone,
-    email: data.email,
-    postal: data.postal,
-    stage: data.stage,
-    vehicle: data.vehicle || '',
-    budget: data.budget || '',
-    message: data.message || '',
-    link: data.link || '',
-    utm_source: data.utm_source || '',
-    utm_medium: data.utm_medium || '',
-    utm_campaign: data.utm_campaign || '',
-    utm_content: data.utm_content || '',
-    gclid: data.gclid || ''
-  })
-})
-        .then(function() {
+        fetch(window.OI_WEBHOOK, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(window.oiPayload(form))
+        })
+        .then(function(r) {
+          if (r.status === 400) {
+            submitted = false;
+            alert('Revisa tus datos: necesitamos tu nombre y un teléfono o email válidos.');
+            return;
+          }
           window.location.href = '/landing/gracias';
         })
         .catch(function() {
           submitted = false;
-          alert('Ha ocurrido un error. Por favor llámanos al 640 113 351.');
+          alert('Ha ocurrido un error. Por favor llámanos al 644 01 50 34.');
         });
       });
     }
