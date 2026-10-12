@@ -117,7 +117,7 @@ const btn = (href, txt, color) => href ? '<a href="' + href + '" style="display:
 const html = '<div style="font-family:Arial,sans-serif;max-width:560px">' +
   '<h2 style="color:#0F172A;margin:0 0 4px">' + (nuevo ? 'Nuevo lead' : 'Lead que vuelve a escribir') + ': ' + esc(n.nombre) + '</h2>' +
   '<p style="color:#64748B;margin:0 0 16px">' + esc(n.canal) + (n.utmCampaign ? ' · ' + esc(n.utmCampaign) : '') + '</p>' +
-  btn(n.telOk ? 'tel:' + n.tel : '', 'Llamar', '#2563EB') + btn(n.whatsapp, 'WhatsApp', '#16A34A') +
+  btn(r.id ? 'https://panel.orozcoimport.es/#/hoy?lead=' + r.id : '', 'Abrir en el panel', '#0F172A') + btn(n.telOk ? 'tel:' + n.tel : '', 'Llamar', '#2563EB') + btn(n.whatsapp, 'WhatsApp', '#16A34A') +
   '<table style="border-collapse:collapse;margin-top:12px;font-size:14px">' +
   fila('Teléfono', n.tel || n.telOriginal) + fila('Email', n.email) + fila('En qué punto está', n.situacion) +
   fila('Coche', n.modelo) + fila('Presupuesto', n.presupuesto) + fila('Anuncio', n.urlAnuncio) + fila('Mensaje', n.mensaje) +
