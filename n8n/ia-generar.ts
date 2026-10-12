@@ -63,7 +63,7 @@ const claude = node({
       sendBody: true,
       contentType: 'json',
       specifyBody: 'json',
-      jsonBody: expr("{{ JSON.stringify({ model: 'claude-sonnet-5-5', max_tokens: 1000, system: $json.system, messages: [{ role: 'user', content: 'Datos del lead:\\n' + JSON.stringify($json.lead, null, 2) }] }) }}"),
+      jsonBody: expr("{{ JSON.stringify({ model: 'claude-sonnet-5-5', max_tokens: 4000, system: $json.system, messages: [{ role: 'user', content: 'Datos del lead:\\n' + JSON.stringify($json.lead, null, 2) }] }) }}"),
       options: { timeout: 60000 }
     },
     credentials: { anthropicApi: newCredential('Anthropic Orozco') }

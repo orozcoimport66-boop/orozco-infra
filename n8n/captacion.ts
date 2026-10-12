@@ -391,6 +391,44 @@ const vincularNotion = node({
   output: [{}]
 });
 
+const esNuevo = ifElse({
+  version: 2.3,
+  config: {
+    name: '¿Lead nuevo?',
+    parameters: {
+      conditions: {
+        combinator: 'and',
+        options: { caseSensitive: true, leftValue: '', typeValidation: 'loose', version: 2 },
+        conditions: [{ leftValue: expr("{{ $('Guardar en Supabase').item.json.nuevo === true }}"), rightValue: true, operator: { type: 'boolean', operation: 'true', singleValue: true } }]
+      }
+    }
+  }
+});
+
+// Prepara el mensaje de primer contacto con IA (subflujo «IA · Generar mensaje de primer contacto»)
+const mensajeIA = node({
+  type: 'n8n-nodes-base.executeWorkflow',
+  version: 1.4,
+  config: {
+    name: 'Preparar mensaje IA',
+    onError: 'continueRegularOutput',
+    parameters: {
+      mode: 'once',
+      source: 'database',
+      workflowId: { __rl: true, mode: 'id', value: 'Kr7sYCIgRhWHuEkv' },
+      workflowInputs: {
+        mappingMode: 'defineBelow',
+        value: { lead_id: expr("{{ $('Guardar en Supabase').item.json.id }}") },
+        matchingColumns: [],
+        schema: [{ id: 'lead_id', displayName: 'lead_id', required: false, defaultMatch: false, display: true, canBeUsedToMatch: true, type: 'string' }],
+        attemptToConvertTypes: false
+      },
+      options: { waitForSubWorkflow: false }
+    }
+  },
+  output: [{}]
+});
+
 const nota = sticky('## Captación de leads\nFormulario web → validar → **Supabase** (fuente de verdad) → responder a la web → en paralelo: **Brevo** (lista 8), **Notion** (crear/actualizar por email o teléfono) y **aviso por email** a Fran.\nEl estado de una ficha existente en Notion no se toca.', [webhook, normalizar], { color: 5 });
 
 export default workflow('captacion', 'Captación de leads (web)')
@@ -403,6 +441,8 @@ export default workflow('captacion', 'Captación de leads (web)')
   .to(brevoContacto)
   .add(responderOk)
   .to(prepararEmail.to(enviarAviso))
+  .add(responderOk)
+  .to(esNuevo.onTrue(mensajeIA))
   .add(responderOk)
   .to(buscarNotion.to(existeEnNotion
     .onTrue(actualizarNotion.to(vincularNotion))
