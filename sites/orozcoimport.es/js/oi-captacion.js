@@ -3,6 +3,7 @@
  *    si el usuario navega antes de enviar el formulario.
  * 2. window.oiPayload(form): datos del formulario + atribución, listos para enviar.
  * 3. Añade un campo trampa invisible (antispam) a los formularios de captación.
+ * 4. Guarda la etapa del lead (stage) para que /landing/gracias la publique en el dataLayer.
  */
 (function () {
   var KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid', 'fbclid'];
@@ -39,6 +40,8 @@
       KEYS.forEach(function (k) { d[k] = a[k] || ''; });
     }
     d.pagina = window.location.origin + window.location.pathname;
+    // Etapa del lead para la página de gracias (Tag Manager decide si cuenta como conversión).
+    try { sessionStorage.setItem('oi_lead_stage', d.stage || ''); } catch (e) {}
     return d;
   };
 

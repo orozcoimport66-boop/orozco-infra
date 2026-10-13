@@ -1,6 +1,22 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <!-- Etapa del lead para Tag Manager (antes de cargar GTM).
+         lead_cuenta = false solo para "Estoy valorando si merece la pena importar".
+         lead_valor: facturación media por lead según el CRM (oct 2026). -->
+<script>
+window.dataLayer = window.dataLayer || [];
+(function () {
+  var s = '';
+  try { s = sessionStorage.getItem('oi_lead_stage') || ''; } catch (e) {}
+  var valores = { decided: 75, undecided: 37, evaluating: 0 };
+  window.dataLayer.push({
+    lead_stage: s || 'desconocido',
+    lead_cuenta: s !== 'evaluating',
+    lead_valor: s in valores ? valores[s] : 50
+  });
+})();
+</script>
     <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
