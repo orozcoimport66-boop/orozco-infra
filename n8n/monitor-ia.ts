@@ -125,7 +125,7 @@ const porMotor = switchCase({
   config: { name: 'Según la IA', parameters: { rules: { values: [regla('chatgpt'), regla('claude'), regla('gemini')] } } }
 });
 
-const lote = { batch: { batchSize: 1, batchInterval: 1500 } };
+const lote = { batching: { batch: { batchSize: 1, batchInterval: 2000 } } }; // de una en una: Anthropic limita las peticiones simultáneas
 
 const chatgpt = node({
   type: 'n8n-nodes-base.httpRequest', version: 4.3,
