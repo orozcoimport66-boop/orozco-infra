@@ -33,13 +33,23 @@ const honeypot = t(b.website);
 
 const src = utmSource.toLowerCase();
 const med = utmMedium.toLowerCase();
+// Web de la que venía la visita (la guarda oi-captacion.js si no es la nuestra)
+const referente = cut(t(b.referente).toLowerCase(), 200);
+const refHost = (referente.match(/^https?:\\/\\/([^\\/?#]+)/) || [])[1] || referente.split('/')[0] || '';
+// Asistentes de IA: ChatGPT añade utm_source=chatgpt.com; el resto se reconoce por la web de procedencia
+const IA = /(chatgpt\\.com|openai\\.com|perplexity\\.ai|gemini\\.google\\.com|bard\\.google\\.com|copilot\\.microsoft\\.com|claude\\.ai|you\\.com|meta\\.ai|deepseek\\.com|grok\\.com|mistral\\.ai)/;
+const IA_SRC = /^(chatgpt|openai|perplexity|gemini|copilot|claude|deepseek|grok|mistral)/;
 let canal = 'Directo';
 if (med === 'cpc' || gclid) canal = 'Google Ads';
 else if (med === 'paid_social' || fbclid) canal = 'Meta Ads';
+else if (IA.test(src) || IA_SRC.test(src) || IA.test(refHost)) canal = 'ChatGPT / IA';
 else if (src === 'instagram') canal = 'Instagram';
 else if (src === 'tiktok') canal = 'TikTok';
 else if (src === 'facebook' || src === 'meta') canal = 'Meta Ads';
 else if (med === 'organic') canal = 'Google Orgánico';
+else if (!src && /(^|\\.)google\\.[a-z.]+$/.test(refHost)) canal = 'Google Orgánico';
+else if (!src && /instagram\\.com$/.test(refHost)) canal = 'Instagram';
+else if (!src && /tiktok\\.com$/.test(refHost)) canal = 'TikTok';
 
 const emailOk = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]{2,}$/.test(email);
 const telOk = /^\\+?[0-9]{9,15}$/.test(tel);
@@ -94,7 +104,7 @@ const supabase = {
   nombre, email: emailOk ? email : '', telefono: telOk ? tel : telOriginal, codigo_postal: cp, situacion, modelo,
   presupuesto, url_anuncio: urlAnuncio, mensaje, canal, utm_source: utmSource, utm_medium: utmMedium,
   utm_campaign: utmCampaign, utm_content: utmContent, utm_term: utmTerm, gclid, fbclid,
-  pagina_origen: pagina, experimento
+  pagina_origen: pagina, experimento, referente: referente || null
 };
 
 const primerNombre = nombre.split(' ')[0] || '';
