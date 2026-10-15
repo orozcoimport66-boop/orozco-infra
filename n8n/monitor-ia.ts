@@ -76,7 +76,7 @@ return { json: { p: { semana: n.semana, pregunta_id: n.pregunta_id, motor: n.mot
   texto: n.texto, fuentes: n.fuentes, empresas, error: n.error } } };
 `;
 
-const CONTEXTO = 'El usuario está en Sevilla (España).';
+const CONTEXTO = 'El usuario está en España.'; // servicio nacional: solo ~8 % de los leads son de Sevilla
 const SISTEMA_EXTRAER = 'Lees la respuesta de un asistente de IA a alguien de España que quiere importar un coche de Alemania. ' +
   'Extrae SOLO las empresas o profesionales que ofrecen al usuario el servicio de importarle o traerle el coche, o de gestionarle la importación o la matriculación ' +
   '(importadores, concesionarios o compraventas que importan, gestorías especializadas, empresas de transporte de coches), en el orden en que aparecen por primera vez. ' +
@@ -84,8 +84,8 @@ const SISTEMA_EXTRAER = 'Lees la respuesta de un asistente de IA a alguien de Es
   'aseguradoras, bancos, medios o blogs citados como fuente, ni marcas o modelos de coche. Usa el nombre comercial tal cual aparece. ' +
   'Responde solo con JSON: {"empresas": ["..."]}. Si no hay ninguna: {"empresas": []}.';
 
-const UBICACION_OAI = { type: 'approximate', country: 'ES', city: 'Sevilla', region: 'Andalucía' };
-const UBICACION_CLAUDE = { type: 'approximate', country: 'ES', city: 'Sevilla', region: 'Andalucía', timezone: 'Europe/Madrid' };
+const UBICACION_OAI = { type: 'approximate', country: 'ES' };
+const UBICACION_CLAUDE = { type: 'approximate', country: 'ES', timezone: 'Europe/Madrid' };
 
 const lunes = trigger({
   type: 'n8n-nodes-base.scheduleTrigger', version: 1.3,
