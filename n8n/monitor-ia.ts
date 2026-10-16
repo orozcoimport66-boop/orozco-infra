@@ -6,9 +6,9 @@ import { workflow, node, trigger, switchCase, expr } from '@n8n/workflow-sdk';
 // extrae las empresas recomendadas con Claude Haiku y guarda en ia_respuestas (rpc ia_guardar).
 
 const PREPARAR_JS = `
-// Motores activos. Gemini necesita la facturación del proyecto de Google Cloud para buscar en Google;
+// Motores activos (Gemini con facturación activa desde el 16/10).
 // Perplexity, su credencial.
-const MOTORES = ['chatgpt', 'claude'];
+const MOTORES = ['chatgpt', 'claude', 'gemini'];
 const REPS = 3;
 const PRUEBA = false; // true: solo 1 pregunta y 1 repetición
 const semana = DateTime.now().setZone('Europe/Madrid').startOf('week').toISODate();
@@ -190,7 +190,7 @@ const extraer = node({
       authentication: 'predefinedCredentialType', nodeCredentialType: 'anthropicApi',
       sendHeaders: true, headerParameters: { parameters: [{ name: 'anthropic-version', value: '2023-06-01' }] },
       sendBody: true, contentType: 'json', specifyBody: 'json',
-      jsonBody: expr('{{ JSON.stringify({ model: "claude-haiku-5-5", max_tokens: 600, system: ' + JSON.stringify(SISTEMA_EXTRAER) + ', messages: [{ role: "user", content: "Respuesta:\\n\\"\\"\\"\\n" + ($json.texto || "(sin respuesta)") + "\\n\\"\\"\\"" }] }) }}'),
+      jsonBody: expr('{{ JSON.stringify({ model: "claude-haiku-5-5", max_tokens: 4000, system: ' + JSON.stringify(SISTEMA_EXTRAER) + ', messages: [{ role: "user", content: "Respuesta:\\n\\"\\"\\"\\n" + ($json.texto || "(sin respuesta)") + "\\n\\"\\"\\"" }] }) }}'),
       options: { timeout: 60000, ...lote }
     },
     credentials: { anthropicApi: { id: '8QYoQrbw7qrwAoSI', name: 'Anthropic Orozco' } },
