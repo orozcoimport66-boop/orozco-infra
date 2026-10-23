@@ -140,6 +140,10 @@ MARCAS = {
     },
 }
 
+# Mientras las páginas son un borrador (fotos pendientes) van con noindex. Al lanzarlas: --lanzar
+import sys
+BORRADOR = '--lanzar' not in sys.argv
+
 # Huecos de casos reales que faltan en el carrusel del hero (foto + datos del cliente)
 CASOS_EXTRA = 3
 
@@ -214,6 +218,8 @@ def generar(slug, m, home):
     h = uno(h, '<title>Importación de coches desde Alemania | Orozco Import</title>', f'<title>{m["title"]}</title>')
     h = sub_re(h, r'<meta name="description" content="[^"]*" />', f'<meta name="description" content="{m["description"]}" />')
     h = uno(h, '<link rel="canonical" href="https://orozcoimport.es/" />', f'<link rel="canonical" href="{url}" />')
+    if BORRADOR:
+        h = uno(h, '<meta name="robots" content="index, follow" />', '<meta name="robots" content="noindex, nofollow" />')
     h = sub_re(h, r'<meta property="og:title" content="[^"]*" />', f'<meta property="og:title" content="{m["title"]}" />')
     h = sub_re(h, r'<meta property="og:description" content="[^"]*" />', f'<meta property="og:description" content="{m["og_description"]}" />')
     h = uno(h, '<meta property="og:url" content="https://orozcoimport.es/" />', f'<meta property="og:url" content="{url}" />')
