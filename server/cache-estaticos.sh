@@ -45,20 +45,19 @@ restaurar() {
   for d in $CAMBIAR; do cp -p "$BACKUPS/$d.caddy.$STAMP-antes-cache" "$DIR/$d.caddy"; done
 }
 
-# 2. Añadir las dos líneas justo después de 'import seguridad' (solo la primera vez que aparece)
+# 2. Añadir el bloque justo después de 'import seguridad' (solo la primera vez que aparece)
 for d in $CAMBIAR; do
   f="$DIR/$d.caddy"
   awk '
     { print }
     !hecho && /import seguridad/ {
-      print "\t@estaticos path *.webp *.jpg *.jpeg *.png *.svg *.ico *.woff2 *.css *.js"
+      # "file": solo si el archivo existe. Un 404 (imagen que no existe) no se guarda en caché.
+      print "\t@estaticos {"
+      print "\t\tpath *.webp *.jpg *.jpeg *.png *.svg *.ico *.woff2 *.css *.js"
+      print "\t\tfile"
+      print "\t}"
       print "\theader @estaticos Cache-Control \"public, max-age=2592000\""
       hecho = 1
-    }
-    # Las páginas de error (404) no se guardan en caché: si luego se sube ese archivo, se ve al momento
-    !hecho_err && /handle_errors[[:space:]]*\{/ {
-      print "\t\theader -Cache-Control"
-      hecho_err = 1
     }
   ' "$f" > "$f.tmp"
   chown --reference="$f" "$f.tmp" 2>/dev/null || true

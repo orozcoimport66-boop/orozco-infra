@@ -74,13 +74,15 @@ case "$cmd" in
     [ "${3:-}" = "noindex" ] && extra=$'\n\theader X-Robots-Tag "noindex, nofollow"'
     apply "$domain" "$domain {
 	import seguridad${extra}
-	@estaticos path *.webp *.jpg *.jpeg *.png *.svg *.ico *.woff2 *.css *.js
+	@estaticos {
+		path *.webp *.jpg *.jpeg *.png *.svg *.ico *.woff2 *.css *.js
+		file
+	}
 	header @estaticos Cache-Control "public, max-age=2592000"
 	root * /srv/sites/$domain
 	try_files {path} {path}/ {path}.html
 	file_server
 	handle_errors {
-		header -Cache-Control
 		rewrite * /404.html
 		file_server
 	}
