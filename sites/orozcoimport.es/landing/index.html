@@ -24,7 +24,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <title>Importar coche de Alemania con total seguridad | Orozco Import</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=optional" rel="stylesheet">
   <style>
     :root {
       /* Paleta refinada */
@@ -57,7 +57,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       /* Fuentes */
       --font-display:  'Geist', 'Inter', -apple-system, sans-serif;
       --font-sans:     'Inter', -apple-system, sans-serif;
-      --font-mono:     'JetBrains Mono', monospace;
+      --font-mono:     'Inter', -apple-system, sans-serif;
 
       /* Easing premium */
       --ease-out:      cubic-bezier(0.16, 1, 0.3, 1);
@@ -92,6 +92,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
     /* Grano global SVG (capa de textura premium) */
     .oi-grain {
+      display: none; /* desactivado: filtro SVG costoso en móvil */
       position: fixed;
       inset: 0;
       pointer-events: none;
@@ -165,7 +166,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
      STICKY BAR — refinada
      ============================================================ -->
 
-<div class="oi-sticky" id="oi-sticky" aria-hidden="true">
+<div class="oi-sticky" id="oi-sticky" aria-hidden="true" inert>
   <div class="oi-sticky__inner">
     <div class="oi-sticky__urgency">
       <span class="oi-sticky__pulse" aria-hidden="true">
@@ -191,6 +192,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
      SECCIÓN 01 — HERO (refundido, lenguaje editorial)
      ============================================================ -->
 
+<main>
 <section class="oi-hero">
   <div class="oi-hero__bg">
     <div class="oi-hero__halo"></div>
@@ -203,7 +205,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <header class="oi-hero__top">
       <div class="oi-hero__logo-wrap">
-        <img src="img/logo-orozco-import.webp" alt="Orozco Import" class="oi-hero__logo" />
+        <img src="img/logo-orozco-import.webp" alt="Orozco Import" class="oi-hero__logo" width="400" height="247" />
       </div>
 
       <div class="oi-hero__meta">
@@ -236,7 +238,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         <p class="oi-hero__eyebrow">
           <span class="oi-hero__eyebrow-line"></span>
-          <span>Servicio premium · Desde 2017</span>
+          <span>Empresa de importación de coches de Alemania a España</span>
         </p>
 
         <h1 class="oi-hero__title">
@@ -340,7 +342,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               </div>
               <div class="oi-hero__card-saving">
                 <span class="oi-saving-label">Ahorro</span>
-                <span class="oi-saving-amount oi-num">5.324€</span>
+                <span class="oi-saving-amount oi-num">5.327€</span>
               </div>
             </div>
           </article>
@@ -353,7 +355,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               <div class="oi-hero__slide">
                 <article class="oi-hero__card">
                   <div class="oi-hero__card-photo-wrap">
-                    <img src="img/caso-2.webp" srcset="img/caso-2-640.webp 640w, img/caso-2.webp 1000w" sizes="(max-width: 768px) 92vw, 760px" alt="Mercedes CLA AMG" class="oi-hero__card-img" />
+                    <img fetchpriority="high" src="img/caso-2.webp" srcset="img/caso-2-640.webp 640w, img/caso-2.webp 1000w" sizes="(max-width: 768px) 92vw, 760px" alt="Mercedes CLA AMG" class="oi-hero__card-img" />
                     <span class="oi-hero__card-badge"><span class="oi-num">2026</span></span>
                   </div>
                   <div class="oi-hero__card-info">
@@ -399,7 +401,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     </div>
                     <div class="oi-hero__card-saving">
                       <span class="oi-saving-label">Ahorro</span>
-                      <span class="oi-saving-amount oi-num">5.324€</span>
+                      <span class="oi-saving-amount oi-num">5.327€</span>
                     </div>
                   </div>
                 </article>
@@ -586,14 +588,29 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <!-- Lado izquierdo: vídeo YouTube embebido -->
       <div class="oi-testimonials__featured-media">
         <div class="oi-testimonials__video-embed">
-          <iframe
-            src="https://www.youtube.com/embed/6RA2EPQknac"
-            title="Testimonio de Francisco — Orozco Import"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen
-            loading="lazy"
-          ></iframe>
+          <!-- Fachada ligera: el reproductor de YouTube solo se carga al pulsar -->
+          <button type="button" class="oi-testimonials__video-placeholder" data-yt="6RA2EPQknac" aria-label="Reproducir el vídeo: testimonio de Francisco" style="border:0;padding:0;margin:0;background:none;width:100%;">
+            <img class="oi-testimonials__video-thumb" src="https://i.ytimg.com/vi/6RA2EPQknac/hqdefault.jpg" alt="Testimonio de Francisco — Orozco Import" width="480" height="360" loading="lazy" decoding="async" />
+            <span class="oi-testimonials__video-overlay">
+              <span class="oi-testimonials__video-play" aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+              </span>
+            </span>
+          </button>
+          <script>
+            (function () {
+              var b = document.currentScript.previousElementSibling;
+              b.addEventListener('click', function () {
+                var f = document.createElement('iframe');
+                f.src = 'https://www.youtube.com/embed/' + b.getAttribute('data-yt') + '?autoplay=1&rel=0';
+                f.title = 'Testimonio de Francisco — Orozco Import';
+                f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+                f.setAttribute('allowfullscreen', '');
+                f.setAttribute('frameborder', '0');
+                b.replaceWith(f);
+              });
+            })();
+          </script>
         </div>
       </div>
 
@@ -639,7 +656,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <article class="oi-testimonials__card oi-reveal">
         <div class="oi-testimonials__card-header">
           <div class="oi-testimonials__card-avatar">
-            <div class="oi-testimonials__card-avatar-img" style="background-image: url('img/cliente-3.webp');" aria-label="Foto de Fabián G."></div>
+            <div class="oi-testimonials__card-avatar-img" style="background-image: url('img/cliente-3.webp');" role="img" aria-label="Foto de Fabián G."></div>
           </div>
           <div class="oi-testimonials__card-author">
             <p class="oi-testimonials__card-name">Fabián G.</p>
@@ -664,7 +681,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <article class="oi-testimonials__card oi-reveal" style="transition-delay: 0.1s;">
         <div class="oi-testimonials__card-header">
           <div class="oi-testimonials__card-avatar">
-            <div class="oi-testimonials__card-avatar-img" style="background-image: url('img/cliente-4.webp');" aria-label="Foto de Félix"></div>
+            <div class="oi-testimonials__card-avatar-img" style="background-image: url('img/cliente-4.webp');" role="img" aria-label="Foto de Félix"></div>
           </div>
           <div class="oi-testimonials__card-author">
             <p class="oi-testimonials__card-name">Félix</p>
@@ -689,7 +706,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <article class="oi-testimonials__card oi-reveal" style="transition-delay: 0.2s;">
         <div class="oi-testimonials__card-header">
           <div class="oi-testimonials__card-avatar">
-            <div class="oi-testimonials__card-avatar-img" style="background-image: url('img/cliente-1.webp');" aria-label="Foto de Miguel L."></div>
+            <div class="oi-testimonials__card-avatar-img" style="background-image: url('img/cliente-1.webp');" role="img" aria-label="Foto de Miguel L."></div>
           </div>
           <div class="oi-testimonials__card-author">
             <p class="oi-testimonials__card-name">Miguel L.</p>
@@ -831,12 +848,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <li>
             <span class="oi-breakdown__list-label">Servicio Orozco Import</span>
             <span class="oi-breakdown__list-dots" aria-hidden="true"></span>
-            <span class="oi-breakdown__list-amount oi-num">1.576€</span>
+            <span class="oi-breakdown__list-amount oi-num">1.573€</span>
           </li>
         </ul>
         <div class="oi-breakdown__total oi-breakdown__total--accent">
           <span class="oi-breakdown__total-label">Total</span>
-          <span class="oi-breakdown__total-amount oi-num">≈ 36.676€</span>
+          <span class="oi-breakdown__total-amount oi-num">≈ 36.673€</span>
         </div>
       </div>
 
@@ -845,7 +862,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="oi-breakdown__saving oi-reveal">
       <div class="oi-breakdown__saving-text">
         <span class="oi-breakdown__saving-label">Ahorro real para Fabián</span>
-        <span class="oi-breakdown__saving-amount oi-display oi-num">5.324€</span>
+        <span class="oi-breakdown__saving-amount oi-display oi-num">5.327€</span>
       </div>
       <div class="oi-breakdown__saving-divider" aria-hidden="true"></div>
       <p class="oi-breakdown__saving-note">
@@ -1213,7 +1230,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <details class="oi-faq__item oi-reveal">
         <summary class="oi-faq__question">
           <span class="oi-faq__question-num oi-num">02</span>
-          <span class="oi-faq__question-text">¿Cuánto cuesta traer un coche de Alemania?</span>
+          <span class="oi-faq__question-text">¿Cuánto cuesta comprar un coche en Alemania y traerlo a España?</span>
           <span class="oi-faq__icon" aria-hidden="true"></span>
         </summary>
         <div class="oi-faq__answer">
@@ -1262,6 +1279,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </summary>
         <div class="oi-faq__answer">
           <p>Seguimos disponibles después de entregar las llaves. Si surge cualquier duda o incidencia, nos puedes contactar y <strong>te ayudamos a resolverla con el vendedor original</strong> o a gestionarla con tu taller de confianza. La relación no termina con la entrega.</p>
+        </div>
+      </details>
+
+      <details class="oi-faq__item oi-reveal">
+        <summary class="oi-faq__question">
+          <span class="oi-faq__question-num oi-num">07</span>
+          <span class="oi-faq__question-text">¿Qué hace una empresa de importación de coches como Orozco Import?</span>
+          <span class="oi-faq__icon" aria-hidden="true"></span>
+        </summary>
+        <div class="oi-faq__answer">
+          <p>Somos <strong>importadores de coches de Alemania a España</strong> con servicio llave en mano. Buscamos el coche en concesionarios oficiales alemanes, lo inspeccionamos físicamente antes de que pagues nada, negociamos el precio, organizamos el transporte asegurado y te lo dejamos en tu puerta. El coche lo pagas directamente al vendedor y a nosotros solo nuestro servicio. Somos una empresa privada, no un organismo público.</p>
         </div>
       </details>
 
@@ -1429,13 +1457,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
      SECCIÓN 11 — FOOTER
      ============================================================ -->
 
+</main>
+
 <footer class="oi-footer">
   <div class="oi-footer__container">
 
     <div class="oi-footer__top">
       <div class="oi-footer__brand">
-        <img loading="lazy" decoding="async" src="img/logo-orozco-import.webp" alt="Orozco Import" class="oi-footer__logo" />
+        <img loading="lazy" decoding="async" src="img/logo-orozco-import.webp" alt="Orozco Import" class="oi-footer__logo" width="400" height="247" />
         <p class="oi-footer__tagline">Importación premium desde Alemania, desde <span class="oi-num">2017</span>.</p>
+        <address class="oi-footer__empresa">
+          Orozco Solutions SLU · CIF B02924140<br>
+          Calle Virgen del Valle, 4 · 41703 Dos Hermanas (Sevilla)<br>
+          <a href="tel:+34644015034">644 01 50 34</a> · <a href="mailto:orozcoimport66@gmail.com">orozcoimport66@gmail.com</a>
+        </address>
+        <p class="oi-footer__aviso">Orozco Import es una empresa privada de intermediación en la compra e importación de vehículos. No somos un organismo público.</p>
       </div>
 
       <nav class="oi-footer__legal" aria-label="Enlaces legales">
@@ -2188,6 +2224,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   .oi-hero { padding: 24px 20px 96px; }
   .oi-hero__top { padding-bottom: 36px; flex-direction: column; gap: 18px; align-items: flex-start; }
   .oi-hero__logo { height: 44px; }
+  .oi-hero__bg-img { display: none; } /* en móvil apenas se ve (5 % de opacidad) y era el LCP y causa de CLS */
   .oi-hero__title { font-size: clamp(2rem, 8vw, 2.75rem); }
   .oi-cta-primary { width: 100%; padding: 16px 24px; }
   .oi-hero__cta-row { width: 100%; flex-direction: column; gap: 16px; }
@@ -3871,6 +3908,24 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   color: rgba(255,255,255,0.5);
   margin: 0;
 }
+.oi-footer__empresa {
+  font-style: normal;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.5);
+  margin: 0;
+}
+.oi-footer__empresa a { color: rgba(255,255,255,0.7); text-decoration: none; }
+.oi-footer__empresa a:hover { color: #fff; }
+.oi-footer__aviso {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  line-height: 1.6;
+  color: rgba(255,255,255,0.4);
+  margin: 0;
+  max-width: 420px;
+}
 .oi-footer__legal {
   display: flex;
   align-items: center;
@@ -4512,7 +4567,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     function check() {
       if (!heroCta) {
         sticky.classList.add('is-visible');
-        sticky.removeAttribute('aria-hidden');
+        sticky.removeAttribute('aria-hidden'); sticky.removeAttribute('inert');
         return;
       }
       var rect = heroCta.getBoundingClientRect();
@@ -4520,9 +4575,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       if (ctaVisible) {
         sticky.classList.remove('is-visible');
         sticky.setAttribute('aria-hidden', 'true');
+        sticky.setAttribute('inert', '');
       } else {
         sticky.classList.add('is-visible');
-        sticky.removeAttribute('aria-hidden');
+        sticky.removeAttribute('aria-hidden'); sticky.removeAttribute('inert');
       }
     }
     window.addEventListener('scroll', check, { passive: true });
