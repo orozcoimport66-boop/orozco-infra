@@ -1,0 +1,40 @@
+{
+  "marca": "Orozco Import",
+  "web": "https://orozcoimport.es",
+  "version": "1.0",
+  "fecha": "2026-11-01",
+  "mision": "Tu experto de confianza con el compromiso de un familiar: defendemos tu bolsillo y tu tranquilidad en un mercado complejo, para que tú solo disfrutes del coche que mereces.",
+  "vision": "Transformar la cultura de compra en España, estableciendo el mercado europeo como la opción más segura y lógica para el conductor exigente, superando las limitaciones de calidad y confianza del mercado nacional.",
+  "valores": [
+    "Transparencia radical",
+    "Rigor técnico",
+    "Defensa de la inversión",
+    "Vínculo familiar"
+  ],
+  "colores": {
+    "navy": "#0F172A",
+    "electrico": "#2563EB",
+    "blanco": "#F9F9F9",
+    "acero": "#64748B",
+    "navy_2": "#1E293B",
+    "azul_cielo": "#60A5FA",
+    "linea": "#E2E8F0"
+  },
+  "tipografias": {
+    "titulares": "Poppins 700/800",
+    "texto": "Inter 400/500",
+    "datos": "Roboto Mono 400/500"
+  },
+  "tono": [
+    "Directo",
+    "Seguro",
+    "Justo",
+    "Protector"
+  ],
+  "logo": {
+    "principal": "01-logo/logo-navy.svg",
+    "fondo_oscuro": "01-logo/logo-blanco-acento.svg",
+    "simbolo": "02-simbolo/simbolo-acento.svg",
+    "favicon": "03-favicon/favicon-navy.svg"
+  }
+}
