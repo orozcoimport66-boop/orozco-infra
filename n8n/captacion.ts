@@ -39,17 +39,24 @@ const refHost = (referente.match(/^https?:\\/\\/([^\\/?#]+)/) || [])[1] || refer
 // Asistentes de IA: ChatGPT añade utm_source=chatgpt.com; el resto se reconoce por la web de procedencia
 const IA = /(chatgpt\\.com|openai\\.com|perplexity\\.ai|gemini\\.google\\.com|bard\\.google\\.com|copilot\\.microsoft\\.com|claude\\.ai|you\\.com|meta\\.ai|deepseek\\.com|grok\\.com|mistral\\.ai)/;
 const IA_SRC = /^(chatgpt|openai|perplexity|gemini|copilot|claude|deepseek|grok|mistral)/;
+// Meta añade fbclid a TODOS los enlaces que salen de Instagram y Facebook, también los orgánicos
+// (bio, historias, mensajes). Por eso el fbclid no decide el canal: Meta Ads solo con medium de pago
+// (las campañas llevan utm_medium=paid_social, ver LAN-5).
+const SOCIAL_SRC = /^(facebook|instagram|meta|fb|ig|threads|messenger|an)$/;
+const PAGO_MED = /^(paid_social|paid|paidsocial|cpc|cpm|ppc|ads?)$/;
 let canal = 'Directo';
-if (med === 'cpc' || gclid) canal = 'Google Ads';
-else if (med === 'paid_social' || fbclid) canal = 'Meta Ads';
+if (gclid) canal = 'Google Ads';
+else if (med === 'paid_social' || (SOCIAL_SRC.test(src) && PAGO_MED.test(med))) canal = 'Meta Ads';
+else if (med === 'cpc') canal = 'Google Ads';
 else if (IA.test(src) || IA_SRC.test(src) || IA.test(refHost)) canal = 'ChatGPT / IA';
-else if (src === 'instagram') canal = 'Instagram';
+else if (src === 'instagram' || src === 'ig') canal = 'Instagram';
 else if (src === 'tiktok') canal = 'TikTok';
-else if (src === 'facebook' || src === 'meta') canal = 'Meta Ads';
+else if (src === 'facebook' || src === 'meta' || src === 'fb') canal = 'Facebook';
 else if (med === 'organic') canal = 'Google Orgánico';
 else if (!src && /(^|\\.)google\\.[a-z.]+$/.test(refHost)) canal = 'Google Orgánico';
 else if (!src && /instagram\\.com$/.test(refHost)) canal = 'Instagram';
 else if (!src && /tiktok\\.com$/.test(refHost)) canal = 'TikTok';
+else if (!src && /(^|\\.)facebook\\.com$/.test(refHost)) canal = 'Facebook';
 
 const emailOk = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]{2,}$/.test(email);
 const telOk = /^\\+?[0-9]{9,15}$/.test(tel);
