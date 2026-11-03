@@ -203,6 +203,7 @@ const mix = (hex, to, t) => '#' + new THREE.Color(hex).lerp(new THREE.Color(to),
 const world = new THREE.Group();
 scene.add(world);
 const FW = 21.6, FD = 18.0;
+const CAR_TAG_Y = 1.7;   // la etiqueta de cada coche flota justo sobre el casco del piloto
 const WALL_H = 4.0;
 const wallsReg = [];   // 0 fondo, 1 izquierda, 2 frente, 3 derecha
 function regWall(g, nx, nz) { g.traverse((o) => { if (o.isMesh) o.castShadow = false; }); wallsReg.push({ g, nx, nz, k: 0, decor: [] }); }
@@ -541,7 +542,8 @@ function floorLabel(text, bg, ink) {
 const BILL_W = 1600, BILL_H = 700, SCR_W = 7.2, SCR_H = SCR_W * BILL_H / BILL_W;
 const SCR_POS = new THREE.Vector3(3.6, 2.5, -FD / 2);
 const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
-const bill = { state: 'off', cur: 0, prev: 0, ops: 0, prevOps: 0, series: [], ts: null, sig: '' };
+const bill = { state: 'off', cur: 0, prev: 0, ops: 0, prevOps: 0, series: [], ts: null };
+let billSig = '';
 let billCtx = null, billTex = null, billMesh = null, billTs = 0, fontsReady = false;
 function tzOffsetMin(t) {
   const p = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Madrid', hourCycle: 'h23', year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' }).formatToParts(new Date(t));
@@ -585,8 +587,29 @@ async function fetchBilling(force) {
        La primera lectura solo fija la referencia (no dispara). */
     const lastTs = (data || []).reduce((mx, r) => Math.max(mx, new Date(r.fecha_terminado).getTime() || 0), 0), nTot = (data || []).length;
     const prevSeen = bill.seen; bill.seen = { last: lastTs, n: nTot };
-    if (prevSeen && (lastTs > prevSeen.last || nTot > prevSeen.n) && !demoOn) triggerFlag('Venta nueva en facturación');
+    if (prevSeen && (lastTs > prevSeen.last || nTot > prevSeen.n) && !demoOn) saleFlag('Venta nueva en facturación');
   } catch (e) { bill.state = 'na'; console.warn('[oficina] facturación no disponible', e && e.message); }
+}
+/* Bandera al instante: cada ~12 s se pregunta a la función oficina_ultima_venta() (solo devuelve { total, ultima }:
+   número de leads en 'Proceso terminado' y la fecha de la última; ningún dato de cliente). La primera lectura solo fija la
+   referencia. Si total o ultima suben, ondea la bandera (máx. una vez cada 90 s) y se refresca la facturación.
+   Si la función no existe o falla, no pasa nada: queda la detección por facturación (cada ~5 min). */
+let saleSeen = null, saleBusy = false, saleFlagAt = 0, saleWarned = false;
+let saleRpc = () => sb.rpc('oficina_ultima_venta');
+function saleFlag(why) { if (demoOn || Date.now() - saleFlagAt < 90000) return false; saleFlagAt = Date.now(); triggerFlag(why); return true; }
+async function pollSale(force) {
+  if (saleBusy || (!force && (!sb || !hasSession || noAccess || demoOn || document.hidden))) return;
+  saleBusy = true;
+  try {
+    const { data, error } = await saleRpc();
+    if (error) throw error;
+    const row = Array.isArray(data) ? data[0] : data;
+    if (!row) return;
+    const cur = { n: Number(row.total) || 0, last: row.ultima ? new Date(row.ultima).getTime() || 0 : 0 };
+    const prev = saleSeen; saleSeen = cur;
+    if (prev && (cur.last > prev.last || cur.n > prev.n)) { saleFlag('Venta nueva'); if (!force) fetchBilling(true); }
+  } catch (e) { if (!saleWarned) { saleWarned = true; console.warn('[oficina] aviso de venta no disponible', e && e.message); } }
+  finally { saleBusy = false; }
 }
 function billView() {
   if (!demoOn) return bill;
@@ -596,8 +619,8 @@ function billView() {
 function drawBilling() {
   if (!billCtx) return;
   const v = billView(), ym = madridYM(), W = BILL_W, H = BILL_H, c = billCtx;
-  const sig = JSON.stringify([v, ym.y, ym.m, fontsReady]);
-  if (sig === bill.sig) return; bill.sig = sig;
+  const sig = JSON.stringify([v.state, v.cur, v.prev, v.ops, v.prevOps, v.ts, v.demo, v.series, ym.y, ym.m, fontsReady]);
+  if (sig === billSig) return; billSig = sig;
   const F = (w, s, mono) => `${w} ${s}px ${mono ? "'JetBrains Mono', ui-monospace, monospace" : "Geist, Inter, system-ui, sans-serif"}`;
   const mes = MESES[ym.m], prevMes = MESES[(ym.m + 11) % 12], ok = v.state === 'ok';
   c.clearRect(0, 0, W, H);
@@ -633,7 +656,7 @@ function drawBilling() {
   c.fillStyle = 'rgba(255,255,255,0.05)'; c.beginPath(); c.roundRect(1060, 50, 490, 600, 28); c.fill();
   c.fillStyle = '#94A3B8'; c.font = F(600, 34, true); c.fillText('OPERACIONES', 1100, 112);
   c.fillStyle = '#F8FAFC'; c.font = F(700, 140); c.fillText(ok ? String(v.ops) : '—', 1096, 250);
-  c.fillStyle = '#94A3B8'; c.font = F(500, 34); c.fillText(ok ? prevMes + ': ' + v.prevOps : '', 1100, 300);
+  c.fillStyle = '#94A3B8'; c.font = F(500, 34); c.fillText(prevMes + ': ' + (ok ? v.prevOps : '—'), 1100, 300);
   if (ok && v.series && v.series.length) {
     const mx = Math.max(1, ...v.series.map((s) => s.v)), bw = 56, gap = 20, x0 = 1100, base = 590;
     v.series.forEach((s, i) => {
@@ -641,6 +664,15 @@ function drawBilling() {
       c.fillStyle = i === 5 ? '#2563EB' : '#33507F'; c.beginPath(); c.roundRect(x, base - h, bw, h, 8); c.fill();
       c.fillStyle = '#94A3B8'; c.font = F(500, 26, true); c.textAlign = 'center'; c.fillText(s.l, x + bw / 2, base + 40);
     });
+    c.textAlign = 'left';
+  } else {
+    const bw = 56, gap = 20, x0 = 1100, base = 590, base0 = madridYM(); const b0 = base0.y * 12 + base0.m;
+    for (let i = 0; i < 6; i++) {
+      const x = x0 + i * (bw + gap);
+      c.fillStyle = 'rgba(148,163,184,0.16)'; c.beginPath(); c.roundRect(x, base - 6, bw, 6, 3); c.fill();
+      c.fillStyle = '#64748B'; c.font = F(600, 40, true); c.textAlign = 'center'; c.fillText('—', x + bw / 2, base - 24);
+      c.fillStyle = '#94A3B8'; c.font = F(500, 26, true); c.fillText(MESES[(b0 - 5 + i) % 12].slice(0, 3), x + bw / 2, base + 40);
+    }
     c.textAlign = 'left';
   }
   billTex.needsUpdate = true;
@@ -1004,7 +1036,7 @@ function buildStation(info, slotIdx, zoneName, place) {
   const a = {
     zoneName, obst, leds, key: info.agente, group: g, hip, torso, head, arms, bub, ring, screenMat, glow, fadeMats, faded: false,
     helmet, cap: capObj, car, pit, noDefaultObst: car,
-    anchor: new THREE.Vector3(g.position.x + dv.x, 2.2, g.position.z + dv.z),
+    anchor: new THREE.Vector3(g.position.x + dv.x, car ? CAR_TAG_Y : 2.2, g.position.z + dv.z),
     focus: new THREE.Vector3(g.position.x + dv.x, 1.0, g.position.z + dv.z - (car ? 0 : 0.2)),
     phase: (h % 628) / 100, human: !!info.human, role: info.rol,
     p: { lean: 0.22, headDown: 0, aS: 0.35, aE: 1.1, aZ: 0.1, mon: 0, type: 0, look: 0, bubble: 0, bubbleKind: 'q' },
@@ -1012,7 +1044,6 @@ function buildStation(info, slotIdx, zoneName, place) {
     tag: null, tagKey: '',
     av, chair, seatedLegs, standLegs, talk, stand: 0, yaw: 0, mv: 0, wph: 0, moving: false, talking: false, talkAmt: 0, q: [], job: null, chairSide: 1,
   };
-  if (car) { a.anchorY = 2.2; }
   agents.set(info.agente, a);
   return a;
 }
@@ -1250,7 +1281,7 @@ function renderEvLog() {
   const html = rows.map((e) => { const a = agents.get(e.de), b = agents.get(e.para); return `<div>${esc(a ? a.name : e.de)} → ${esc(b ? b.name : e.para)} · ${esc(hace(e.ts))}</div>`; }).join('');
   if (html !== evEl._h) { evEl._h = html; evEl.innerHTML = html; }
   evEl.hidden = !rows.length;
-  const bn = $('banners'); evEl.style.setProperty('--bn', (bn && getComputedStyle(bn).display !== 'none' ? bn.offsetHeight : 0) + 'px');
+  syncLayout();
 }
 function queueEvent(ev, demo) {
   if (!ev || !ev.de || !ev.para || ev.de === ev.para) return;
@@ -1507,10 +1538,10 @@ function handleSession(session) {
   const had = hasSession; hasSession = !!session;
   if (hasSession) {
     if (!pollTimer) pollTimer = setInterval(() => { if (!document.hidden) fetchRows(); }, 60000);
-    subscribe(); fetchRows();
+    subscribe(); fetchRows(); pollSale();
   } else {
     unsubscribe(); if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
-    setOfflineAll(); bill.state = 'off'; billTs = 0; bill.seen = null; lastUpdate = null; noAccess = false; fetchError = false;
+    setOfflineAll(); bill.state = 'off'; billTs = 0; bill.seen = null; saleSeen = null; lastUpdate = null; noAccess = false; fetchError = false;
     if (had) console.info('[oficina] sin sesión');
   }
   applyAll(); renderBanners();
@@ -1750,7 +1781,7 @@ function updateTags() {
     list.push(a);
   }
   const pin = (a) => (a.key === selected || a.key === hoverKey ? 1 : 0);
-  list.sort((p, q) => (pin(q) - pin(p)) || (p._d - q._d));   // primero la seleccionada/bajo el cursor, luego las más cercanas
+  list.sort((p, q) => (pin(q) - pin(p)) || ((q.car ? 1 : 0) - (p.car ? 1 : 0)) || (p._d - q._d));   // primero la seleccionada/bajo el cursor, luego las más cercanas
   const placed = [];
   const hit = (r) => placed.some((q) => r.x0 < q.x1 && r.x1 > q.x0 && r.y0 < q.y1 && r.y1 > q.y0);
   for (const a of list) {
@@ -1760,12 +1791,14 @@ function updateTags() {
     const nb = a._nb || 80, det = (a.tagRefs.det.textContent || '').length;
     const fullW = Math.min(172, Math.max(nb + 33, det * 5.4 + 18)) * s, fullH = (a.human ? 44 : 56) * s;
     const smW = (nb + 33) * s, smH = 28 * s, bottom = a._y - 6;
-    let full = false, dy = 0;   // etiqueta siempre mínima: nombre + punto (el detalle va en el tooltip / la tarjeta)
+    let full = false, dy = 0;
+    a._x = clamp(a._x, Math.min(W / 2, smW / 2 + 4), Math.max(W / 2, W - smW / 2 - 4));   // nunca fuera de la pantalla   // etiqueta siempre mínima: nombre + punto (el detalle va en el tooltip / la tarjeta)
     const rect = () => { const w = full ? fullW : smW, h = full ? fullH : smH; return { x0: a._x - w / 2, x1: a._x + w / 2, y0: bottom - dy - h, y1: bottom - dy }; };
     if (!pinned) {
       if (full && hit(rect())) full = false;                          // si choca, solo nombre y punto
       for (let i = 0; i < 4 && hit(rect()); i++) dy += smH + 3;       // si aún choca, se apila hacia arriba
     }
+    if (barB && a._y > barB && bottom - dy - smH < barB + 4) dy -= barB + 4 - (bottom - dy - smH);   // nunca bajo la barra superior
     placed.push(rect());
     if (a._c !== !full) { a._c = !full; el.classList.toggle('compact', !full); }
     el.style.transform = `translate3d(${a._x.toFixed(1)}px,${(a._y - dy).toFixed(1)}px,0) translate(-50%,-100%) translateY(-6px) scale(${s.toFixed(3)})`;
@@ -1800,12 +1833,21 @@ function updateTip() {
   tipEl.classList.toggle('below', below);
 }
 
+let barB = 0;
+function syncLayout() {
+  const bar = document.querySelector('.bar'), bn = $('banners'), rs = document.documentElement.style;
+  if (bar) { barB = Math.round(bar.getBoundingClientRect().bottom); rs.setProperty('--barB', barB + 'px'); }
+  rs.setProperty('--bn', (bn && bn.offsetHeight && getComputedStyle(bn).display !== 'none' ? bn.offsetHeight + 8 : 0) + 'px');
+}
 function resize() {
   const w = innerWidth, h = innerHeight;
   renderer.setSize(w, h, false);
   camera.aspect = w / h; camera.updateProjectionMatrix();
+  syncLayout();
 }
 addEventListener('resize', resize);
+if (window.ResizeObserver) { const ro = new ResizeObserver(() => syncLayout()); const b1 = document.querySelector('.bar'), b2 = $('banners'); if (b1) ro.observe(b1); if (b2) ro.observe(b2); }
+syncLayout();
 
 let lastT = performance.now(), frameAcc = 0, frameN = 0, started = false;
 function loop(now) {
@@ -1833,7 +1875,7 @@ function loop(now) {
   if (!started) { started = true; document.documentElement.dataset.ready = '1'; }
 }
 let secTick = 0;
-setInterval(() => { secTick++; applyAll(); renderEvLog(); drawBilling(); drawBoard(); if (secTick % 300 === 0) fetchBilling(true); }, 1000);
+setInterval(() => { secTick++; applyAll(); renderEvLog(); drawBilling(); drawBoard(); if (secTick % 300 === 0) fetchBilling(true); if (secTick % 12 === 0) pollSale(); }, 1000);
 
 /* ───────── Arranque ───────── */
 buildOffice();
@@ -1845,4 +1887,4 @@ resize();
 applyAll(); renderBanners();
 requestAnimationFrame(loop);
 initData();
-window.__oficina = { select: (k) => select(k, true), recentrar, camera, controls, agents, talk: (de, para, tipo) => queueEvent({ de, para, tipo }, true), nav: { findPath, navClear, navFree }, areas: AREAS, ensureAgent, applyAll, bandera: triggerFlag, DORSALES, FL, sfx, view: (k) => view(k) };
+window.__oficina = { select: (k) => select(k, true), recentrar, camera, controls, agents, talk: (de, para, tipo) => queueEvent({ de, para, tipo }, true), nav: { findPath, navClear, navFree }, areas: AREAS, ensureAgent, applyAll, bandera: triggerFlag, sale: { poll: pollSale, stub: (f) => { saleRpc = f; saleSeen = null; saleFlagAt = 0; }, flagAt: () => saleFlagAt }, DORSALES, FL, sfx, view: (k) => view(k) };

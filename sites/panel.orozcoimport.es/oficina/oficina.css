@@ -173,3 +173,42 @@ body.demo-on #flagTest{display:inline-block}
   .btn.snd{padding:7px 9px}
   .actions{gap:6px}
 }
+
+/* ───────── Correcciones 3/11 (revisión de Web) ───────── */
+/* 1 · fichas de la barra: nunca cortadas, se reparten en varias líneas */
+.counts{flex-wrap:wrap}
+@media (max-width:760px){.counts{flex-wrap:wrap;row-gap:4px}}
+/* 2 · aviso de venta: siempre debajo de la barra (altura medida por JS en --barB) */
+#flagToast{top:calc(var(--barB,76px) + 10px)}
+@media (max-width:760px){#flagToast{top:calc(var(--barB,114px) + 10px)}}
+/* 2 · móvil apaisado / pantallas bajas: barra compacta de una fila (≤60 px) */
+@media (max-height:500px){
+  .bar{top:max(6px,env(safe-area-inset-top));left:max(8px,env(safe-area-inset-left));right:max(8px,env(safe-area-inset-right));
+    flex-wrap:nowrap;gap:8px;padding:4px 8px;border-radius:12px;border-top-width:2px}
+  .logo{display:none}
+  .brand{order:0;flex:none}
+  .ttl{border-left:0;padding-left:0;gap:0}
+  .ttl .meta{display:none}
+  h1{font-size:13px}
+  .counts{order:0;flex:1 1 0;flex-basis:0;flex-wrap:wrap;gap:3px;row-gap:3px;justify-content:center}
+  .chip{padding:3px 6px;font-size:10px;gap:4px}
+  .chip b{font-size:10px}
+  .actions{order:0;flex:none;margin-left:0;gap:6px}
+  .btn{padding:5px 8px;font-size:11px}
+  .tl{font-size:11px}
+  .btn.snd span{display:none}
+  .btn.snd{padding:5px 8px}
+  #banners{gap:3px}
+  .banner{padding:4px 10px;font-size:11.5px}
+  #flagToast{padding:6px 12px 6px 8px}
+  #evlog div:nth-child(3){display:none}
+}
+/* 3 · registro de conversaciones: fondo con contraste y siempre POR ENCIMA de los avisos (sin solaparse) */
+#evlog{bottom:calc(max(14px,env(safe-area-inset-bottom)) + var(--bn,0px));max-width:calc(100vw - 28px);
+  padding:6px 10px;border-radius:10px;background:rgba(15,23,42,.9);border:1px solid rgba(148,163,184,.28);
+  color:#E2E8F0;text-shadow:none;box-shadow:0 6px 18px rgba(0,0,0,.35)}
+#evlog div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#evlog div:nth-child(2){opacity:.82}#evlog div:nth-child(3){opacity:.65}
+@media (max-width:760px){#evlog{left:50%;right:auto;transform:translateX(-50%);width:max-content;max-width:calc(100vw - 16px);text-align:center;font-size:10px;
+  bottom:calc(max(8px,env(safe-area-inset-bottom)) + var(--bn,0px))}
+  #evlog div{white-space:normal}}
