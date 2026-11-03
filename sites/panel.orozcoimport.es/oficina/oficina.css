@@ -1,7 +1,7 @@
 :root{
   --bg-dark:#0F172A; --bg-deep:#0A0F1C; --bg-elev:#1E293B; --bg-mid:#161F36;
   --blue:#2563EB; --blue-soft:#3B82F6; --blue-light:#93C5FD;
-  --gold:#D4B57A; --gold-soft:#E8D5A8; --orange:#FF6B35;
+  --gold:#60A5FA; --gold-soft:#BFDBFE; --ferrari:#D91E26; --orange:#FF6B35;
   --paper:#F2EFE9; --text:#F8FAFC; --mute:#94A3B8;
   --line:rgba(255,255,255,.1);
   --c-trabajando:#22C55E; --c-libre:#94A3B8; --c-esperando:#F59E0B; --c-bloqueado:#EF4444; --c-offline:#64748B;
@@ -11,7 +11,7 @@
 }
 *{box-sizing:border-box}
 html,body{margin:0;height:100%;overflow:hidden;background:var(--bg-deep);color:var(--text);font-family:var(--font-sans);-webkit-font-smoothing:antialiased;overscroll-behavior:none}
-body{background:radial-gradient(120% 90% at 50% 38%,#24324d 0%,#16213a 38%,#0F172A 66%,#0A0F1C 100%)}
+body{background:radial-gradient(120% 90% at 50% 38%,#2A3350 0%,#18213A 38%,#0F172A 66%,#0A0F1C 100%)}
 #stage{position:fixed;inset:0}
 #stage canvas{display:block;width:100%;height:100%;touch-action:none;outline:none}
 #tags{position:fixed;inset:0;pointer-events:none;overflow:hidden}
@@ -32,9 +32,9 @@ h1{font:600 16px/1 var(--font-display);margin:0;letter-spacing:-.01em}
 .chip.zero{opacity:.55}
 .meta{font:500 10.5px/1 var(--font-mono);color:var(--mute);white-space:nowrap}
 .actions{display:flex;align-items:center;gap:10px}
-.btn{appearance:none;border:1px solid rgba(212,181,122,.55);background:rgba(212,181,122,.12);color:var(--gold-soft);
+.btn{appearance:none;border:1px solid rgba(96,165,250,.55);background:rgba(96,165,250,.12);color:var(--gold-soft);
   font:600 12.5px/1 var(--font-sans);padding:8px 12px;border-radius:9px;cursor:pointer;text-decoration:none;display:inline-block;transition:background .15s}
-.btn:hover{background:rgba(212,181,122,.24)}
+.btn:hover{background:rgba(96,165,250,.24)}
 .toggle{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;font:500 12.5px/1 var(--font-sans);color:#E2E8F0}
 .toggle input{position:absolute;opacity:0;pointer-events:none}
 .track{width:34px;height:20px;border-radius:999px;background:#334155;position:relative;transition:background .2s;flex:none}
@@ -116,7 +116,7 @@ body.has-card #banners{display:none}
 @media (prefers-reduced-motion:reduce){.tag .dot{animation:none!important}}
 
 /* personas del equipo (sin estado) */
-.tag.s-human{border-color:rgba(212,181,122,.5)}
+.tag.s-human{border-color:rgba(96,165,250,.5)}
 .tag.s-human .dot,.tag.s-human .tag-time{display:none}
 .tag.s-human .tag-detalle{color:var(--gold-soft)}
 
@@ -143,3 +143,33 @@ body.has-card #banners{display:none}
 #evlog div:nth-child(2){opacity:.7}#evlog div:nth-child(3){opacity:.45}
 body.has-card #evlog{display:none}
 @media (max-width:760px){#evlog{right:8px;left:8px;text-align:center;bottom:calc(max(8px,env(safe-area-inset-bottom)) + var(--bn,0px) + 8px)}}
+
+/* ───── Tema Fórmula 1 ───── */
+.bar{border-top:3px solid transparent;border-image:repeating-linear-gradient(90deg,#F9F9F9 0 10px,#0B0F19 10px 20px) 3 0 0 0}
+.ttl h1{letter-spacing:.02em}
+.btn.snd{display:inline-flex;align-items:center;gap:7px}
+.btn.snd svg{width:15px;height:15px;flex:none}
+.btn.snd .on{display:none}
+.btn.snd[aria-pressed="true"] .on{display:block}
+.btn.snd[aria-pressed="true"] .off{display:none}
+.btn.snd[aria-pressed="true"]{background:rgba(37,99,235,.35);border-color:rgba(147,197,253,.8);color:#fff}
+#flagTest{display:none}
+body.demo-on #flagTest{display:inline-block}
+/* aviso de venta cerrada */
+#flagToast{position:fixed;left:50%;top:max(86px,calc(env(safe-area-inset-top) + 76px));transform:translateX(-50%);z-index:40;display:flex;align-items:center;gap:10px;
+  padding:9px 16px 9px 10px;border-radius:12px;background:rgba(15,23,42,.94);border:1px solid rgba(96,165,250,.7);color:#fff;pointer-events:none;white-space:nowrap;
+  box-shadow:0 12px 34px rgba(0,0,0,.5),0 0 0 3px rgba(37,99,235,.25);animation:toastIn .35s ease-out;transition:opacity .8s}
+#flagToast[hidden]{display:none}
+#flagToast.out{opacity:0}
+#flagToast b{font:700 14px/1 var(--font-display);letter-spacing:.01em}
+#flagToast span:last-child{font:500 11.5px/1 var(--font-mono);color:var(--mute)}
+#flagToast .chk{width:26px;height:26px;border-radius:5px;flex:none;border:1px solid #475569;
+  background:conic-gradient(#0B0F19 25%,#F9F9F9 0 50%,#0B0F19 0 75%,#F9F9F9 0) 0 0/13px 13px}
+@keyframes toastIn{from{opacity:0;transform:translate(-50%,-8px)}to{opacity:1;transform:translate(-50%,0)}}
+@media (max-width:760px){#flagToast{top:124px;max-width:calc(100vw - 20px)}#flagToast span:last-child{display:none}}
+.btn,.tl{white-space:nowrap}
+@media (max-width:760px){
+  .btn.snd span{display:none}
+  .btn.snd{padding:7px 9px}
+  .actions{gap:6px}
+}
