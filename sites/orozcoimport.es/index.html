@@ -2209,7 +2209,7 @@
 <!-- ============================================================
      SCRIPTS
      ============================================================ -->
-<script src="/js/oi-captacion.js?v=4"></script>
+<script src="/js/oi-captacion.js?v=5"></script>
 <script>
 
   /* Form: lógica condicional */
@@ -2235,22 +2235,9 @@
         }
         if (submitted) return;
         submitted = true;
-        fetch(window.OI_WEBHOOK, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(window.oiPayload(form))
-        })
-        .then(function(r) {
-          if (r.status === 400) {
-            submitted = false;
-            alert('Revisa tus datos: necesitamos tu nombre y un teléfono o email válidos.');
-            return;
-          }
-          window.location.href = (window.oiGraciasUrl ? window.oiGraciasUrl() : '/landing/gracias/');
-        })
-        .catch(function() {
-          submitted = false;
-          alert('Ha ocurrido un error. Por favor llámanos al 644 01 50 34.');
+        window.oiEnviarLead(form, {
+          ocupado: function(v) { submitted = v; },
+          invalido: function() { alert('Revisa tus datos: necesitamos tu nombre y un teléfono o email válidos.'); }
         });
       });
     }

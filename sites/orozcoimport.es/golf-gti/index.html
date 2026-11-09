@@ -1187,7 +1187,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 @media (max-width: 600px) { .oi-footer { padding: 48px 24px 96px; } .oi-footer__top { flex-direction: column; gap: 24px; align-items: flex-start; } .oi-footer__legal { gap: 16px; } .oi-footer__bottom { justify-content: flex-start; } }
 </style>
 
-<script src="/js/oi-captacion.js?v=4"></script>
+<script src="/js/oi-captacion.js?v=5"></script>
 <script>
 (function () {
   'use strict';
@@ -1431,21 +1431,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       });
       if (!valid) { if (submitBtn) { submitBtn.disabled = false; submitBtn.style.opacity = '1'; } return; }
 
-      var data = window.oiPayload(form);
-
-      fetch(WEBHOOK, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
-        .then(function (r) {
-          if (r.status === 400) {
-            if (submitBtn) { submitBtn.disabled = false; submitBtn.style.opacity = '1'; }
-            alert('Revisa tus datos: necesitamos tu nombre y un teléfono o email válidos.');
-            return;
-          }
-          window.location.href = (window.oiGraciasUrl ? window.oiGraciasUrl() : '/landing/gracias/');
-        })
-        .catch(function () {
-          if (submitBtn) { submitBtn.disabled = false; submitBtn.style.opacity = '1'; }
-          alert('Ha ocurrido un error. Por favor llámanos al 644 01 50 34.');
-        });
+      window.oiEnviarLead(form, {
+        ocupado: function (v) { if (submitBtn) { submitBtn.disabled = v; submitBtn.style.opacity = v ? '0.7' : '1'; } },
+        invalido: function () { alert('Revisa tus datos: necesitamos tu nombre y un teléfono o email válidos.'); }
+      });
     });
   }
 

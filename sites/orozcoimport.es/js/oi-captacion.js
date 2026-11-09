@@ -5,6 +5,7 @@
  * 3. Añade un campo trampa invisible (antispam) a los formularios de captación.
  * 4. Guarda la etapa del lead (stage) para que /landing/gracias la publique en el dataLayer.
  * 5. Guarda la web de procedencia (sin parámetros) para reconocer buscadores y asistentes de IA (ChatGPT, Perplexity…).
+ * 6. window.oiEnviarLead(form, op): envía al webhook y solo redirige a gracias con respuesta 2xx.
  */
 (function () {
   var KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid', 'fbclid'];
@@ -52,6 +53,82 @@
     KEYS.forEach(function (k) { if (a[k]) q.set(k, a[k]); });
     var s = q.toString();
     return '/landing/gracias/' + (s ? '?' + s : '');
+  };
+
+  // Envío del lead (9/11/2026). Solo se va a gracias si el webhook responde 2xx.
+  // 400 = datos no válidos (lo decide la página). Cualquier otro error, red caída o
+  // más de 20 s sin respuesta: NO se redirige; se muestra un aviso con «Reintentar» y el
+  // teléfono que ya figura en la página. Un reintento automático (a los 2 s) solo si la
+  // red falla o el servidor está caído (502/503/504), donde el lead no llegó a n8n.
+  var TIEMPO_MAX = 20000, ESPERA_REINTENTO = 2000;
+  function quitarAviso(form) {
+    var c = form.querySelector('.oi-form__envio-error');
+    if (c) c.parentNode.removeChild(c);
+  }
+  function mostrarAviso(form, reintentar) {
+    quitarAviso(form);
+    var c = document.createElement('div');
+    c.className = 'oi-form__envio-error';
+    c.setAttribute('role', 'alert');
+    c.style.cssText = 'margin:14px 0 0;padding:14px 16px;border-radius:8px;border:1px solid #e11d48;background:#fff1f2;color:#881337;font-size:0.9375rem;line-height:1.5;text-align:left;';
+    var p = document.createElement('p');
+    p.style.margin = '0 0 10px';
+    p.textContent = 'No hemos podido enviar tu solicitud. Tus datos siguen en el formulario: vuelve a intentarlo o llámanos.';
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'oi-form__reintentar';
+    b.textContent = 'Reintentar';
+    b.style.cssText = 'cursor:pointer;margin:0 12px 0 0;padding:10px 18px;border:0;border-radius:6px;background:#881337;color:#fff;font:inherit;font-weight:600;';
+    b.addEventListener('click', reintentar);
+    var a = document.createElement('a');
+    a.href = 'tel:+34644015034';
+    a.textContent = 'Llamar al 644 01 50 34';
+    a.style.cssText = 'display:inline-block;white-space:nowrap;margin-top:6px;color:#881337;font-weight:600;';
+    c.appendChild(p); c.appendChild(b); c.appendChild(a);
+    var btn = form.querySelector('[type="submit"]');
+    var ancla = btn ? (btn.parentNode.className.indexOf('submit-wrap') !== -1 ? btn.parentNode : btn) : null;
+    if (ancla && ancla.parentNode) ancla.parentNode.insertBefore(c, ancla.nextSibling); else form.appendChild(c);
+  }
+
+  // op.ocupado(true|false): la página bloquea o libera su botón. op.invalido(): respuesta 400.
+  window.oiEnviarLead = function (form, op) {
+    op = op || {};
+    var ocupado = function (v) { if (op.ocupado) op.ocupado(v); };
+    quitarAviso(form);
+    ocupado(true);
+    var cuerpo = JSON.stringify(window.oiPayload(form));
+    var intentos = 0;
+    function fallo(estado) {
+      ocupado(false);
+      try { (window.dataLayer = window.dataLayer || []).push({ event: 'formulario_error_envio', envio_estado: String(estado) }); } catch (e) {}
+      mostrarAviso(form, function () { window.oiEnviarLead(form, op); });
+    }
+    function enviar() {
+      intentos++;
+      var ctrl = window.AbortController ? new AbortController() : null;
+      var reloj = ctrl ? setTimeout(function () { ctrl.abort(); }, TIEMPO_MAX) : null;
+      var opciones = { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: cuerpo };
+      if (ctrl) opciones.signal = ctrl.signal;
+      fetch(window.OI_WEBHOOK, opciones)
+        .then(function (r) {
+          clearTimeout(reloj);
+          if (r.ok) { window.location.href = window.oiGraciasUrl(); return; }
+          if (r.status === 400) {
+            ocupado(false);
+            if (op.invalido) op.invalido(); else alert('Revisa tus datos: necesitamos tu nombre y un teléfono o email válidos.');
+            return;
+          }
+          if ((r.status === 502 || r.status === 503 || r.status === 504) && intentos < 2) { setTimeout(enviar, ESPERA_REINTENTO); return; }
+          fallo(r.status);
+        })
+        .catch(function (e) {
+          clearTimeout(reloj);
+          var agotado = e && e.name === 'AbortError';
+          if (!agotado && intentos < 2) { setTimeout(enviar, ESPERA_REINTENTO); return; }
+          fallo(agotado ? 'tiempo' : 'red');
+        });
+    }
+    enviar();
   };
 
   window.oiPayload = function (form) {
