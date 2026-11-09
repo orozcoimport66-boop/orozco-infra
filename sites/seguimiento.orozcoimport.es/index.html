@@ -73,7 +73,13 @@ body{background:var(--bl);color:var(--nv);font:400 15px/1.55 Inter,system-ui,san
 </div></header>
 <main class="cuerpo" id="app"><div class="cargando" aria-label="Cargando"></div></main>
 <script>
-/* Fases y estados del proceso (mismo esquema que el panel: seguimiento.js) */
+/* Datos: función pública seguimiento_publico de Supabase (migración 035). Solo nombre de pila, vehículo,
+   servicio, estado y fechas: nunca teléfono, email ni importes. Clave publicable: pensada para el navegador. */
+var SUPABASE = 'https://lhtequkigdilfldnugco.supabase.co';
+var CLAVE = 'sb_publishable_Npr_iJetGNfb2xLgPQ0lCw_CPpRRRNk';
+/* Enlace para dejar la reseña en Google (solo se muestra cuando Fran pulsa «Pedir reseña») */
+var RESENA_URL = '';
+/* Fases y estados del proceso (misma lógica que el panel: util.js y las funciones seg_* de Supabase) */
 var ESTADOS = {
   buscando:      { t: 'Buscando tu unidad', d: 'Estamos buscando en Alemania unidades que cumplan todo lo que nos has pedido. Te avisaremos en cuanto tengamos una candidata.' },
   esp_revision:  { t: 'Esperando revisión', d: 'Hemos encontrado una unidad que encaja. Nuestro perito la revisará en persona antes de que pagues nada.' },
@@ -141,8 +147,9 @@ function pintar(s) {
   }
   h += '</ol></section>';
 
-  if (s.resena_url) {
-    h += '<section class="resena"><h2>¿Nos ayudas con tu opinión?</h2><p>Si te ha gustado cómo lo hemos hecho, una reseña en Google ayuda a que otras personas confíen en nosotros.</p><a href="' + esc(s.resena_url) + '" target="_blank" rel="noopener">Dejar una reseña en Google</a></section>';
+  var urlResena = s.resena_url || (s.resena && RESENA_URL);
+  if (urlResena) {
+    h += '<section class="resena"><h2>¿Nos ayudas con tu opinión?</h2><p>Si te ha gustado cómo lo hemos hecho, una reseña en Google ayuda a que otras personas confíen en nosotros.</p><a href="' + esc(urlResena) + '" target="_blank" rel="noopener">Dejar una reseña en Google</a></section>';
   }
   h += '<footer class="pie">Esta página se actualiza en cada paso de tu importación.<br>© Orozco Import · <a href="https://orozcoimport.es" target="_blank" rel="noopener">orozcoimport.es</a></footer>';
   document.getElementById('app').innerHTML = h;
@@ -162,9 +169,21 @@ var DEMOS = {
   4: { nombre: 'Laura', vehiculo: 'BMW 320d Touring · 2021 · 48.000 km', servicio: 'En Puerta', estado: 'terminado', opcion: 'A', reserva: '2026-11-02', actualizado: '2026-12-12', resena_url: 'https://g.page/r/ejemplo/review',
        fases: [{ fase: 'encontrada', fecha: '2026-11-08' }, { fase: 'revision', fecha: '2026-11-11' }, { fase: 'comprado', fecha: '2026-11-13' }, { fase: 'recogido', fecha: '2026-11-21' }, { fase: 'sede', fecha: '2026-11-25' }, { fase: 'itv', fecha: '2026-12-02' }, { fase: 'entregado', fecha: '2026-12-05' }, { fase: 'matriculado', fecha: '2026-12-12' }] }
 };
-var demo = new URLSearchParams(location.search).get('demo');
+var NO_VALIDO = ['Enlace no válido', 'Revisa que el enlace sea el que te enviamos por WhatsApp. Si tienes dudas, escríbenos por el mismo chat.'];
+var params = new URLSearchParams(location.search);
+var demo = params.get('demo');
+var codigo = (params.get('c') || '').replace(/[^0-9a-f]/gi, '');
 if (demo && DEMOS[demo]) pintar(DEMOS[demo]);
-else aviso('Enlace no válido', 'Revisa que el enlace sea el que te enviamos por WhatsApp. Si tienes dudas, escríbenos por el mismo chat.');
+else if (codigo.length !== 32) aviso(NO_VALIDO[0], NO_VALIDO[1]);
+else {
+  fetch(SUPABASE + '/rest/v1/rpc/seguimiento_publico', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', apikey: CLAVE, Authorization: 'Bearer ' + CLAVE },
+    body: JSON.stringify({ p_token: codigo })
+  }).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function (s) { if (s && s.estado) pintar(s); else aviso(NO_VALIDO[0], NO_VALIDO[1]); })
+    .catch(function () { aviso('No hemos podido cargar tu seguimiento', 'Vuelve a intentarlo en unos minutos. Si sigue sin cargar, escríbenos por WhatsApp.'); });
+}
 </script>
 </body>
 </html>
