@@ -43,6 +43,17 @@
 
   window.oiAtribucion = leer;
 
+  // URL de la página de gracias conservando la atribución de la sesión (UTMs, gclid, fbclid).
+  // Se reconstruye desde sessionStorage porque el usuario puede haber navegado sin parámetros antes de enviar.
+  // Con barra final para evitar la redirección 308 de /landing/gracias -> /landing/gracias/.
+  window.oiGraciasUrl = function () {
+    var a = leer();
+    var q = new URLSearchParams();
+    KEYS.forEach(function (k) { if (a[k]) q.set(k, a[k]); });
+    var s = q.toString();
+    return '/landing/gracias/' + (s ? '?' + s : '');
+  };
+
   window.oiPayload = function (form) {
     var d = {};
     new FormData(form).forEach(function (valor, clave) {
