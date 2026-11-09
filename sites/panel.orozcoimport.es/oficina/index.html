@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="theme-color" content="#0F172A" />
+<title>Oficina · Orozco Import · Paddock</title>
+<link rel="icon" type="image/x-icon" href="/favicon.ico" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/oficina/oficina.css" />
+<script type="importmap">
+{ "imports": {
+  "three": "/oficina/vendor/three.module.min.js",
+  "three/addons/controls/OrbitControls.js": "/oficina/vendor/OrbitControls.js"
+} }
+</script>
+</head>
+<body>
+<div id="stage"></div>
+<div id="tags" aria-hidden="true"></div>
+
+<header class="bar">
+  <div class="brand">
+    <img src="/logo-blanco.png" alt="Orozco Import" class="logo" />
+    <div class="ttl"><h1>Oficina</h1><div class="meta"><span id="upd">Cargando…</span></div></div>
+  </div>
+  <div class="counts" id="counts" role="status" aria-live="polite"></div>
+  <div class="actions">
+    <label class="toggle" title="Simula estados aleatorios en tu navegador, sin tocar la base de datos">
+      <input type="checkbox" id="demo" />
+      <span class="track"><span class="knob"></span></span>
+      <span class="tl">Modo demo</span>
+    </label>
+    <button id="flagTest" class="btn" type="button" title="Solo modo demo: ondea la bandera a cuadros">Bandera</button>
+    <button id="sonido" class="btn snd" type="button" aria-pressed="false" aria-label="Sonido de boxes" title="Sonido de boxes (apagado por defecto)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4z"/><path class="on" d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/><path class="off" d="m22 9-6 6M16 9l6 6"/></svg><span>Sonido: no</span>
+    </button>
+    <button id="recentrar" class="btn" type="button">Recentrar</button>
+  </div>
+</header>
+
+<div id="banners"></div>
+
+<aside id="card" class="card" hidden>
+  <button id="cardClose" class="x" type="button" aria-label="Cerrar">×</button>
+  <div class="card-head">
+    <span class="swatch" id="cSwatch"></span>
+    <div>
+      <div class="c-name" id="cName"></div>
+      <div class="c-area" id="cArea"></div>
+    </div>
+  </div>
+  <div class="pill" id="cPill"></div>
+  <p class="c-detalle" id="cDetalle"></p>
+  <div class="c-time" id="cTime"></div>
+</aside>
+
+<div id="fallback" class="fallback" hidden>
+  <div>
+    <h2>No se puede mostrar la oficina 3D</h2>
+    <p>Tu navegador no tiene WebGL activado. Prueba con otro navegador o actualiza el actual.</p>
+    <a class="btn" href="https://panel.orozcoimport.es/">Volver al panel</a>
+  </div>
+</div>
+
+<script src="/oficina/vendor/supabase.js"></script>
+<script type="module" src="/oficina/oficina.js"></script>
+</body>
+</html>
