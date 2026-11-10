@@ -86,8 +86,9 @@ var ESTADOS = {
   esp_pago:      { t: 'Esperando firma y pago', d: 'La unidad ha superado la revisión de nuestro perito. Falta firmar con el vendedor y hacer el pago.' },
   esp_camion:    { t: 'Esperando al camión de transporte', d: 'El coche ya es tuyo. Estamos organizando el transporte en camión desde Alemania.' },
   en_camino:     { t: 'En camino', d: 'Tu coche viaja hacia España en camión.' },
+  a_base:        { t: 'De camino a nuestra base logística', d: 'Tu coche ya está en España y va hacia nuestra base logística.' },
   esp_itv:       { t: 'Esperando ITV', d: 'El siguiente paso es la ITV para poder matricularlo en España.' },
-  esp_matricula: { t: 'Esperando matriculación', d: 'Ha pasado la ITV. Estamos tramitando la matriculación en la DGT.' },
+  esp_matricula: { t: 'Esperando matriculación', d: 'Estamos tramitando la matriculación de tu coche en la DGT.' },
   en_reparto:    { t: 'En reparto', d: 'Tu coche va de camino a tu casa.' },
   esperandote:   { t: 'Tu coche te está esperando', d: 'Ya puedes recogerlo. Te confirmamos lugar y hora por WhatsApp.' },
   terminado:     { t: 'Proceso terminado', d: 'Disfruta de tu nuevo vehículo. Ha sido un placer acompañarte en todo el camino.' }
@@ -98,16 +99,17 @@ var FASES = {
   comprado:    'Coche comprado',
   recogido:    'Recogido en Alemania',
   recogido_tu: 'Recogido por ti',
-  sede:        'En nuestras instalaciones',
+  sede:        'En base logística en España',
   itv:         'ITV pasada',
   matriculado: 'Matriculado',
   entregado:   'Entregado'
 };
-/* Recorrido de cada servicio. En Puerta, tras la ITV, Fran elige entregar antes (A) o matricular antes (B) */
+/* Recorrido: lo manda Supabase (s.recorrido), porque Fran puede cambiar el orden desde la base logística.
+   Si no viene (demos), el recorrido por defecto de cada servicio. */
 var RECORRIDOS = {
-  'En Puerta':   { base: ['encontrada', 'revision', 'comprado', 'recogido', 'sede', 'itv'], A: ['entregado', 'matriculado'], B: ['matriculado', 'entregado'] },
-  'En Sede':     { base: ['encontrada', 'revision', 'comprado', 'recogido', 'sede', 'itv', 'matriculado', 'entregado'] },
-  'En Origen':   { base: ['encontrada', 'revision', 'comprado', 'recogido_tu', 'itv', 'matriculado'] }
+  'En Puerta':   ['encontrada', 'revision', 'comprado', 'recogido', 'sede', 'itv', 'matriculado', 'entregado'],
+  'En Sede':     ['encontrada', 'revision', 'comprado', 'recogido', 'sede', 'itv', 'matriculado', 'entregado'],
+  'En Origen':   ['encontrada', 'revision', 'comprado', 'recogido_tu', 'itv', 'matriculado']
 };
 
 function fecha(d) { return new Date(d).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' }); }
@@ -121,11 +123,8 @@ function pintar(s) {
   document.getElementById('coche').textContent = s.vehiculo || '';
   document.getElementById('saludo').hidden = false;
 
-  var r = RECORRIDOS[s.servicio] || RECORRIDOS['En Puerta'];
   var hechas = {}; (s.fases || []).forEach(function (f) { hechas[f.fase] = f.fecha; });
-  var orden = r.base.slice();
-  var finalPendiente = false;
-  if (r.A) { if (s.opcion === 'A' || s.opcion === 'B') orden = orden.concat(r[s.opcion]); else finalPendiente = true; }
+  var orden = (s.recorrido && s.recorrido.length ? s.recorrido : RECORRIDOS[s.servicio] || RECORRIDOS['En Puerta']).slice();
   var actual = orden.findIndex(function (k) { return !hechas[k]; });
   var e = ESTADOS[s.estado] || ESTADOS.buscando;
   var fin = s.estado === 'terminado';
@@ -142,9 +141,6 @@ function pintar(s) {
     var cls = hechas[k] ? 'hecho' : (i === actual ? 'actual' : '');
     h += '<li class="paso ' + cls + '"><div class="punto">' + CHECK + '</div><div><div class="t">' + esc(FASES[k]) + '</div>' + (hechas[k] ? '<div class="f">' + esc(fechaCorta(hechas[k])) + '</div>' : '') + '</div></li>';
   });
-  if (finalPendiente) {
-    h += '<li class="paso"><div class="punto">' + CHECK + '</div><div><div class="t">Matriculación y entrega</div><div class="opciones">El orden lo acordamos contigo después de la ITV</div></div></li>';
-  }
   h += '</ol></section>';
 
   var urlResena = s.resena_url || (s.resena && RESENA_URL);
@@ -164,9 +160,9 @@ var DEMOS = {
   1: { nombre: 'Laura', vehiculo: 'BMW 320d Touring · 2021', servicio: 'En Puerta', estado: 'buscando', descartadas: 1, reserva: '2026-11-02', actualizado: '2026-11-06', fases: [] },
   2: { nombre: 'Laura', vehiculo: 'BMW 320d Touring · 2021 · 48.000 km', servicio: 'En Puerta', estado: 'en_camino', reserva: '2026-11-02', actualizado: '2026-11-21', prevista: '2026-11-25',
        fases: [{ fase: 'encontrada', fecha: '2026-11-08' }, { fase: 'revision', fecha: '2026-11-11' }, { fase: 'comprado', fecha: '2026-11-13' }, { fase: 'recogido', fecha: '2026-11-21' }] },
-  3: { nombre: 'Laura', vehiculo: 'BMW 320d Touring · 2021 · 48.000 km', servicio: 'En Puerta', estado: 'esp_matricula', opcion: 'B', reserva: '2026-11-02', actualizado: '2026-12-02',
+  3: { nombre: 'Laura', vehiculo: 'BMW 320d Touring · 2021 · 48.000 km', servicio: 'En Puerta', estado: 'esp_matricula', reserva: '2026-11-02', actualizado: '2026-12-02',
        fases: [{ fase: 'encontrada', fecha: '2026-11-08' }, { fase: 'revision', fecha: '2026-11-11' }, { fase: 'comprado', fecha: '2026-11-13' }, { fase: 'recogido', fecha: '2026-11-21' }, { fase: 'sede', fecha: '2026-11-25' }, { fase: 'itv', fecha: '2026-12-02' }] },
-  4: { nombre: 'Laura', vehiculo: 'BMW 320d Touring · 2021 · 48.000 km', servicio: 'En Puerta', estado: 'terminado', opcion: 'A', reserva: '2026-11-02', actualizado: '2026-12-12', resena_url: 'https://g.page/r/ejemplo/review',
+  4: { nombre: 'Laura', vehiculo: 'BMW 320d Touring · 2021 · 48.000 km', servicio: 'En Puerta', estado: 'terminado', recorrido: ['encontrada', 'revision', 'comprado', 'recogido', 'sede', 'itv', 'entregado', 'matriculado'], reserva: '2026-11-02', actualizado: '2026-12-12', resena_url: 'https://g.page/r/ejemplo/review',
        fases: [{ fase: 'encontrada', fecha: '2026-11-08' }, { fase: 'revision', fecha: '2026-11-11' }, { fase: 'comprado', fecha: '2026-11-13' }, { fase: 'recogido', fecha: '2026-11-21' }, { fase: 'sede', fecha: '2026-11-25' }, { fase: 'itv', fecha: '2026-12-02' }, { fase: 'entregado', fecha: '2026-12-05' }, { fase: 'matriculado', fecha: '2026-12-12' }] }
 };
 var NO_VALIDO = ['Enlace no válido', 'Revisa que el enlace sea el que te enviamos por WhatsApp. Si tienes dudas, escríbenos por el mismo chat.'];

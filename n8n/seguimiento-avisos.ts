@@ -25,8 +25,9 @@ const ESTADOS = {
   esp_pago: ['Esperando firma y pago', 'La unidad ha superado la revisión de nuestro perito. Falta firmar con el vendedor y hacer el pago.'],
   esp_camion: ['Esperando al camión de transporte', 'El coche ya es tuyo. Estamos organizando el transporte en camión desde Alemania.'],
   en_camino: ['En camino', 'Tu coche viaja hacia España en camión.'],
+  a_base: ['De camino a nuestra base logística', 'Tu coche ya está en España y va hacia nuestra base logística.'],
   esp_itv: ['Esperando ITV', 'El siguiente paso es la ITV para poder matricularlo en España.'],
-  esp_matricula: ['Esperando matriculación', 'Ha pasado la ITV. Estamos tramitando la matriculación en la DGT.'],
+  esp_matricula: ['Esperando matriculación', 'Estamos tramitando la matriculación de tu coche en la DGT.'],
   en_reparto: ['En reparto', 'Tu coche va de camino a tu casa.'],
   esperandote: ['Tu coche te está esperando', 'Ya puedes recogerlo. Te confirmamos lugar y hora por WhatsApp.'],
   terminado: ['Proceso terminado', 'Disfruta de tu nuevo vehículo. Ha sido un placer acompañarte en todo el camino.']
