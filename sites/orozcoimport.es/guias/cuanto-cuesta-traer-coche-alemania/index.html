@@ -16,7 +16,7 @@
 <meta property="og:image" content="https://orozcoimport.es/guias/a/fabian-cla.webp">
 <link rel="preload" href="/guias/a/poppins-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/guias/a/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/guias/a/guia.css?v=1">
+<link rel="stylesheet" href="/guias/a/guia.css?v=2">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -84,7 +84,7 @@
         <h1>¿Cuánto cuesta traer un coche de Alemania? <em>El desglose real, euro a euro.</em></h1>
         <p class="entradilla">Lo que ves en mobile.de no es lo que vas a pagar. Aquí tienes cada partida con números de coches que hemos traído de verdad, y cuándo te compensa y cuándo no.</p>
         <div class="autor">
-          <span class="foto" aria-hidden="true"><span class="fran">foto</span></span>
+          <span class="foto" aria-hidden="true"><span class="fran" data-campo="foto_fran" data-tipo="foto" data-pregunta="Tu foto para firmar la guía. Mejor si es en Alemania revisando un coche.">foto</span></span>
           <span><b>Fran Orozco</b>9 años comprando coches en Alemania<span class="sep">·</span>+400 entregados</span>
         </div>
       </div>
@@ -161,16 +161,16 @@
       <h2 id="t-precio"><span class="num">02</span>El precio del coche en Alemania</h2>
       <p>Es la partida grande y donde está el ahorro. En Alemania hay muchas más unidades de ocasión de BMW, Mercedes, Audi o Volkswagen, mejor equipadas y con el historial de mantenimiento en la red oficial.</p>
       <h3>¿Particular o concesionario?</h3>
-      <p>Un particular suele ser más barato, pero sin garantía y con más riesgo de sorpresas. Un concesionario da garantía y factura, y es con quien trabajamos en la mayoría de casos. <span class="fran">% de compras a concesionario frente a particular</span></p>
+      <p>Un particular suele ser más barato, pero sin garantía y con más riesgo de sorpresas. Un concesionario da garantía y factura, y es con quien trabajamos en la mayoría de casos. <span class="fran" data-campo="pct_concesionario" data-tipo="texto" data-pregunta="¿Qué porcentaje de los coches compráis a concesionario y cuál a particular?">% de compras a concesionario frente a particular</span></p>
       <h3>El IVA: lo que más confunde</h3>
-      <p class="rev">Si el coche es <strong>usado a efectos fiscales</strong> (más de 6 meses y más de 6.000 km), pagas el precio con el IVA que corresponda en Alemania y no vuelves a pagar IVA en España. Si es <strong>nuevo a efectos fiscales</strong>, el IVA (21 %) se paga en España.</p>
+      <p class="rev" data-campo="confirmar_iva" data-tipo="confirmar" data-pregunta="¿Es correcta la regla del IVA del párrafo subrayado? Si no, corrígela.">Si el coche es <strong>usado a efectos fiscales</strong> (más de 6 meses y más de 6.000 km), pagas el precio con el IVA que corresponda en Alemania y no vuelves a pagar IVA en España. Si es <strong>nuevo a efectos fiscales</strong>, el IVA (21 %) se paga en España.</p>
     </section>
 
     <section id="transporte" aria-labelledby="t-tr">
       <h2 id="t-tr"><span class="num">03</span>El transporte: 1.000–1.300 €</h2>
       <p>Lo normal es traerlo en <strong>camión asegurado</strong>, puerta a puerta. El precio depende de dónde esté el coche en Alemania y de dónde vivas tú.</p>
       <p>Conducirlo tú es posible, pero súmale el vuelo, la gasolina, los peajes, dos o tres días y un seguro temporal con placas de exportación. Y los kilómetros que le metes antes de estrenarlo.</p>
-      <p>Rango real del último año: <span class="fran">mínimo y máximo de transporte pagado</span></p>
+      <p>Rango real del último año: <span class="fran" data-campo="transporte_rango" data-tipo="texto" data-pregunta="Transporte en el último año: ¿cuánto fue lo mínimo y lo máximo que se pagó?">mínimo y máximo de transporte pagado</span></p>
     </section>
 
     <section id="impuesto" aria-labelledby="t-imp">
@@ -201,14 +201,14 @@
         </div>
         <p class="calc__nota">Orientativo. Canarias, Ceuta y Melilla tienen tipos propios. Te damos la cifra exacta de tu coche antes de que decidas.</p>
       </div>
-      <p>Rango real que han pagado nuestros clientes en el último año: <span class="fran">mínimo, máximo y media del impuesto</span></p>
+      <p>Rango real que han pagado nuestros clientes en el último año: <span class="fran" data-campo="impuesto_rango" data-tipo="texto" data-pregunta="Impuesto de matriculación que han pagado los clientes en el último año: mínimo, máximo y media.">mínimo, máximo y media del impuesto</span></p>
     </section>
 
     <section id="itv" aria-labelledby="t-itv">
       <h2 id="t-itv"><span class="num">05</span>ITV, tasas y placas: ≈ 300 €</h2>
       <p>Para circular en España, el coche pasa la <strong>ITV de matriculación</strong> y se paga la <strong>tasa de la DGT</strong> (99,77 € en 2026). Después llegan las placas definitivas. En el caso de Fabián, estos gastos sumaron 300 €.</p>
       <p>No los hacemos nosotros: los hacen el organismo o la empresa autorizada correspondiente. Nosotros los <strong>coordinamos</strong> para que no tengas que pedir citas ni ir a ningún sitio.</p>
-      <p class="rev">Qué entra exactamente en esos 300 €: <span class="fran">desglose de gastos asociados</span></p>
+      <p class="rev">Qué entra exactamente en esos 300 €: <span class="fran" data-campo="gastos_desglose" data-tipo="texto" data-pregunta="¿Qué incluyen exactamente los 300 € de gastos asociados del caso de Fabián (ITV, tasa, placas…)?">desglose de gastos asociados</span></p>
     </section>
 
     <section id="servicio" aria-labelledby="t-serv">
@@ -231,7 +231,7 @@
           <div class="caso__img"><img src="/guias/a/fabian-cla-640.webp" alt="Mercedes CLA 250e AMG importado de Alemania para Fabián, de Valencia" loading="lazy" width="640" height="427"><span class="tag">Hamburgo → Valencia</span></div>
           <div class="caso__body">
             <h3>Mercedes CLA 250e AMG</h3>
-            <p class="meta">Fabián G. · Valencia · <span class="fran">año y km</span></p>
+            <p class="meta">Fabián G. · Valencia · <span class="fran" data-campo="fabian_anio_km" data-tipo="texto" data-pregunta="Año y kilómetros del Mercedes CLA 250e de Fabián.">año y km</span></p>
             <ul>
               <li><span>Coche en Alemania</span><span class="mono">33.250 €</span></li>
               <li><span>Transporte</span><span class="mono">1.100 €</span></li>
@@ -243,8 +243,7 @@
             <div class="vs"><span>En España: 42.000 €</span><b>−5.327 €</b></div>
           </div>
         </article>
-        <article class="caso">
-          <div class="caso__img"><div class="caso__vacia">Foto del caso 2</div></div>
+        <article class="caso" data-campo="caso_2" data-tipo="caso" data-pregunta="Caso 2. Modelo, nombre del cliente, ciudad, año, km, precio en Alemania, transporte, impuestos, gastos, total y precio del mismo coche en España. Sube 1 a 3 fotos y confirma que el cliente da permiso para publicarlo.">          <div class="caso__img"><div class="caso__vacia">Foto del caso 2</div></div>
           <div class="caso__body">
             <h3><span class="fran">modelo</span></h3>
             <p class="meta"><span class="fran">nombre · ciudad · año · km</span></p>
@@ -259,8 +258,7 @@
             <div class="vs"><span>En España: <span class="fran">€</span></span><b><span class="fran">ahorro</span></b></div>
           </div>
         </article>
-        <article class="caso">
-          <div class="caso__img"><div class="caso__vacia">Foto del caso 3</div></div>
+        <article class="caso" data-campo="caso_3" data-tipo="caso" data-pregunta="Caso 3. Modelo, nombre del cliente, ciudad, año, km, precio en Alemania, transporte, impuestos, gastos, total y precio del mismo coche en España. Sube 1 a 3 fotos y confirma que el cliente da permiso para publicarlo.">          <div class="caso__img"><div class="caso__vacia">Foto del caso 3</div></div>
           <div class="caso__body">
             <h3><span class="fran">modelo</span></h3>
             <p class="meta"><span class="fran">nombre · ciudad · año · km</span></p>
@@ -281,7 +279,7 @@
     <!-- CONTRASTE + EMOCIONAL: decir que no también vende -->
     <section id="no-compensa" aria-labelledby="t-no">
       <h2 id="t-no"><span class="num">08</span>Cuándo no te compensa (y te lo decimos)</h2>
-      <p>Nuestro trabajo también es decirte que no. De cada cinco coches que nos pasan, <span class="fran">cuántos descartamos</span>. Estos son los casos en los que importar casi nunca sale a cuenta:</p>
+      <p>Nuestro trabajo también es decirte que no. De cada cinco coches que nos pasan, <span class="fran" data-campo="descartes" data-tipo="texto" data-pregunta="De cada cinco coches que os pasan los clientes, ¿cuántos descartáis?">cuántos descartamos</span>. Estos son los casos en los que importar casi nunca sale a cuenta:</p>
       <ul class="semaforo">
         <li><span class="luz" data-c="rojo"><i></i><i></i><i></i></span><b>Presupuesto por debajo de 15.000 €</b><span>Los costes fijos, unos 3.000 €, se comen casi todo el ahorro.</span></li>
         <li><span class="luz" data-c="rojo"><i></i><i></i><i></i></span><b>Emisiones altas en un coche reciente</b><span>Con más de 200 g/km, el 14,75 % del impuesto puede anular la diferencia de precio.</span></li>
@@ -289,7 +287,7 @@
         <li><span class="luz" data-c="verde"><i></i><i></i><i></i></span><b>Lo que sí compensa</b><span>Coches de más de 20.000 €, versiones deportivas o muy equipadas, híbridos enchufables y modelos que en España apenas se ven.</span></li>
       </ul>
       <figure class="cita">
-        <q><span class="fran fran--bloque">Frase de Fran: un caso real en el que le dijo a un cliente que no le compensaba, y por qué.</span></q>
+        <q><span class="fran fran--bloque" data-campo="frase_fran" data-tipo="largo" data-pregunta="Cuéntalo como se lo contarías a un cliente: un caso real en el que le dijiste que no le compensaba importar, y por qué.">Frase de Fran: un caso real en el que le dijo a un cliente que no le compensaba, y por qué.</span></q>
         <div class="autor"><span class="foto" aria-hidden="true">F</span><span><b>Fran Orozco</b>Fundador de Orozco Import</span></div>
       </figure>
     </section>
@@ -394,6 +392,7 @@
 </div>
 
 <script src="/js/oi-captacion.js?v=5" defer></script>
+<script src="/guias/a/revision.js?v=1" defer></script>
 <script>
 (function(){
   var PRE=/^pre\.|localhost|127\.0\.0\.1/.test(location.hostname);

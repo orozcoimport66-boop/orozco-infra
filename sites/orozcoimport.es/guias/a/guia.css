@@ -253,3 +253,11 @@ p{margin:0}
 
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
 .fran{overflow-wrap:anywhere}.art{overflow-wrap:break-word}
+/* modo revisión (dentro del panel) */
+.fran--ok{background:#DCFCE7!important;color:#14532D!important;border-color:#16A34A!important}
+.fran--ok::before{content:"✓ Fran · "}
+[data-campo].caso.fran--ok,[data-campo].rev.fran--ok{outline:2px solid #16A34A;outline-offset:4px;border-radius:12px}
+.fran--brilla{animation:brilla 1.4s ease-out}
+@keyframes brilla{0%{box-shadow:0 0 0 0 rgba(245,158,11,.9)}100%{box-shadow:0 0 0 14px rgba(245,158,11,0)}}
+.en-revision .borrador,.en-revision .fija{display:none!important}
+.en-revision .cab{position:static}

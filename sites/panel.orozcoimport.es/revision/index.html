@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Revisión de guía · Orozco Import</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="/favicon.ico">
+<style>
+:root{--navy:#0F172A;--navy-2:#1E293B;--papel:#F6F4F0;--blanco:#fff;--linea:#E5E1D8;--texto:#1F2937;--mute:#6B7280;--azul:#2563EB;--azul-h:#1D4ED8;--azul-f:#EFF4FF;--verde:#16A34A;--verde-f:#ECFDF3;--ambar:#D97706;--ambar-f:#FFFBEB;--rojo:#DC2626;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",Inter,"Segoe UI",Roboto,sans-serif;color:var(--texto);font-size:14px;line-height:1.45;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--papel)}
+button,input,textarea{font:inherit;color:inherit}
+.app{display:grid;grid-template-rows:auto 1fr;height:100dvh}
+.cab{display:flex;align-items:center;gap:14px;padding:10px 16px;background:var(--navy);color:#CBD5E1}
+.cab img{height:24px}
+.cab b{color:#fff;font-weight:600;font-size:14.5px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chip{font-size:12px;font-weight:600;padding:4px 9px;border-radius:99px;background:var(--navy-2);color:#CBD5E1;white-space:nowrap}
+.chip.enviada{background:#14532D;color:#BBF7D0}.chip.integrada{background:#1E3A8A;color:#BFDBFE}
+.cuerpo{display:grid;grid-template-columns:minmax(0,1fr) 420px;min-height:0}
+.visor{position:relative;min-height:0;background:#fff}
+.visor iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.lado{display:flex;flex-direction:column;min-height:0;background:var(--blanco);border-left:1px solid var(--linea)}
+.lado__cab{padding:16px 18px 12px;border-bottom:1px solid var(--linea)}
+.prog{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:13px;color:var(--mute)}
+.barra{height:6px;border-radius:9px;background:var(--linea);overflow:hidden;margin-top:8px}
+.barra i{display:block;height:100%;width:0;background:var(--verde);transition:width .3s}
+.sec-tit{margin-top:14px;font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--azul)}
+.sec-nom{font-size:18px;font-weight:700;color:var(--navy);margin-top:2px;line-height:1.25}
+.lado__scroll{flex:1;overflow:auto;padding:14px 18px 18px}
+.campo{border:1px solid var(--linea);border-radius:12px;padding:14px;margin-bottom:12px;background:#fff;transition:border-color .2s,box-shadow .2s}
+.campo.hecho{border-color:#BBF7D0;background:linear-gradient(#fff,#fff) padding-box}
+.campo.foco{border-color:var(--azul);box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+.campo__top{display:flex;gap:10px;align-items:flex-start}
+.estado{flex:none;width:20px;height:20px;border-radius:50%;border:2px solid var(--linea);margin-top:1px}
+.hecho .estado{border:0;background:var(--verde) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center/12px no-repeat}
+.campo p{margin:0;font-size:14px;color:var(--navy);font-weight:600;line-height:1.4;flex:1}
+.ir{flex:none;border:0;background:none;color:var(--azul);font-size:12.5px;font-weight:600;cursor:pointer;padding:2px 0}
+.campo textarea,.campo input[type=text]{width:100%;margin-top:10px;border:1.5px solid var(--linea);border-radius:10px;padding:10px 12px;font-size:14.5px;line-height:1.45;resize:vertical;background:#fff}
+.campo textarea:focus,.campo input[type=text]:focus{outline:0;border-color:var(--azul);box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+.confirma{display:flex;gap:8px;margin-top:10px}
+.confirma button{flex:1;min-height:40px;border-radius:10px;border:1.5px solid var(--linea);background:#fff;font-weight:600;cursor:pointer}
+.confirma button[aria-pressed=true].si{border-color:var(--verde);background:var(--verde-f);color:#14532D}
+.confirma button[aria-pressed=true].no{border-color:var(--ambar);background:var(--ambar-f);color:#92400E}
+.fotos{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.foto{position:relative;width:76px;height:76px;border-radius:10px;overflow:hidden;background:var(--papel);border:1px solid var(--linea)}
+.foto img{width:100%;height:100%;object-fit:cover}
+.foto span{position:absolute;inset:0;display:grid;place-items:center;font-size:11px;color:var(--mute);text-align:center;padding:4px}
+.foto button{position:absolute;top:3px;right:3px;width:22px;height:22px;border-radius:50%;border:0;background:rgba(15,23,42,.75);color:#fff;font-size:14px;line-height:1;cursor:pointer}
+.subir{display:grid;place-items:center;width:76px;height:76px;border-radius:10px;border:1.5px dashed #CBD5E1;color:var(--azul);font-size:12px;font-weight:600;cursor:pointer;text-align:center;line-height:1.2}
+.subir input{display:none}
+.permiso{display:flex;gap:8px;align-items:flex-start;margin-top:10px;font-size:13px;color:var(--texto)}
+.nota{margin-top:6px}
+.nota label{display:block;font-size:12.5px;font-weight:700;color:var(--mute);text-transform:uppercase;letter-spacing:.04em}
+.nota textarea{width:100%;margin-top:8px;min-height:78px;border:1.5px dashed var(--linea);border-radius:10px;padding:10px 12px;font-size:14px;resize:vertical}
+.nota textarea:focus{outline:0;border-color:var(--azul)}
+.otras{margin-top:20px;border-top:1px solid var(--linea);padding-top:14px}
+.otras h3{margin:0 0 8px;font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--mute)}
+.otras button{display:flex;justify-content:space-between;align-items:center;width:100%;padding:9px 10px;border:0;border-radius:8px;background:none;text-align:left;cursor:pointer;font-size:14px}
+.otras button:hover{background:var(--papel)}
+.otras button.on{background:var(--azul-f);color:var(--azul-h);font-weight:600}
+.otras small{font-size:12px;color:var(--mute);white-space:nowrap}
+.otras small.ok{color:var(--verde)}
+.vacio{color:var(--mute);font-size:14px;margin:4px 0 14px}
+.pie{padding:12px 18px;border-top:1px solid var(--linea);background:#fff}
+.guardado{font-size:12.5px;color:var(--mute);min-height:18px}
+.enviar{width:100%;min-height:48px;margin-top:8px;border:0;border-radius:12px;background:var(--azul);color:#fff;font-weight:700;font-size:15.5px;cursor:pointer}
+.enviar:hover{background:var(--azul-h)}.enviar:disabled{opacity:.6;cursor:default}
+.aviso{margin-top:8px;font-size:12.5px;color:var(--ambar)}
+.cortina{position:fixed;inset:0;display:grid;place-items:center;background:var(--papel);z-index:20;padding:24px}
+.cortina[hidden]{display:none}
+.tarjeta{max-width:440px;background:#fff;border-radius:16px;padding:28px;box-shadow:0 20px 50px -20px rgba(15,23,42,.35);text-align:center}
+.tarjeta h1{margin:0;font-size:21px;color:var(--navy)}
+.tarjeta p{margin:10px 0 0;color:var(--mute);font-size:15px}
+.tarjeta a,.tarjeta button{display:inline-flex;margin-top:18px;min-height:44px;align-items:center;padding:0 18px;border-radius:10px;background:var(--azul);color:#fff;text-decoration:none;font-weight:700;border:0;cursor:pointer}
+.tarjeta .ok{font-size:44px;line-height:1}
+.asa{display:none}
+/* móvil: hoja inferior */
+@media (max-width:900px){
+  .cuerpo{grid-template-columns:1fr}
+  .lado{position:fixed;left:0;right:0;bottom:0;height:78dvh;border-left:0;border-top:1px solid var(--linea);border-radius:18px 18px 0 0;box-shadow:0 -20px 40px -20px rgba(15,23,42,.4);transform:translateY(calc(78dvh - 112px));transition:transform .3s;z-index:10}
+  .lado.abierto{transform:none}
+  .asa{display:block;width:44px;height:5px;border-radius:9px;background:#CBD5E1;margin:8px auto 0;border:0;padding:0;cursor:pointer}
+  .lado__cab{cursor:pointer;padding-top:8px}
+  .visor{margin-bottom:112px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="cab">
+    <img src="/logo-blanco.png" alt="Orozco Import">
+    <b id="titulo">Revisión de guía</b>
+    <span class="chip" id="chip">Cargando…</span>
+  </header>
+  <div class="cuerpo">
+    <div class="visor"><iframe id="guia" title="Vista previa de la guía"></iframe></div>
+    <aside class="lado" id="lado" aria-label="Datos que se te piden">
+      <button class="asa" id="asa" aria-label="Abrir o cerrar el panel"></button>
+      <div class="lado__cab" id="ladocab">
+        <div class="prog"><span id="prog-txt">0 de 0 respondidas</span><span id="sec-cuenta"></span></div>
+        <div class="barra"><i id="prog-barra"></i></div>
+        <div class="sec-tit">Estás leyendo</div>
+        <div class="sec-nom" id="sec-nom">—</div>
+      </div>
+      <div class="lado__scroll" id="scroll"></div>
+      <div class="pie">
+        <div class="guardado" id="guardado"></div>
+        <button class="enviar" id="enviar">Enviar a Javi</button>
+        <div class="aviso" id="aviso" hidden></div>
+      </div>
+    </aside>
+  </div>
+</div>
+<div class="cortina" id="cortina"><div class="tarjeta" id="cortina-tarjeta"><h1>Cargando la guía…</h1></div></div>
+
+<script src="/revision/supabase.js"></script>
+<script>
+(function(){
+  var URL_SB='https://lhtequkigdilfldnugco.supabase.co', KEY='sb_publishable_Npr_iJetGNfb2xLgPQ0lCw_CPpRRRNk', BUCKET='guias-aportes';
+  var sb=supabase.createClient(URL_SB,KEY,{auth:{persistSession:true,autoRefreshToken:true}});
+  var $=function(id){return document.getElementById(id)};
+  var guia=new URLSearchParams(location.search).get('guia');
+  var rev=null, secciones=[], campos=[], aportes={}, actual='inicio', origen=null, frame=$('guia'), timers={}, pendientes=0;
+
+  function cortina(html){$('cortina-tarjeta').innerHTML=html;$('cortina').hidden=false}
+  function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+
+  async function inicio(){
+    if(!guia){cortina('<h1>Falta la guía</h1><p>Abre esta página desde el enlace de tu tarea.</p>');return}
+    var s=await sb.auth.getSession();
+    if(!s.data.session){cortina('<h1>Entra en el panel</h1><p>Inicia sesión en el panel y vuelve a abrir el enlace de la tarea.</p><a href="/">Ir al panel</a>');return}
+    var r=await sb.from('seo_revisiones').select('*').eq('guia',guia).neq('estado','cancelada').order('creado',{ascending:false}).limit(1);
+    if(r.error||!r.data.length){cortina('<h1>No hay revisión abierta</h1><p>No encuentro ninguna revisión para esta guía.</p>');return}
+    rev=r.data[0];
+    $('titulo').textContent=rev.titulo;
+    pintaEstado();
+    var a=await sb.from('seo_aportes').select('*').eq('revision_id',rev.id);
+    (a.data||[]).forEach(function(x){aportes[x.campo]=x});
+    var u=new URL(rev.url_preview); origen=u.origin; u.searchParams.set('revision','1');
+    frame.src=u.toString();
+    setTimeout(function(){if(!campos.length)manda({t:'oi-hola'})},2500);
+  }
+  function pintaEstado(){
+    var c=$('chip'); c.className='chip '+rev.estado;
+    c.textContent=rev.estado==='enviada'?'Enviada':rev.estado==='integrada'?'Integrada':'Pendiente';
+    $('enviar').textContent=rev.estado==='pendiente'?'Enviar a Javi':'Volver a enviar';
+  }
+  function manda(m){if(frame.contentWindow&&origen)frame.contentWindow.postMessage(m,origen)}
+
+  addEventListener('message',function(e){
+    if(e.origin!==origen)return; var d=e.data||{};
+    if(d.t==='oi-guia'){secciones=d.secciones||[];campos=d.campos||[];$('cortina').hidden=true;pinta();mandaValores()}
+    if(d.t==='oi-seccion'&&d.id!==actual){actual=d.id;if(escribiendo())espera=true;else pinta()}
+  });
+
+  var espera=false;
+  function escribiendo(){var el=document.activeElement;return el&&$('scroll').contains(el)&&/^(INPUT|TEXTAREA)$/.test(el.tagName)}
+  function hecho(c){var a=aportes[c.campo];if(!a)return false;if(c.tipo==='confirmar')return a.confirmado===true||(a.confirmado===false&&!!(a.valor||'').trim());if(c.tipo==='foto')return (a.archivos||[]).length>0;if(c.tipo==='caso')return !!(a.valor||'').trim()&&(a.archivos||[]).length>0;return !!(a.valor||'').trim()}
+  function deSeccion(id){return campos.filter(function(c){return c.seccion===id})}
+  function progreso(){var n=campos.filter(hecho).length;$('prog-txt').textContent=n+' de '+campos.length+' respondidas';$('prog-barra').style.width=(campos.length?n/campos.length*100:0)+'%';return n}
+
+  function pinta(){
+    var sec=secciones.find(function(s){return s.id===actual})||secciones[0]||{id:'inicio',titulo:'Cabecera'};
+    $('sec-nom').textContent=sec.titulo;
+    var cs=deSeccion(sec.id); $('sec-cuenta').textContent=cs.length?cs.length+(cs.length===1?' pregunta aquí':' preguntas aquí'):'';
+    var h='';
+    if(!cs.length)h+='<p class="vacio">En esta sección no hay datos que darnos. Si algo no está bien, cuéntalo aquí abajo.</p>';
+    cs.forEach(function(c){h+=campoHTML(c)});
+    var nota=aportes['nota:'+sec.id];
+    h+='<div class="nota"><label for="nota-'+sec.id+'">Aclaraciones o correcciones de esta sección</label><textarea id="nota-'+sec.id+'" data-nota="'+sec.id+'" placeholder="Algo que no es así, un matiz, un dato que falta…">'+esc(nota&&nota.valor)+'</textarea></div>';
+    h+='<div class="otras"><h3>Todas las secciones</h3>';
+    secciones.forEach(function(s){var c=deSeccion(s.id),ok=c.filter(hecho).length,nn=aportes['nota:'+s.id]&&(aportes['nota:'+s.id].valor||'').trim();
+      h+='<button data-ir="'+s.id+'" class="'+(s.id===sec.id?'on':'')+'"><span>'+esc(s.titulo)+'</span><small class="'+(c.length&&ok===c.length?'ok':'')+'">'+(c.length?ok+'/'+c.length:'')+(nn?' · nota':'')+'</small></button>'});
+    h+='</div>';
+    var sc=$('scroll'),y=sc.scrollTop; sc.innerHTML=h; sc.scrollTop=0;
+    progreso(); cargaFotos();
+  }
+  function campoHTML(c){
+    var a=aportes[c.campo]||{},v=esc(a.valor),cl='campo'+(hecho(c)?' hecho':''),h='<div class="'+cl+'" data-campo="'+c.campo+'"><div class="campo__top"><span class="estado"></span><p>'+esc(c.pregunta)+'</p><button class="ir" data-ir-campo="'+c.campo+'">Ver</button></div>';
+    if(c.tipo==='texto')h+='<input type="text" data-v="'+c.campo+'" value="'+v+'" placeholder="Escribe aquí">';
+    if(c.tipo==='largo')h+='<textarea rows="5" data-v="'+c.campo+'" placeholder="Escribe aquí, como lo contarías">'+v+'</textarea>';
+    if(c.tipo==='confirmar'){h+='<div class="confirma"><button class="si" data-conf="'+c.campo+'" data-val="1" aria-pressed="'+(a.confirmado===true)+'">Está bien</button><button class="no" data-conf="'+c.campo+'" data-val="0" aria-pressed="'+(a.confirmado===false)+'">Hay que corregirlo</button></div>';
+      if(a.confirmado===false)h+='<textarea rows="3" data-v="'+c.campo+'" placeholder="¿Cómo sería lo correcto?">'+v+'</textarea>'}
+    if(c.tipo==='caso'){h+='<textarea rows="7" data-v="'+c.campo+'" placeholder="Modelo:\nCliente y ciudad:\nAño y km:\nPrecio en Alemania:\nTransporte:\nImpuestos:\nGastos:\nTotal en su casa:\nPrecio en España:">'+v+'</textarea>'}
+    if(c.tipo==='foto'||c.tipo==='caso'){h+='<div class="fotos" data-fotos="'+c.campo+'">'+(a.archivos||[]).map(function(p){return '<div class="foto" data-ruta="'+esc(p)+'"><span>…</span><button data-borra="'+esc(p)+'" data-de="'+c.campo+'" aria-label="Quitar foto">×</button></div>'}).join('')+'<label class="subir">+ Foto<input type="file" accept="image/*" multiple data-sube="'+c.campo+'"></label></div>'}
+    return h+'</div>';
+  }
+  async function cargaFotos(){
+    var els=[].slice.call(document.querySelectorAll('.foto[data-ruta]'));
+    for(var i=0;i<els.length;i++){var el=els[i];if(el.dataset.ok)continue;var r=await sb.storage.from(BUCKET).createSignedUrl(el.dataset.ruta,3600);
+      if(r.data){var im=new Image();im.src=r.data.signedUrl;im.alt='';el.querySelector('span').replaceWith(im);el.dataset.ok=1}}
+  }
+  function mandaValores(){var v={};campos.forEach(function(c){var a=aportes[c.campo];v[c.campo]=hecho(c)?((c.tipo==='texto'||c.tipo==='largo')?a.valor:'ok'):''});manda({t:'oi-valores',valores:v})}
+
+  function estadoGuardado(t){$('guardado').textContent=t}
+  async function guarda(campo,cambios){
+    var c=campos.find(function(x){return x.campo===campo});
+    var a=Object.assign({},aportes[campo]||{revision_id:rev.id,campo:campo,archivos:[]},cambios,{seccion:c?c.seccion:campo.replace(/^nota:/,''),actualizado:new Date().toISOString()});
+    aportes[campo]=a; pendientes++; estadoGuardado('Guardando…');
+    var r=await sb.from('seo_aportes').upsert({revision_id:rev.id,campo:campo,seccion:a.seccion,valor:a.valor||null,confirmado:a.confirmado==null?null:a.confirmado,archivos:a.archivos||[],actualizado:a.actualizado},{onConflict:'revision_id,campo'});
+    pendientes--;
+    if(r.error){estadoGuardado('No se ha podido guardar. Revisa la conexión.');return false}
+    if(!pendientes)estadoGuardado('Guardado '+new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}));
+    refresca(campo); return true;
+  }
+  function refresca(campo){
+    var c=campos.find(function(x){return x.campo===campo});
+    if(c){var el=document.querySelector('.campo[data-campo="'+campo+'"]');if(el)el.classList.toggle('hecho',hecho(c))}
+    progreso(); mandaValores();
+    [].forEach.call(document.querySelectorAll('.otras button'),function(b){var id=b.dataset.ir,cs=deSeccion(id),ok=cs.filter(hecho).length,nn=aportes['nota:'+id]&&(aportes['nota:'+id].valor||'').trim(),sm=b.querySelector('small');sm.textContent=(cs.length?ok+'/'+cs.length:'')+(nn?' · nota':'');sm.className=cs.length&&ok===cs.length?'ok':''});
+  }
+
+  var sc=$('scroll');
+  sc.addEventListener('input',function(e){
+    var t=e.target,campo=t.dataset.v||(t.dataset.nota?'nota:'+t.dataset.nota:null); if(!campo)return;
+    estadoGuardado('Escribiendo…'); clearTimeout(timers[campo]);
+    timers[campo]=setTimeout(function(){guarda(campo,{valor:t.value})},700);
+  });
+  sc.addEventListener('focusout',function(){setTimeout(function(){if(espera&&!escribiendo()){espera=false;pinta()}},300)});
+  sc.addEventListener('focusin',function(e){var c=e.target.closest('.campo');[].forEach.call(document.querySelectorAll('.campo.foco'),function(x){x.classList.remove('foco')});if(c){c.classList.add('foco');manda({t:'oi-ir',campo:c.dataset.campo})}});
+  sc.addEventListener('click',async function(e){
+    var b=e.target.closest('button'); if(!b)return;
+    if(b.dataset.irCampo){manda({t:'oi-ir',campo:b.dataset.irCampo});cierraMovil();return}
+    if(b.dataset.ir){actual=b.dataset.ir;manda({t:'oi-ir',seccion:b.dataset.ir});pinta();return}
+    if(b.dataset.conf){var si=b.dataset.val==='1';await guarda(b.dataset.conf,{confirmado:si,valor:si?null:(aportes[b.dataset.conf]||{}).valor});pinta();if(!si){var ta=document.querySelector('[data-v="'+b.dataset.conf+'"]');if(ta)ta.focus()}return}
+    if(b.dataset.borra){var campo=b.dataset.de,ruta=b.dataset.borra;if(!confirm('¿Quitar esta foto?'))return;await sb.storage.from(BUCKET).remove([ruta]);await guarda(campo,{archivos:(aportes[campo].archivos||[]).filter(function(p){return p!==ruta})});pinta();return}
+  });
+  sc.addEventListener('change',async function(e){
+    var t=e.target; if(!t.dataset.sube||!t.files.length)return;
+    var campo=t.dataset.sube,lista=(aportes[campo]&&aportes[campo].archivos||[]).slice();
+    estadoGuardado('Subiendo '+t.files.length+(t.files.length>1?' fotos…':' foto…'));
+    for(var i=0;i<t.files.length;i++){var f=t.files[i],nom=f.name.toLowerCase().replace(/[^a-z0-9.]+/g,'-').slice(-60),ruta=rev.id+'/'+campo+'/'+Date.now()+'-'+nom;
+      var r=await sb.storage.from(BUCKET).upload(ruta,f,{contentType:f.type||'image/jpeg',upsert:false});
+      if(r.error){estadoGuardado('No se ha podido subir '+f.name+': '+r.error.message);continue} lista.push(ruta)}
+    await guarda(campo,{archivos:lista}); pinta();
+  });
+
+  $('enviar').addEventListener('click',async function(){
+    var falta=campos.length-campos.filter(hecho).length,av=$('aviso');
+    if(falta&&!av.dataset.visto){av.hidden=false;av.dataset.visto=1;av.textContent='Faltan '+falta+(falta===1?' dato':' datos')+'. Puedes enviarlo así y completarlo luego, o rellenarlo antes. Pulsa otra vez para enviar.';return}
+    this.disabled=true;
+    var r=await sb.rpc('seo_revision_enviar',{p_id:rev.id});
+    this.disabled=false;
+    if(r.error){av.hidden=false;av.textContent='No se ha podido enviar: '+r.error.message;return}
+    rev.estado='enviada'; pintaEstado(); av.hidden=true;
+    cortina('<div class="ok">✓</div><h1>¡Enviado!</h1><p>Claude lo mete en la guía y a Javi le llega para revisarla y publicarla. Si quieres corregir algo, puedes volver a esta página y enviarlo otra vez.</p><button id="seguir">Volver a la guía</button>');
+    $('seguir').onclick=function(){$('cortina').hidden=true};
+  });
+
+  // móvil: hoja inferior
+  var lado=$('lado');
+  function cierraMovil(){lado.classList.remove('abierto')}
+  $('asa').onclick=$('ladocab').onclick=function(){if(innerWidth<=900)lado.classList.toggle('abierto')};
+
+  inicio().catch(function(err){cortina('<h1>Algo ha fallado</h1><p>'+esc(err.message)+'</p>')});
+})();
+</script>
+</body>
+</html>
