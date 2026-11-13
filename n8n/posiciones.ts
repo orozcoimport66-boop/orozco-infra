@@ -35,7 +35,26 @@ const saveGsc = node({ type: 'n8n-nodes-base.httpRequest', version: 4.5, config:
     sendBody: true, contentType: 'json', specifyBody: 'json', jsonBody: expr("{{ JSON.stringify($json.filas) }}"), options: { timeout: 120000 } },
   credentials: { supabaseApi: { id: 'UITXv3nKNY6ZT4cA', name: 'Supabase Orozco' } }, retryOnFail: true, maxTries: 3, waitBetweenTries: 5000 } });
 
+// Totales sin desglose (incluyen búsquedas anonimizadas) y páginas del sitemap (13/11/2026)
+const gscTot = node({ type: 'n8n-nodes-base.httpRequest', version: 4.5, config: { name: 'Search Console totales', executeOnce: true, onError: 'continueRegularOutput',
+  parameters: { method: 'POST', url: 'https://searchconsole.googleapis.com/webmasters/v3/sites/sc-domain%3Aorozcoimport.es/searchAnalytics/query', authentication: 'predefinedCredentialType', nodeCredentialType: 'googleOAuth2Api',
+    sendBody: true, contentType: 'json', specifyBody: 'json', jsonBody: expr("{{ JSON.stringify({ startDate: $('Rango de fechas').first().json.desde_gsc, endDate: $('Rango de fechas').first().json.hasta, dimensions: ['date'], rowLimit: 25000, dataState: 'all' }) }}"), options: { timeout: 120000 } },
+  credentials: { googleOAuth2Api: { id: 'vD8CZobtfKh2Mjht', name: 'Search Console Orozco' } }, retryOnFail: true, maxTries: 3, waitBetweenTries: 5000 } });
+const mapTot = node({ type: 'n8n-nodes-base.code', version: 2, config: { name: 'Preparar totales', parameters: { mode: 'runOnceForAllItems', language: 'javaScript', jsCode: "// Una fila por d\u00eda. Si Search Console falla, no se guarda nada (lista vac\u00eda).\nconst ahora = new Date().toISOString();\nconst filas = [];\nfor (const it of $('Search Console totales').all()) for (const r of (it.json.rows || [])) {\n  const [fecha] = r.keys || [];\n  if (!fecha) continue;\n  filas.push({ fecha, clics: Number(r.clicks || 0), impresiones: Number(r.impressions || 0), posicion: Math.round(Number(r.position || 0) * 100) / 100, actualizado: ahora });\n}\nreturn [{ json: { filas } }];\n" } } });
+const saveTot = node({ type: 'n8n-nodes-base.httpRequest', version: 4.5, config: { name: 'Guardar gsc_totales', onError: 'continueRegularOutput',
+  parameters: { method: 'POST', url: 'https://lhtequkigdilfldnugco.supabase.co/rest/v1/gsc_totales', authentication: 'predefinedCredentialType', nodeCredentialType: 'supabaseApi', sendHeaders: true, headerParameters: { parameters: [{ name: 'Prefer', value: 'resolution=merge-duplicates,return=minimal' }] },
+    sendBody: true, contentType: 'json', specifyBody: 'json', jsonBody: expr('{{ JSON.stringify($json.filas) }}'), options: { timeout: 60000 } },
+  credentials: { supabaseApi: { id: 'UITXv3nKNY6ZT4cA', name: 'Supabase Orozco' } }, retryOnFail: true, maxTries: 3, waitBetweenTries: 5000 } });
+const sitemap = node({ type: 'n8n-nodes-base.httpRequest', version: 4.5, config: { name: 'Sitemap', executeOnce: true, onError: 'continueRegularOutput',
+  parameters: { method: 'GET', url: 'https://orozcoimport.es/sitemap.xml', options: { timeout: 30000, response: { response: { responseFormat: 'text', outputPropertyName: 'xml' } } } }, retryOnFail: true, maxTries: 2, waitBetweenTries: 5000 } });
+const mapPag = node({ type: 'n8n-nodes-base.code', version: 2, config: { name: 'Preparar páginas', parameters: { mode: 'runOnceForAllItems', language: 'javaScript', jsCode: "// Rutas del sitemap con el mismo formato que gsc_diario: /, /golf-gti, /guias/...\nconst xml = String(($input.first().json || {}).xml || '');\nconst ruta = (u) => { let r = String(u || '').trim().replace(/^https?:\\/\\//i, '').replace(/^www\\./i, '').replace(/[?#].*$/, '');\n  if (/^orozcoimport\\.es(\\/|$)/i.test(r)) r = r.replace(/^orozcoimport\\.es/i, '') || '/';\n  if (r.length > 1) r = r.replace(/\\/+$/, '');\n  return r || '/'; };\nconst paginas = [...new Set([...xml.matchAll(/<loc>([^<]+)<\\/loc>/gi)].map((m) => ruta(m[1])))];\nreturn [{ json: { p_paginas: paginas } }];\n" } } });
+const syncPag = node({ type: 'n8n-nodes-base.httpRequest', version: 4.5, config: { name: 'Sincronizar páginas', onError: 'continueRegularOutput',
+  parameters: { method: 'POST', url: 'https://lhtequkigdilfldnugco.supabase.co/rest/v1/rpc/seo_paginas_sincronizar', authentication: 'predefinedCredentialType', nodeCredentialType: 'supabaseApi',
+    sendBody: true, contentType: 'json', specifyBody: 'json', jsonBody: expr('{{ JSON.stringify({ p_paginas: $json.p_paginas }) }}'), options: { timeout: 30000 } },
+  credentials: { supabaseApi: { id: 'UITXv3nKNY6ZT4cA', name: 'Supabase Orozco' } }, retryOnFail: true, maxTries: 3, waitBetweenTries: 5000 } });
+
 export default workflow('posiciones', 'Posiciones → panel (Google Ads y orgánico, cada noche)')
   .add(noche).to(rango)
   .add(manual).to(rango)
-  .add(rango).to(adsCamp).to(mapCamp).to(saveCamp).to(adsKw).to(mapKw).to(saveKw).to(gsc).to(borrar).to(mapGsc).to(saveGsc);
+  .add(rango).to(adsCamp).to(mapCamp).to(saveCamp).to(adsKw).to(mapKw).to(saveKw).to(gsc).to(borrar).to(mapGsc).to(saveGsc)
+  .to(gscTot).to(mapTot).to(saveTot).to(sitemap).to(mapPag).to(syncPag);
