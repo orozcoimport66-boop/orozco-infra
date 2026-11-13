@@ -65,15 +65,19 @@ p{margin:0}
 .inf__ver{padding:14px 16px 6px;font:800 21px/1.15 var(--h);letter-spacing:-.02em;color:var(--nv)}
 .inf__ver[data-c=verde]{color:#15803D}.inf__ver[data-c=ambar]{color:#B45309}.inf__ver[data-c=rojo]{color:#B91C1C}.inf__ver[data-c=gris]{color:var(--nv2)}
 .inf ul{list-style:none;margin:0;padding:4px 16px 10px}
-.inf li{display:flex;justify-content:space-between;gap:14px;padding:8px 0;border-bottom:1px dashed var(--ln)}
+.inf li{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:8px 0;border-bottom:1px dashed var(--ln)}
 .inf li:last-child{border:0}
 .inf li span:last-child{text-align:right;color:var(--nv);font-family:var(--m);font-weight:500;font-size:13px}
 .inf .bien{color:#15803D!important}.inf .ojo{color:#B45309!important}.inf .mal{color:#B91C1C!important}
+.inf .desg li{padding:6px 0;font-size:13px}
+.inf__sig{padding:12px 16px;background:var(--nv);color:#CBD5E1;font-size:13.5px;line-height:1.4}
+.inf__sig b{display:block;color:var(--azc);font:700 12.5px/1.3 var(--h);margin-bottom:2px}
 .inf__tot{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:14px 16px;background:#EFF4FF}
 .inf__tot span{font-size:13px;color:var(--nv)}
 .inf__tot b{font:500 22px/1 var(--m);color:var(--nv);letter-spacing:-.03em}
 .inf__alt{padding:12px 16px 16px;border-top:1px solid var(--ln)}
-.inf__alt p{font-size:13px;color:var(--nv);font-weight:600;margin-bottom:8px}
+.inf__alt p{font-size:13px;color:var(--tx);margin-bottom:8px}
+.inf__alt p b{display:block;color:var(--nv);font:700 14px/1.3 var(--h)}
 .alts{display:flex;gap:8px}
 .alts figure{margin:0;flex:1;min-width:0}
 .alts img{width:100%;aspect-ratio:3/2;object-fit:cover;border-radius:8px}
@@ -87,7 +91,8 @@ p{margin:0}
 .top img{height:34px;width:auto}
 .top a.wa{display:inline-flex;align-items:center;gap:8px;color:#E2E8F0;text-decoration:none;font-size:14px;font-weight:600}
 .hero__in{position:relative;display:grid;gap:40px;padding:44px 0 0}
-.hero h1{color:#fff;font-size:clamp(36px,9.6vw,64px);line-height:1.02;font-weight:800;letter-spacing:-.035em}
+.hero h1{color:#fff;font-size:clamp(38px,10vw,66px);line-height:1.04;font-weight:800;letter-spacing:-.03em}
+.hero h1 .h1b{display:block;margin-top:.32em;font-size:.56em;line-height:1.15;font-weight:700;letter-spacing:-.015em;color:var(--azc)}
 .hero .lead{color:#CBD5E1;margin-top:20px}
 .hero__cta{margin-top:28px;display:flex;flex-direction:column;align-items:flex-start;gap:14px}
 .garant{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:14px;color:#94A3B8}
@@ -96,12 +101,12 @@ p{margin:0}
 .escena{position:relative;padding-bottom:24px;max-width:520px;width:100%;justify-self:center}
 .anu{position:relative;width:80%;border-radius:16px;overflow:hidden;background:var(--nv2);box-shadow:0 0 0 1px rgba(255,255,255,.08);transform:rotate(-2.5deg)}
 .anu img{width:100%;aspect-ratio:8/5;object-fit:cover}
-.anu__tag{position:absolute;left:10px;bottom:10px;background:#fff;color:var(--nv);font:700 13px/1 var(--h);padding:8px 10px;border-radius:8px}
+.anu__tag{position:absolute;right:10px;top:10px;background:#fff;color:var(--nv);font:700 13px/1 var(--h);padding:8px 10px;border-radius:8px}
 .anu__pie{padding:10px 12px 12px;color:#E2E8F0;font-size:13px}
 .anu__pie b{display:block;color:#fff;font:700 15px/1.3 var(--h)}
 .anu__pie .mono{color:#94A3B8;font-size:12px}
 .anu__precio{position:absolute;top:10px;left:10px;background:rgba(15,23,42,.85);color:#fff;font:500 14px/1 var(--m);padding:7px 9px;border-radius:8px}
-.escena .inf{position:relative;width:78%;margin:-64px 0 0 auto;transform:rotate(1.5deg)}
+.escena .inf{position:relative;width:88%;margin:-56px 0 0 auto;transform:rotate(1.5deg)}
 
 /* contraste */
 .contra{display:grid;gap:16px;margin-top:40px}
@@ -126,19 +131,38 @@ p{margin:0}
 .oscuro{background:var(--nv);color:#CBD5E1}
 .oscuro h2{color:#fff}
 .pasos{list-style:none;margin:40px 0 0;padding:0;display:grid;gap:14px;counter-reset:p}
-.paso{background:var(--nv2);border-radius:18px;padding:22px;counter-increment:p;position:relative}
+.paso{min-width:0;background:var(--nv2);border-radius:18px;padding:22px;counter-increment:p;position:relative}
 .paso::before{content:counter(p);position:absolute;top:18px;right:20px;font:800 44px/1 var(--h);color:rgba(96,165,250,.22)}
 .paso h3{color:#fff;padding-right:44px}
 .paso p{margin-top:6px;font-size:15px}
-.demo{margin-top:18px;border-radius:12px;background:var(--nv);border:1px solid rgba(255,255,255,.08);padding:12px;font-size:13px}
+.demo{margin-top:18px;border-radius:14px;background:#fff;padding:12px;font-size:13px;color:var(--nv);box-shadow:0 20px 40px -24px rgba(0,0,0,.6)}
+.url{display:flex;align-items:center;gap:5px;padding:2px 2px 10px}
+.url i{width:8px;height:8px;border-radius:50%;background:#CBD5E1}
+.url span{flex:1;min-width:0;margin-left:6px;background:var(--bl);border-radius:7px;padding:6px 9px;font:500 11.5px/1 var(--m);color:var(--ac);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.por img{width:100%;aspect-ratio:8/5;object-fit:cover;border-radius:9px}
+.por div{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:10px 2px 2px}
+.por b{font:700 14.5px/1.25 var(--h)}
+.por .mono{font-size:15px;color:var(--nv);grid-row:span 2;align-self:center}
+.por small{font:500 11.5px/1.3 var(--m);color:var(--ac)}
+.cursor{display:flex;align-items:center;gap:8px;margin-top:10px;padding:9px 10px;border:1.5px solid var(--az);border-radius:9px;font:500 11.5px/1 var(--m);color:var(--nv);white-space:nowrap;overflow:hidden}
+.cursor svg{width:15px;height:15px;color:var(--az);flex:none}
+.chk{list-style:none;margin:0;padding:4px 4px 2px}
+.chk li{display:flex;align-items:center;gap:10px;padding:8.5px 0;border-bottom:1px solid var(--ln);font-size:14px}
+.chk li:last-child{border:0}
+.chk li::before{content:"";flex:none;width:20px;height:20px;border-radius:50%;background:var(--ok) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 12.5 4.5 4.5L19 7.5'/%3E%3C/svg%3E") center/12px no-repeat}
+.chk li.carga{color:var(--ac)}
+.chk li.carga::before{background:none;border:2.5px solid var(--ln);border-top-color:var(--az);animation:gira 1s linear infinite}
+@keyframes gira{to{transform:rotate(360deg)}}
+.demo .inf{box-shadow:none}
+.demo .inf__top{padding:8px 4px 10px}
+.demo .inf__ver{padding:10px 4px 2px;font-size:18px}
+.demo .inf ul{padding:2px 4px 6px}
+.demo .inf li{padding:6px 0;font-size:13px}
+.demo .inf__tot{padding:10px 10px;border-radius:9px}
+.demo .inf__tot b{font-size:18px}
+.demo .inf__sig{border-radius:9px;margin-top:8px;padding:10px}
 .campo{display:flex;align-items:center;gap:8px;background:#fff;border-radius:9px;padding:10px 12px;color:var(--nv);font:500 12.5px/1.2 var(--m);overflow:hidden;white-space:nowrap}
 .campo svg{width:16px;height:16px;color:var(--ac)}
-.barra{height:6px;border-radius:9px;background:rgba(255,255,255,.1);overflow:hidden;margin-top:10px}
-.barra i{display:block;height:100%;width:72%;background:linear-gradient(90deg,var(--az),var(--azc));border-radius:9px}
-.demo .mono{color:#94A3B8;font-size:12px;display:flex;justify-content:space-between;margin-top:8px}
-.burbuja{background:#DCF8C6;color:#14281A;border-radius:12px 12px 12px 4px;padding:10px 12px;max-width:92%;font-size:13.5px;line-height:1.4}
-.burbuja small{display:block;text-align:right;color:#4B6B53;font-size:11px;margin-top:4px}
-.burbuja .luz{vertical-align:-3px;margin-right:6px;padding:3px 5px}.burbuja .luz i{width:8px;height:8px}
 .pasos-fin{margin-top:22px;font-size:16px;color:#E2E8F0}
 .pasos-fin b{color:#fff}
 
@@ -199,6 +223,56 @@ p{margin:0}
 .no p{font-size:15px;margin-top:4px}
 .no .ej{margin-top:10px}
 .sub{margin-top:64px;font-size:22px}
+/* tres fases */
+.fases-h{margin-top:72px}
+.fases-h h3{font-size:clamp(24px,5.4vw,34px);line-height:1.12;font-weight:800;letter-spacing:-.02em}
+.fases-h p{margin-top:12px}
+.fases{list-style:none;margin:32px 0 0;padding:0;display:grid;gap:22px;position:relative}
+.fase{min-width:0;background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 0 0 1px var(--ln),0 24px 48px -32px rgba(15,23,42,.4)}
+.fase__vis{position:relative;aspect-ratio:8/6;overflow:hidden;background:var(--nv)}
+.fase__vis>img:first-child{width:100%;height:100%!important;object-fit:cover}
+.fase__txt{padding:18px 20px 22px}
+.cuando{display:inline-flex;align-items:center;gap:8px;font:500 12.5px/1 var(--m);color:var(--az);background:#EFF4FF;padding:6px 9px;border-radius:7px}
+.fase__txt h3{margin-top:12px;font-size:20px}
+.fase__txt p{margin-top:6px;font-size:15.5px}
+.fase .chips{left:12px;right:12px;bottom:12px}
+.fase .chip{background:#fff;color:var(--nv);border-color:#fff;font-size:12px;padding:7px 9px}
+.fase .chip::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--ok);margin-right:6px;vertical-align:1px}
+.hist{position:absolute;inset:0;background:linear-gradient(160deg,#1E293B,#0F172A);padding:16px;display:flex;flex-direction:column}
+.hist__doc{background:#fff;border-radius:12px;padding:14px;flex:1;display:flex;flex-direction:column;color:var(--nv)}
+.hist__doc header{display:flex;justify-content:space-between;align-items:baseline;font:700 13.5px/1.2 var(--h)}
+.hist__doc header span{font:500 11px var(--m);color:var(--ac)}
+.km{display:flex;align-items:flex-end;gap:7px;height:30%;min-height:56px;margin:26px 0 4px;padding-bottom:16px;position:relative;border-bottom:1px solid var(--ln)}
+.km i{flex:1;background:linear-gradient(180deg,var(--azc),var(--az));border-radius:4px 4px 0 0;position:relative}
+.km i::after{content:attr(data-a);position:absolute;bottom:-16px;left:50%;transform:translateX(-50%);font:500 9.5px/1 var(--m);color:var(--ac)}
+.km i:last-child::before{content:attr(data-k);position:absolute;top:-17px;left:50%;transform:translateX(-50%);font:500 10px/1 var(--m);color:var(--nv);white-space:nowrap}
+.hist__doc ul{list-style:none;margin:auto 0 0;padding:6px 0 0}
+.hist__doc li{display:flex;justify-content:space-between;gap:8px;padding:5px 0;font-size:12.5px;border-top:1px dashed var(--ln)}
+.hist__doc li b{font:500 12px var(--m);color:#15803D}
+.insp>img:first-child{filter:brightness(.42) saturate(.6)}
+.insp__hoja{position:absolute;right:-6%;top:9%;width:54%;height:auto;border-radius:8px;box-shadow:0 20px 40px -10px rgba(0,0,0,.6);transform:rotate(4deg)}
+.puntos200{position:absolute;left:16px;bottom:16px;color:#fff}
+.puntos200 b{display:block;font:800 54px/.9 var(--h);letter-spacing:-.05em}
+.puntos200 span{font:600 14px/1.2 var(--b);color:#E2E8F0}
+/* del anuncio a tu puerta */
+.ruta{display:grid;gap:14px;margin-top:40px}
+.tramo{background:#fff;border-radius:20px;padding:22px;box-shadow:0 0 0 1px var(--ln)}
+.pais{display:inline-block;font:700 13px/1 var(--h);color:#fff;background:var(--nv);padding:7px 10px;border-radius:8px}
+.tramo ol{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:0}
+.tramo li{display:grid;grid-template-columns:40px 1fr;gap:0 14px;padding:12px 0;border-top:1px solid var(--ln)}
+.tramo li:first-child{border-top:0;padding-top:4px}
+.tramo li svg{grid-row:span 2;width:40px;height:40px;padding:9px;border-radius:12px;background:#EFF4FF;color:var(--az)}
+.tramo li b{font:700 16px/1.3 var(--h);color:var(--nv)}
+.tramo li span{font-size:14.5px;line-height:1.4}
+.tramo li.estrella svg{background:var(--az);color:#fff}
+.tramo--camion{display:flex;align-items:center;gap:14px;background:var(--nv);color:#CBD5E1;box-shadow:none;position:relative;overflow:hidden}
+.tramo--camion svg{width:44px;height:44px;color:var(--azc);flex:none}
+.tramo--camion b{display:block;font:700 16px/1.3 var(--h);color:#fff}
+.tramo--camion span{font-size:14.5px}
+.tramo--camion::after{content:"";position:absolute;left:0;right:0;bottom:12px;border-bottom:2px dashed rgba(96,165,250,.35)}
+.cuanto{margin-top:22px;display:grid;gap:16px;align-items:center;padding:22px;border-radius:18px;background:#EFF4FF}
+.cuanto p{font:700 19px/1.35 var(--h);color:var(--nv);letter-spacing:-.01em}
+.cuanto p span{display:block;font:400 15.5px/1.5 var(--b);color:var(--tx);margin-top:4px;letter-spacing:0}
 
 /* formulario */
 .form-sec{background:linear-gradient(180deg,var(--bl),#EEF2F8)}
@@ -226,35 +300,13 @@ form .btn{width:100%}
 .trasbtn{text-align:center;font-size:13.5px;color:var(--ac);margin-top:12px}
 .oi-form__envio-error{text-align:left}
 
-/* precio */
-.precio{display:grid;gap:32px;margin-top:40px;align-items:start}
-.ticket{background:#fff;border-radius:18px;padding:22px 22px 0;box-shadow:0 0 0 1px var(--ln),0 30px 60px -36px rgba(15,23,42,.45);position:relative}
-.ticket::after{content:"";position:absolute;left:0;right:0;bottom:-10px;height:10px;background:radial-gradient(circle at 10px -2px,transparent 10px,#fff 10.5px) 0 0/20px 10px repeat-x}
-.ticket h3{font-size:17px;display:flex;justify-content:space-between;gap:10px;align-items:center}
-.ticket ul{list-style:none;margin:14px 0 0;padding:0}
-.ticket li{display:flex;justify-content:space-between;gap:14px;padding:12px 0;border-top:1px dashed var(--ln);font-size:15px;color:var(--nv)}
-.ticket li small{display:block;color:var(--ac);font-size:13px}
-.ticket li .mono{white-space:nowrap}
-.ticket li.nuestro-li{background:#EFF4FF;margin:0 -22px;padding:12px 22px;border-top:0}
-.ticket .tot{display:flex;justify-content:space-between;align-items:baseline;padding:16px 0 22px;border-top:2px solid var(--nv);margin-top:4px}
-.ticket .tot span{font:700 16px var(--h);color:var(--nv)}
-.ticket .tot b{font:500 28px/1 var(--m);color:var(--nv);letter-spacing:-.04em}
-.pct{display:flex;align-items:center;gap:18px;margin-top:22px}
-.donut{width:84px;height:84px;flex:none}
-.pct p{font-size:16px;color:var(--nv)}
-.pct b{font:800 20px var(--h)}
-.incl{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}
-.incl div{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;line-height:1.35;color:var(--nv);background:#fff;border-radius:12px;padding:12px;box-shadow:0 0 0 1px var(--ln)}
-.incl svg{color:var(--az);width:20px;height:20px;flex:none}
+/* contraste si lo haces tú */
 .vs{margin-top:22px;display:grid;gap:10px}
 .vs div{border-radius:14px;padding:16px 18px}
 .vs div:first-child{background:#fff;box-shadow:0 0 0 1px var(--ln);color:var(--tx)}
 .vs div:last-child{background:var(--nv);color:#CBD5E1}
 .vs b{display:block;font:700 16px/1.3 var(--h);color:var(--nv);margin-bottom:4px}
 .vs div:last-child b{color:#fff}
-.reserva{margin-top:22px;display:flex;gap:14px;align-items:flex-start;padding:18px;border-radius:14px;background:#fff;border:1.5px solid var(--az)}
-.reserva .mono{font-size:22px;color:var(--az);white-space:nowrap}
-.reserva p{font-size:15px;color:var(--nv)}
 
 /* faq */
 .faq{margin-top:32px;max-width:780px}
@@ -291,6 +343,8 @@ footer.pie nav{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px}
   .fotos{margin:36px 0 0;padding:0;overflow:visible}
   .fotos figure{flex:1}
   .vs{grid-template-columns:1fr 1fr}
+  .fases{grid-template-columns:repeat(3,1fr)}
+  .cuanto{grid-template-columns:1fr auto;padding:26px 30px}
 }
 @media (min-width:960px){
   :root{--g:32px}
@@ -302,11 +356,14 @@ footer.pie nav{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px}
   .sema{grid-template-columns:.9fr 1.1fr;gap:56px}
   .mira{grid-template-columns:1fr 1fr;gap:64px}
   .fgrid{grid-template-columns:.85fr 1.15fr;gap:72px}
-  .precio{grid-template-columns:1fr 1fr;gap:64px}
+  .ruta{grid-template-columns:1.3fr 210px 1fr;align-items:center}
+  .tramo--camion{flex-direction:column;justify-content:center;text-align:center;overflow:visible}
+  .tramo--camion::after{bottom:auto;top:50%;left:-14px;right:-14px;z-index:0}
+  .tramo--camion>*{position:relative;z-index:1;background:var(--nv)}
   .fija{display:none}
   footer.pie{padding-bottom:40px}
 }
-@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
@@ -322,6 +379,7 @@ footer.pie nav{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px}
   <symbol id="i-camion" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 16.5V6h12v10.5"/><path d="M14 9.5h4l3.5 4v3H14"/><circle cx="6.5" cy="17.5" r="1.8"/><circle cx="17.5" cy="17.5" r="1.8"/><path d="M2 16.5h2.7M8.3 16.5h7.4"/></symbol>
   <symbol id="i-firma" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17c3-1 4-8 6-8s0 7 2 7 2-4 4-4 1 3 3 3 2-1 3-2"/><path d="M3 21h18"/></symbol>
   <symbol id="i-matricula" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="10" rx="2"/><path d="M6 7v10"/><path d="M9 12h3M14.5 12h4"/></symbol>
+  <symbol id="i-casa" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 11 12 4l8.5 7"/><path d="M5.5 9.5V20h13V9.5"/><path d="M10 20v-5.5h4V20"/></symbol>
   <symbol id="i-tel" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3.5h3.5l1.8 4.5-2.3 1.4a11 11 0 0 0 6.6 6.6l1.4-2.3 4.5 1.8V19a2 2 0 0 1-2 2A16.5 16.5 0 0 1 3 5.5a2 2 0 0 1 2-2Z"/></symbol>
 </svg>
 
@@ -334,7 +392,7 @@ footer.pie nav{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px}
     </div>
     <div class="hero__in">
       <div>
-        <h1>¿Ese coche es buena compra? Te lo decimos antes de que pagues.</h1>
+        <h1>¿Ese coche es buena compra? <span class="h1b">Te lo decimos antes de que pagues.</span></h1>
         <p class="lead">Pásanos el anuncio que tienes visto. En 24 h te decimos qué tal está, si es buena oportunidad y cuánto te cuesta puesto en tu casa. Sin compromiso.</p>
         <div class="hero__cta">
           <a class="btn" id="cta-hero" href="#form">Analiza mi coche</a>
@@ -352,12 +410,14 @@ footer.pie nav{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px}
           <span class="anu__tag">El anuncio que tienes visto</span>
         </div>
         <div class="inf" aria-hidden="true">
-          <div class="inf__top"><div><b>Tu informe</b><small>en menos de 24 h</small></div><span class="luz" data-c="verde"><i></i><i></i><i></i></span></div>
+          <div class="inf__top"><div><b>Tu informe</b><small>BMW Serie 2 Gran Coupé · 2021</small></div><span class="luz" data-c="verde"><i></i><i></i><i></i></span></div>
           <p class="inf__ver" data-c="verde">Buena compra</p>
-          <ul>
-            <li><span>Precio</span><span class="bien">En mercado</span></li>
-            <li><span>Vendedor</span><span class="bien">Concesionario</span></li>
-            <li><span>Garantía europea</span><span class="bien">Hasta 2027</span></li>
+          <ul class="desg">
+            <li><span>Precio del coche</span><span>24.900 €</span></li>
+            <li><span>Gestión de importación</span><span>1.573 €</span></li>
+            <li><span>Transporte hasta tu puerta</span><span>1.100 €</span></li>
+            <li><span>Revisión presencial</span><span>280 €</span></li>
+            <li><span>Matriculación e ITV</span><span>≈ 900 €</span></li>
           </ul>
           <div class="inf__tot"><span>Puesto en tu casa</span><b>28.750 €</b></div>
         </div>
@@ -380,7 +440,7 @@ footer.pie nav{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px}
       <figure class="vista vista--clara" style="margin:0">
         <img src="/analiza/a/anuncio-480.webp" width="480" height="300" alt="" loading="lazy">
         <span class="vista__tit">Comprar sabiendo</span>
-        <div class="chips"><span class="chip">Precio en mercado</span><span class="chip">Concesionario</span><span class="chip">28.750 € en tu casa</span></div>
+        <div class="chips"><span class="chip">Precio en mercado</span><span class="chip">Concesionario verificado</span><span class="chip">28.750 € en tu casa</span></div>
       </figure>
     </div>
     <div class="mani">
@@ -393,6 +453,30 @@ footer.pie nav{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px}
         <div class="firma"><i aria-hidden="true">F</i><span><b>Fran Orozco</b>Fundador de Orozco Import</span></div>
       </blockquote>
     </div>
+    <div class="fases-h">
+      <h3>Tres revisiones antes de que pagues el coche.</h3>
+      <p class="lead">El informe de 24 h es solo la primera. Si decides seguir, vamos hasta el fondo.</p>
+    </div>
+    <ol class="fases">
+      <li class="fase">
+        <div class="fase__vis"><img src="/analiza/a/anuncio-480.webp" width="480" height="300" alt="" loading="lazy">
+          <div class="chips"><span class="chip">Precio en mercado</span><span class="chip">Vendedor verificado</span><span class="chip">Daños en fotos</span><span class="chip">Fallos del modelo</span></div></div>
+        <div class="fase__txt"><span class="cuando">Fase 1 · en 24 h</span><h3>Revisión del anuncio</h3><p>Con todo lo que se ve en el anuncio y en las fotos, te decimos si merece la pena seguir.</p></div>
+      </li>
+      <li class="fase">
+        <div class="fase__vis"><div class="hist" aria-hidden="true"><div class="hist__doc">
+          <header>Historial del vehículo<span>verificado</span></header>
+          <div class="km"><i style="height:20%" data-a="22"></i><i style="height:44%" data-a="23"></i><i style="height:68%" data-a="24"></i><i style="height:86%" data-a="25"></i><i style="height:100%" data-a="26" data-k="48.300 km"></i></div>
+          <ul><li><span>Kilómetros</span><b>Coherentes</b></li><li><span>Accidentes registrados</span><b>Ninguno</b></li><li><span>Mantenimiento oficial</span><b>4 de 4</b></li><li><span>Cargas o embargos</span><b>Libre</b></li></ul>
+        </div></div></div>
+        <div class="fase__txt"><span class="cuando">Fase 2 · si decides seguir</span><h3>Verificación de la documentación</h3><p>Pedimos el historial al vendedor: kilómetros reales, accidentes, mantenimientos y cargas.</p></div>
+      </li>
+      <li class="fase">
+        <div class="fase__vis insp"><img src="/analiza/a/fase3.webp" width="640" height="400" alt="" loading="lazy"><img class="insp__hoja" src="/analiza/a/inspeccion.webp" width="560" height="520" alt="Ejemplo de informe de inspección de Orozco Import" loading="lazy">
+          <div class="puntos200"><b>+200</b><span>puntos revisados</span></div></div>
+        <div class="fase__txt"><span class="cuando">Fase 3 · antes de pagar el coche</span><h3>Revisión presencial en Alemania</h3><p>Un perito ve el coche en persona: pintura panel a panel, diagnosis electrónica, motor en frío y en caliente, bajos, frenos y prueba en carretera.</p></div>
+      </li>
+    </ol>
   </div>
 </section>
 
@@ -404,17 +488,25 @@ footer.pie nav{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px}
       <li class="paso">
         <h3>Nos pasas el anuncio</h3>
         <p>De mobile.de, AutoScout24 o donde lo hayas visto. ¿Aún no tienes uno? Dinos modelo y versión.</p>
-        <div class="demo"><div class="campo"><svg><use href="#i-link"/></svg>https://anuncio-de-tu-coche.de/…</div></div>
+        <div class="demo" aria-hidden="true"><div class="url"><i></i><i></i><i></i><span>mobile.de/coches/bmw-218i-gran-coupe-…</span></div>
+          <div class="por"><img src="/analiza/a/anuncio-480.webp" width="480" height="300" alt="" loading="lazy"><div><b>BMW 218i Gran Coupé</b><span class="mono">24.900 €</span><small>2021 · 48.300 km · Múnich</small></div></div>
+          <div class="cursor"><svg><use href="#i-link"/></svg>Enlace copiado</div></div>
       </li>
       <li class="paso">
         <h3>Lo analizamos</h3>
-        <p>Precio, vendedor, garantía, lo que dicen el anuncio y las fotos, y cuánto te costaría traerlo.</p>
-        <div class="demo"><div class="barra"><i></i></div><div class="mono"><span>Revisando 6 puntos</span><span>4/6</span></div></div>
+        <p>Revisamos cada punto del anuncio y de las fotos, y calculamos lo que te costaría traerlo.</p>
+        <div class="demo" aria-hidden="true"><ul class="chk"><li>Precio frente al mercado</li><li>Vendedor verificado</li><li>Tipo de vehículo</li><li>Daños visibles en fotos</li><li>Fallos típicos del modelo</li><li>Equipamiento real</li><li class="carga">Coste puesto en tu casa</li></ul></div>
       </li>
       <li class="paso">
         <h3>Te llega por WhatsApp</h3>
-        <p>Con un semáforo, el coste total puesto en tu casa y, si hace falta, alternativas mejores.</p>
-        <div class="demo"><div class="burbuja"><span class="luz" data-c="verde"><i></i><i></i><i></i></span>Tu informe está listo: es buena compra. Puesto en tu casa, 28.750 €.<small>Hoy, 18:42</small></div></div>
+        <p>Un informe con semáforo, el coste total desglosado y, si hace falta, alternativas mejores.</p>
+        <div class="demo" aria-hidden="true"><div class="inf">
+          <div class="inf__top"><div><b>Tu informe</b><small>BMW 218i Gran Coupé</small></div><span class="luz" data-c="verde"><i></i><i></i><i></i></span></div>
+          <p class="inf__ver" data-c="verde">Buena compra</p>
+          <ul><li><span>Precio</span><span class="bien">3 % por debajo</span></li><li><span>Vendedor</span><span class="bien">Verificado</span></li><li><span>Daños en fotos</span><span class="bien">Ninguno</span></li><li><span>Costes de traerlo</span><span>3.850 €</span></li></ul>
+          <div class="inf__tot"><span>Puesto en tu casa</span><b>28.750 €</b></div>
+          <div class="inf__sig"><b>Siguiente paso</b>Verificar la documentación con el concesionario.</div>
+        </div></div>
       </li>
     </ol>
     <p class="pasos-fin">¿Te encaja? <b>Lo vemos juntos en 20 minutos con Fran.</b> Si no, tan amigos.</p>
@@ -428,7 +520,7 @@ footer.pie nav{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px}
     <p class="lead" style="margin-top:16px">Cada informe lleva un color. Toca cada uno para ver qué recibirías.</p>
     <div class="sema">
       <div class="tabs" role="tablist" aria-label="Colores del informe">
-        <button class="tab" role="tab" id="tb-verde" aria-controls="p-verde" aria-selected="true"><span class="luz" data-c="verde"><i></i><i></i><i></i></span><b>Verde: buena compra</b><span>El coste total puesto en casa y 1-2 coches de reserva por si se vende.</span></button>
+        <button class="tab" role="tab" id="tb-verde" aria-controls="p-verde" aria-selected="true"><span class="luz" data-c="verde"><i></i><i></i><i></i></span><b>Verde: buena compra</b><span>El coste total puesto en casa, el siguiente paso y 1-2 alternativas por si te cuadran más.</span></button>
         <button class="tab" role="tab" id="tb-ambar" aria-controls="p-ambar" aria-selected="false" tabindex="-1"><span class="luz" data-c="ambar"><i></i><i></i><i></i></span><b>Ámbar: puede serlo</b><span>Qué hay que comprobar antes de pagar y 1-2 alternativas.</span></button>
         <button class="tab" role="tab" id="tb-rojo" aria-controls="p-rojo" aria-selected="false" tabindex="-1"><span class="luz" data-c="rojo"><i></i><i></i><i></i></span><b>Rojo: no lo compraríamos</b><span>Por qué no, y 2-3 coches que sí merecen la pena.</span></button>
         <button class="tab" role="tab" id="tb-gris" aria-controls="p-gris" aria-selected="false" tabindex="-1"><span class="luz" data-c="gris"><i></i><i></i><i></i></span><b>Gris: no te compensa importar</b><span>Te lo decimos claro. Sin llamadas ni insistencia.</span></button>
@@ -439,14 +531,15 @@ footer.pie nav{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px}
           <p class="inf__ver" data-c="verde">Buena compra. Nosotros iríamos a por él.</p>
           <ul>
             <li><span>Precio frente a otros iguales</span><span class="bien">3 % por debajo</span></li>
-            <li><span>Quién lo vende</span><span class="bien">Concesionario oficial</span></li>
-            <li><span>Garantía europea</span><span class="bien">Sí, hasta 06/2027</span></li>
-            <li><span>Lo que dice el anuncio</span><span class="bien">Todo cuadra</span></li>
+            <li><span>Quién lo vende</span><span class="bien">Concesionario verificado</span></li>
+            <li><span>Daños visibles en fotos</span><span class="bien">Ninguno</span></li>
+            <li><span>Fallos típicos del modelo</span><span class="bien">Sin avisos</span></li>
             <li><span>Tu presupuesto (25-30.000 €)</span><span class="bien">Encaja</span></li>
           </ul>
           <div class="inf__tot"><span>Puesto en tu casa</span><b>28.750 €</b></div>
-          <div class="inf__alt"><p>Por si se vende antes, te guardamos estos dos:</p>
-            <div class="alts"><figure><img src="/analiza/a/alt-1.webp" width="240" height="160" alt="" loading="lazy"><figcaption>27.900 € en casa</figcaption></figure><figure><img src="/analiza/a/alt-8.webp" width="240" height="150" alt="" loading="lazy"><figcaption>29.300 € en casa</figcaption></figure></div>
+          <div class="inf__sig"><b>Siguiente paso</b>Contactar con el concesionario y verificar la documentación del vehículo.</div>
+          <div class="inf__alt"><p><b>Alternativas que te proponemos</b>Revisa estas unidades por si te cuadran más.</p>
+            <div class="alts"><figure><img src="/analiza/a/alt-1.webp" width="240" height="150" alt="" loading="lazy"><figcaption>27.900 € en casa</figcaption></figure><figure><img src="/analiza/a/alt-8.webp" width="240" height="150" alt="" loading="lazy"><figcaption>29.300 € en casa</figcaption></figure></div>
           </div>
         </div>
         <div class="panel inf" role="tabpanel" id="p-ambar" aria-labelledby="tb-ambar" hidden>
@@ -455,13 +548,13 @@ footer.pie nav{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px}
           <ul>
             <li><span>Precio frente a otros iguales</span><span class="ojo">12 % por debajo</span></li>
             <li><span>Quién lo vende</span><span class="ojo">Particular</span></li>
-            <li><span>Garantía europea</span><span class="mal">No tiene</span></li>
-            <li><span>Antes de pagar, pediríamos</span><span class="ojo">Facturas de taller</span></li>
-            <li><span>Y comprobaríamos</span><span class="ojo">Por qué es tan barato</span></li>
+            <li><span>Daños visibles en fotos</span><span class="ojo">Roce en paragolpes</span></li>
+            <li><span>Fallos típicos del modelo</span><span class="ojo">Uno a vigilar</span></li>
           </ul>
           <div class="inf__tot"><span>Puesto en tu casa</span><b>25.200 €</b></div>
-          <div class="inf__alt"><p>Alternativas con menos riesgo por lo mismo:</p>
-            <div class="alts"><figure><img src="/analiza/a/alt-1.webp" width="240" height="160" alt="" loading="lazy"><figcaption>25.900 € en casa</figcaption></figure><figure><img src="/analiza/a/alt-4.webp" width="240" height="150" alt="" loading="lazy"><figcaption>26.400 € en casa</figcaption></figure></div>
+          <div class="inf__sig"><b>Siguiente paso</b>Pedir las facturas de taller y entender por qué está tan por debajo de mercado.</div>
+          <div class="inf__alt"><p><b>Alternativas que te proponemos</b>Con menos riesgo por un precio parecido.</p>
+            <div class="alts"><figure><img src="/analiza/a/alt-1.webp" width="240" height="150" alt="" loading="lazy"><figcaption>25.900 € en casa</figcaption></figure><figure><img src="/analiza/a/alt-4.webp" width="240" height="150" alt="" loading="lazy"><figcaption>26.400 € en casa</figcaption></figure></div>
           </div>
         </div>
         <div class="panel inf" role="tabpanel" id="p-rojo" aria-labelledby="tb-rojo" hidden>
@@ -473,20 +566,21 @@ footer.pie nav{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px}
             <li><span>Lo que dice el anuncio</span><span class="mal">Pide pago por adelantado</span></li>
             <li><span>Nuestra opinión</span><span class="mal">Huele a estafa</span></li>
           </ul>
-          <div class="inf__alt"><p>Estos tres sí merecen la pena:</p>
-            <div class="alts"><figure><img src="/analiza/a/alt-1.webp" width="240" height="160" alt="" loading="lazy"><figcaption>27.900 €</figcaption></figure><figure><img src="/analiza/a/alt-8.webp" width="240" height="150" alt="" loading="lazy"><figcaption>29.300 €</figcaption></figure><figure><img src="/analiza/a/alt-7.webp" width="240" height="150" alt="" loading="lazy"><figcaption>28.100 €</figcaption></figure></div>
+          <div class="inf__sig"><b>Siguiente paso</b>Olvidarte de este anuncio y mirar las alternativas.</div>
+          <div class="inf__alt"><p><b>Alternativas que te proponemos</b>Estas sí merecen la pena.</p>
+            <div class="alts"><figure><img src="/analiza/a/alt-1.webp" width="240" height="150" alt="" loading="lazy"><figcaption>27.900 €</figcaption></figure><figure><img src="/analiza/a/alt-8.webp" width="240" height="150" alt="" loading="lazy"><figcaption>29.300 €</figcaption></figure><figure><img src="/analiza/a/alt-7.webp" width="240" height="150" alt="" loading="lazy"><figcaption>28.100 €</figcaption></figure></div>
           </div>
         </div>
         <div class="panel inf" role="tabpanel" id="p-gris" aria-labelledby="tb-gris" hidden>
           <div class="inf__top"><div><b>Tu búsqueda</b><small>Presupuesto: hasta 15.000 €</small></div><span class="luz" data-c="gris"><i></i><i></i><i></i></span></div>
           <p class="inf__ver" data-c="gris">Con este presupuesto, importar no te compensa.</p>
           <ul>
-            <li><span>Transporte, impuestos e ITV</span><span>≈ 2.300 €</span></li>
-            <li><span>Nuestro servicio</span><span>1.573 €</span></li>
+            <li><span>Transporte, gestión, impuestos e ITV</span><span>≈ 3.900 €</span></li>
             <li><span>Lo que queda para el coche</span><span class="mal">≈ 11.100 €</span></li>
             <li><span>Nuestro consejo</span><span>Buscar en España</span></li>
           </ul>
-          <div class="inf__alt"><p>Preferimos que lo sepas hoy a que pagues de más mañana. Si tu presupuesto cambia, aquí estamos.</p></div>
+          <div class="inf__sig"><b>Siguiente paso</b>Ninguno por ahora. Si tu presupuesto cambia, aquí estamos.</div>
+          <div class="inf__alt"><p>Preferimos que lo sepas hoy a que pagues de más mañana.</p></div>
         </div>
         <p class="sema__nota"><span class="ej">Ejemplo</span> Cifras orientativas. Las tuyas dependen de tu coche y tu código postal.</p>
       </div>
@@ -501,29 +595,31 @@ footer.pie nav{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px}
     <p class="lead" style="margin-top:16px">Lo mismo que miraría un amigo que lleva 9 años comprando coches en Alemania.</p>
     <div class="mira">
       <div class="ficha">
-        <div class="ficha__img"><img src="/analiza/a/anuncio-480.webp" width="480" height="300" alt="Foto del anuncio de ejemplo" loading="lazy"><span class="n pin" style="top:14px;right:14px" aria-hidden="true">4</span></div>
+        <div class="ficha__img"><img src="/analiza/a/anuncio-480.webp" width="480" height="300" alt="Foto del anuncio de ejemplo" loading="lazy"><span class="n pin" style="bottom:22%;left:46%" aria-hidden="true">4</span></div>
         <div class="ficha__body">
           <h3>BMW Serie 2 Gran Coupé 218i</h3>
-          <div class="dat"><span>2021</span><span>48.300 km</span><span>Gasolina</span><span>Automático</span></div>
+          <div class="dat"><span>Gasolina</span><span>Automático</span><span>Paquete M</span></div>
           <div class="fila"><span>Precio</span><span class="mono">24.900 €</span><span class="n" aria-hidden="true">1</span></div>
-          <div class="fila"><span>Vendedor</span><span>Autohaus · Múnich</span><span class="n" aria-hidden="true">2</span></div>
-          <div class="fila"><span>Garantía</span><span>BMW Premium Selection</span><span class="n" aria-hidden="true">3</span></div>
+          <div class="fila"><span>Vendedor</span><span>Concesionario · Múnich</span><span class="n" aria-hidden="true">2</span></div>
+          <div class="fila"><span>Tipo</span><span>Berlina coupé, 4 puertas</span><span class="n" aria-hidden="true">3</span></div>
           <div class="nuestro">
-            <div><svg class="ico" style="color:var(--az)"><use href="#i-camion"/></svg><span>Puesto en tu casa</span><span class="mono">28.750 €</span><span class="n" aria-hidden="true">5</span></div>
-            <div><svg class="ico" style="color:var(--az)"><use href="#i-check"/></svg><span>Tu presupuesto: 25-30.000 €</span><span class="n" aria-hidden="true">6</span></div>
+            <div><svg class="ico" style="color:var(--az)"><use href="#i-lupa"/></svg><span>Fallos típicos: 1 a vigilar</span><span class="n" aria-hidden="true">5</span></div>
+            <div><svg class="ico" style="color:var(--az)"><use href="#i-check"/></svg><span>Equipamiento: coincide</span><span class="n" aria-hidden="true">6</span></div>
+            <div><svg class="ico" style="color:var(--az)"><use href="#i-camion"/></svg><span>Puesto en tu casa</span><span class="mono">28.750 €</span><span class="n" aria-hidden="true">7</span></div>
           </div>
         </div>
       </div>
       <div>
         <ol class="lista">
-          <li><span class="n">1</span><div><h3>El precio</h3><p>Si cuadra con otros coches iguales en Alemania. Ni caro ni sospechosamente barato.</p></div></li>
+          <li><span class="n">1</span><div><h3>El precio</h3><p>Si cuadra con otros iguales en Alemania. Ni caro ni sospechosamente barato.</p></div></li>
           <li><span class="n">2</span><div><h3>Quién lo vende</h3><p>Concesionario o particular, y si es de fiar.</p></div></li>
-          <li><span class="n">3</span><div><h3>La garantía europea</h3><p>Si la tiene, de quién es y hasta cuándo te cubre.</p></div></li>
-          <li><span class="n">4</span><div><h3>Lo que dicen el anuncio y las fotos</h3><p>Año, kilómetros y equipamiento: lo que encaja y lo que no.</p></div></li>
-          <li><span class="n">5</span><div><h3>Lo que te cuesta en tu puerta</h3><p>Transporte, impuestos, ITV y nuestro servicio. El número final, sin sorpresas.</p></div></li>
-          <li><span class="n">6</span><div><h3>Si encaja con tu presupuesto</h3><p>Y si por el mismo dinero hay algo mejor.</p></div></li>
+          <li><span class="n">3</span><div><h3>El tipo de vehículo</h3><p>Si encaja con lo que buscas y con el uso que le vas a dar.</p></div></li>
+          <li><span class="n">4</span><div><h3>Los daños que ya se ven en las fotos</h3><p>Roces, golpes, llantas, desgaste del interior. Lo que el anuncio no cuenta.</p></div></li>
+          <li><span class="n">5</span><div><h3>Los fallos típicos de ese modelo</h3><p>Lo que suele dar guerra en ese motor o esa caja, y qué hay que preguntar.</p></div></li>
+          <li><span class="n">6</span><div><h3>El equipamiento</h3><p>Si lleva lo que dice, y lo que suma o resta al precio.</p></div></li>
+          <li><span class="n">7</span><div><h3>Lo que te cuesta en tu puerta</h3><p>Todos los costes sumados, y si encaja con tu presupuesto.</p></div></li>
         </ol>
-        <div class="honesto"><svg class="ico"><use href="#i-escudo"/></svg><p>Esto es el análisis del anuncio. Si decides seguir, un perito revisa el coche en persona en Alemania antes de que pagues nada.</p></div>
+        <div class="honesto"><svg class="ico"><use href="#i-escudo"/></svg><p>Esto es la fase 1. Si decides seguir, verificamos la documentación y un perito revisa el coche en persona, más de 200 puntos, antes de que pagues nada.</p></div>
       </div>
     </div>
   </div>
@@ -613,46 +709,34 @@ footer.pie nav{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px}
   </div>
 </section>
 
-<!-- 8 · PRECIO: transparencia + percepción de valor -->
-<section class="sec" aria-labelledby="t-precio">
+<!-- 8 · TODO LO QUE HACEMOS: valor sin cifras (las cifras las da Fran en la llamada) -->
+<section class="sec" aria-labelledby="t-todo">
   <div class="wrap">
-    <h2 id="t-precio">Lo que cuesta traer tu coche. Todo, sin letra pequeña.</h2>
-    <p class="lead" style="margin-top:16px">Si después del informe quieres que te lo traigamos, estas son las cuentas del coche del ejemplo.</p>
-    <div class="precio">
-      <div>
-        <div class="ticket">
-          <h3>BMW Serie 2 Gran Coupé <span class="ej">Ejemplo</span></h3>
-          <ul>
-            <li><span>Precio del coche en Alemania<small>El del anuncio, lo pagas al vendedor</small></span><span class="mono">24.900 €</span></li>
-            <li class="nuestro-li"><span><b>Servicio Orozco Import</b><small>IVA incluido. Todo lo de la derecha</small></span><span class="mono">1.573 €</span></li>
-            <li><span>Transporte en camión<small>Hasta tu puerta</small></span><span class="mono">1.100 €</span></li>
-            <li><span>Revisión en Alemania<small>Un perito ve el coche antes de que pagues</small></span><span class="mono">250-300 €</span></li>
-            <li><span>Impuesto de matriculación e ITV<small>Según CO₂ y comunidad autónoma</small></span><span class="mono">≈ 900 €</span></li>
-          </ul>
-          <div class="tot"><span>Puesto en tu casa</span><b>≈ 28.750 €</b></div>
-        </div>
-        <div class="pct">
-          <svg class="donut" viewBox="0 0 42 42" aria-hidden="true"><circle cx="21" cy="21" r="15.9" fill="none" stroke="#E2E8F0" stroke-width="6"/><circle cx="21" cy="21" r="15.9" fill="none" stroke="#2563EB" stroke-width="6" stroke-dasharray="5.5 94.5" stroke-dashoffset="25" stroke-linecap="round"/></svg>
-          <p>Nuestro servicio es el <b>5 %</b> de lo que pagas en total. El otro 95 % es tu coche y lo que cuesta traerlo.</p>
-        </div>
+    <h2 id="t-todo">Del anuncio a tu puerta. Nos encargamos de todo.</h2>
+    <p class="lead" style="margin-top:16px">Si el informe te convence, esto es lo que hacemos por ti. Tú solo eliges el coche.</p>
+    <div class="ruta">
+      <div class="tramo"><span class="pais">En Alemania</span>
+        <ol>
+          <li><svg><use href="#i-lupa"/></svg><b>Buscamos y comparamos</b><span>Las mejores unidades para lo que buscas.</span></li>
+          <li><svg><use href="#i-doc"/></svg><b>Verificamos la documentación</b><span>Kilómetros reales, accidentes, mantenimientos y cargas.</span></li>
+          <li class="estrella"><svg><use href="#i-escudo"/></svg><b>Revisión presencial profesional</b><span>Más de 200 puntos, con fotos y vídeo de la prueba.</span></li>
+          <li><svg><use href="#i-tel"/></svg><b>Hablamos con el concesionario</b><span>En alemán, y negociamos por ti.</span></li>
+          <li><svg><use href="#i-firma"/></svg><b>Cerramos la compra con seguridad</b><span>El pago del coche va directo al vendedor, nunca a nosotros.</span></li>
+        </ol>
       </div>
-      <div>
-        <h3>Por 1.573 € nos encargamos de</h3>
-        <div class="incl">
-          <div><svg><use href="#i-lupa"/></svg>Buscar el coche y comparar opciones</div>
-          <div><svg><use href="#i-tel"/></svg>Hablar con el concesionario en alemán</div>
-          <div><svg><use href="#i-doc"/></svg>Verificar toda la documentación</div>
-          <div><svg><use href="#i-firma"/></svg>Cerrar la compra con seguridad</div>
-          <div><svg><use href="#i-camion"/></svg>Organizar el transporte</div>
-          <div><svg><use href="#i-matricula"/></svg>Coordinar ITV y matriculación en España</div>
-        </div>
-        <div class="vs">
-          <div><b>Si lo haces tú</b>Vuelos, hotel, dos días sin trabajar, un vendedor que habla alemán y la duda de si has mirado lo que había que mirar.</div>
-          <div><b>Con nosotros</b>Te enteras de todo por WhatsApp y el coche llega a tu puerta con matrícula española.</div>
-        </div>
-        <div class="reserva"><span class="mono">250 €</span><p><b>Para empezar, una reserva.</b> Se descuenta del precio final, y si no encontramos un coche adecuado para ti, te la devolvemos.</p></div>
+      <div class="tramo tramo--camion"><svg><use href="#i-camion"/></svg><div><b>Transporte en camión asegurado</b><span>De Alemania a España</span></div></div>
+      <div class="tramo"><span class="pais">En España</span>
+        <ol>
+          <li><svg><use href="#i-matricula"/></svg><b>Coordinamos ITV y matriculación</b><span>Tú no haces ningún trámite.</span></li>
+          <li class="estrella"><svg><use href="#i-casa"/></svg><b>Entrega en tu puerta</b><span>Con matrícula española y listo para conducir.</span></li>
+        </ol>
       </div>
     </div>
+    <div class="vs">
+      <div><b>Si lo haces tú</b>Vuelos, hotel, dos días sin trabajar, un vendedor que habla alemán y la duda de si has mirado lo que había que mirar.</div>
+      <div><b>Con nosotros</b>Te enteras de todo por WhatsApp y el coche llega a tu puerta con matrícula española.</div>
+    </div>
+    <div class="cuanto"><p>¿Cuánto te costaría tu coche, con todo?<span>Te damos el coste total en tu informe, y Fran te lo explica partida a partida en la llamada.</span></p><a class="btn" href="#form">Analiza mi coche</a></div>
   </div>
 </section>
 
@@ -664,8 +748,8 @@ footer.pie nav{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px}
       <details><summary>¿Cuánto cuesta el análisis?</summary><p>Nada, y no te compromete a nada. Solo pagas si después decides que te traigamos el coche.</p></details>
       <details><summary>¿Quién hace el análisis?</summary><p>Lo preparamos con nuestras herramientas y con los criterios que Fran aplica desde hace 9 años, y lo revisa el equipo antes de enviártelo.</p></details>
       <details><summary>¿Y si no tengo un anuncio concreto?</summary><p>Dinos modelo, versión y presupuesto. Te decimos si tiene sentido traerlo y te enseñamos opciones.</p></details>
-      <details><summary>¿Revisáis el coche en persona?</summary><p>El análisis se hace sobre el anuncio. Si decides seguir, un perito revisa el coche en persona en Alemania antes de que pagues nada.</p></details>
-      <details><summary>¿Qué garantía tiene el coche?</summary><p>La garantía europea del fabricante o del concesionario, si el coche la tiene. Te lo decimos en el informe, con la fecha hasta la que te cubre.</p></details>
+      <details><summary>¿Revisáis el coche en persona?</summary><p>Sí. El informe de 24 h es sobre el anuncio. Si decides seguir, verificamos la documentación y un perito revisa el coche en persona en Alemania, más de 200 puntos, antes de que pagues nada.</p></details>
+      <details><summary>¿Cuánto cuesta traer el coche?</summary><p>Depende del coche y de dónde vivas. Te damos el coste total en tu informe, y Fran te lo explica partida a partida en la llamada.</p></details>
       <details><summary>¿Quién se encarga de la ITV y la matrícula?</summary><p>Las realizan el organismo o la empresa autorizada correspondiente. Nosotros las coordinamos para que tú no tengas que hacer nada.</p></details>
       <details><summary>¿Y si importar no me compensa?</summary><p>Te lo decimos en el informe, con los números. Sin llamadas ni insistencia.</p></details>
     </div>
