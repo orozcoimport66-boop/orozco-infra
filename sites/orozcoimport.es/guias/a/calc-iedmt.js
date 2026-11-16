@@ -11,7 +11,7 @@
   var SUPA = 'https://lhtequkigdilfldnugco.supabase.co/rest/v1/rpc/';
   var KEY = 'sb_publishable_Npr_iJetGNfb2xLgPQ0lCw_CPpRRRNk';
   var ORDEN = 'Orden HAC/1501/2025';
-  var FIJOS = 3300; // transporte, ITV y tasas, revisión y servicio (ver la guía)
+  var FIJOS = 3300; // transporte, ITV y tasas, revisión del perito y servicio (ver la guía)
 
   // Anexo IV: % por años de uso (turismos)
   var USO = [[1, 100], [2, 84], [3, 67], [4, 56], [5, 47], [6, 39], [7, 34], [8, 28], [9, 24], [10, 19], [11, 17], [12, 13], [Infinity, 10]];
@@ -167,7 +167,7 @@
         '<li><span>− Impuestos ya pagados en origen (' + pct(Math.round(iva * 1000) / 10) + ' de IVA y ' + pct(tipo) + ' de matriculación)</span><b>' + eur(vm - bi) + '</b></li>' +
         '<li><span>= Base imponible</span><b>' + eur(bi) + '</b></li>' +
         '<li class="ci-fin"><span>× Tipo según CO₂ y comunidad</span><b>' + pct(tipo) + '</b></li>';
-      extra.innerHTML = 'Con transporte, ITV y tasas, revisión y nuestro servicio, cuenta con unos <b>' + eur(cuota + FIJOS) + '</b> además del precio del coche. <a href="#form">Te lo calculamos con tu coche concreto →</a>';
+      extra.innerHTML = 'Con transporte, ITV y tasas, revisión del perito y nuestro servicio, cuenta con unos <b>' + eur(cuota + FIJOS) + '</b> además del precio del coche. <a href="#form">Te lo calculamos con tu coche concreto →</a>';
     }
 
     // eventos
