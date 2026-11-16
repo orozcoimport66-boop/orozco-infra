@@ -261,3 +261,42 @@ p{margin:0}
 @keyframes brilla{0%{box-shadow:0 0 0 0 rgba(245,158,11,.9)}100%{box-shadow:0 0 0 14px rgba(245,158,11,0)}}
 .en-revision .borrador,.en-revision .fija{display:none!important}
 .en-revision .cab{position:static}
+
+/* Calculadora del impuesto de matriculación (calc-iedmt.js) */
+.calc sup{font-size:.7em;color:var(--azc)}
+.ci-grid{display:grid;gap:0 16px}
+@media (min-width:620px){.ci-grid{grid-template-columns:1fr 1fr}}
+.ci-campo{position:relative;min-width:0}
+.calc .ci-campo input:not([type=range]):not([type=checkbox]),.calc .ci-campo select{width:100%;margin-top:8px;padding:12px 14px;border-radius:12px;border:1px solid #334155;background:var(--nv2);color:#fff;font:500 16px/1.2 var(--b);appearance:none;-webkit-appearance:none}
+.calc .ci-campo select{background-image:linear-gradient(45deg,transparent 50%,#94A3B8 50%),linear-gradient(135deg,#94A3B8 50%,transparent 50%);background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px;background-repeat:no-repeat;padding-right:34px}
+.calc .ci-campo input:focus,.calc .ci-campo select:focus{outline:2px solid var(--azc);outline-offset:1px;border-color:transparent}
+.calc .ci-campo input:disabled{opacity:.55}
+.calc .ci-campo input::placeholder{color:#64748B}
+.ci-dos{display:grid;grid-template-columns:1.4fr 1fr;gap:8px}
+.ci-lista{position:absolute;z-index:5;left:0;right:0;top:100%;margin:6px 0 0;padding:6px;list-style:none;background:#fff;border-radius:14px;box-shadow:0 24px 48px -12px rgba(15,23,42,.55);max-height:340px;overflow:auto}
+.ci-lista li{display:grid;grid-template-columns:1fr auto;gap:2px 12px;padding:10px 12px;border-radius:10px;cursor:pointer;color:var(--tx)}
+.ci-lista li b{color:var(--nv);font:600 14.5px/1.3 var(--b)}
+.ci-lista li span{grid-column:1;font-size:12.5px;color:var(--ac)}
+.ci-lista li em{grid-row:1/3;grid-column:2;align-self:center;font:500 14px/1 var(--m);font-style:normal;color:var(--nv)}
+.ci-lista li i{color:#B45309;font-style:normal}
+.ci-lista li:hover,.ci-lista li:focus{background:var(--azf);outline:none}
+.ci-lista li.ci-nada{display:block;cursor:default;font-size:13.5px;color:var(--ac)}
+.ci-lista li.ci-nada:hover{background:none}
+.ci-elegido{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 16px;margin-top:8px;font-size:13px;color:#94A3B8}
+.ci-elegido b{color:#fff;font:500 14px/1 var(--m)}
+.ci-enlace{margin-top:10px;padding:0;border:0;background:none;color:var(--azc);font:500 13.5px/1.3 var(--b);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.calc .ci-check{display:flex;align-items:center;gap:8px;margin-top:10px;font:400 13.5px/1.3 var(--b);color:#94A3B8}
+.ci-check input{width:16px;height:16px;accent-color:var(--azc)}
+.ci-res{margin-top:22px;border-radius:16px;background:var(--nv2);padding:18px}
+.ci-total small{display:block;font-size:12.5px;color:#94A3B8}
+.ci-total b{display:block;margin-top:6px;font:600 36px/1 var(--m);color:#fff;letter-spacing:-.03em}
+.ci-total span{display:block;margin-top:8px;font-size:13px;color:#94A3B8}
+.ci-pasos{margin:16px 0 0;padding:14px 0 0;list-style:none;border-top:1px solid #334155;display:grid;gap:8px}
+.ci-pasos li{display:flex;justify-content:space-between;gap:16px;font-size:13.5px;color:#CBD5E1}
+.ci-pasos li b{font:500 14px/1.3 var(--m);color:#fff;white-space:nowrap}
+.ci-pasos li.ci-fin{padding-top:8px;border-top:1px dashed #334155}
+.ci-pasos li.ci-vacio{display:block;color:#94A3B8}
+.ci-extra{margin-top:14px!important;font-size:14px!important;color:#E2E8F0}
+.ci-extra b{color:#fff}
+.ci-extra a{color:var(--azc);font-weight:600}
+.art .ci-pasos{padding-left:0}.art .ci-pasos li{margin:0;padding-left:0}.art .ci-pasos li::before{content:none}
