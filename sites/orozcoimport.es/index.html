@@ -936,8 +936,8 @@
         <div class="oi-filtro__txt">
           <span class="oi-filtro__num">Filtro 2 · la documentación y las fotos</span>
           <h3 class="oi-filtro__tit">Lo que el anuncio no cuenta.</h3>
-          <p>Pedimos la documentación y el historial internacional del coche: kilómetros reales, mantenimientos y accidentes registrados en cualquier país de Europa. Y revisamos las fotos una a una buscando golpes y daños.</p>
-          <ul class="oi-filtro__chips"><li>Historial de accidentes en Europa</li><li>Kilómetros reales</li><li>Mantenimientos</li><li>Daños en las fotos</li></ul>
+          <p>Pedimos la documentación y el historial internacional del coche: kilómetros reales, mantenimientos, cargas y accidentes registrados en cualquier país de Europa. Y revisamos las fotos una a una buscando golpes y daños.</p>
+          <ul class="oi-filtro__chips"><li>Historial de accidentes en Europa</li><li>Kilómetros reales</li><li>Mantenimientos</li><li>Cargas y embargos</li><li>Daños en las fotos</li></ul>
           <p class="oi-filtro__embudo"><b>3</b> candidatos <span>→</span> <b>1</b> sigue</p>
         </div>
         <div class="oi-filtro__vis" role="img" aria-label="Ejemplo: de tres candidatos, uno tiene un accidente registrado en otro país y otro daños en las fotos">
@@ -949,8 +949,8 @@
         <div class="oi-filtro__txt">
           <span class="oi-filtro__num">Filtro 3 · en persona, en Alemania</span>
           <h3 class="oi-filtro__tit">Un perito lo revisa antes de que pagues nada.</h3>
-          <p>El que ha pasado los dos filtros lo vemos en persona: más de 200 puntos en los 6 bloques de abajo. Y antes de que decidas, te enviamos el informe con fotos, vídeo y nuestra recomendación.</p>
-          <ul class="oi-filtro__chips"><li>Más de 200 puntos</li><li>Prueba en carretera</li><li>Informe antes de decidir</li></ul>
+          <p>El que ha pasado los dos filtros lo vemos en persona: más de 200 puntos, de la mecánica y la electrónica a la pintura panel a panel y los bajos. Y antes de que decidas, te enviamos el informe con fotos, vídeo y nuestra recomendación.</p>
+          <ul class="oi-filtro__chips"><li>Diagnosis y mecánica</li><li>Pintura panel a panel</li><li>Electrónica y opcionales</li><li>Prueba en carretera</li><li>Informe antes de decidir</li></ul>
           <p class="oi-filtro__embudo"><b>1</b> coche <span>→</span> tu informe</p>
         </div>
         <div class="oi-filtro__vis">
@@ -958,41 +958,8 @@
         </div>
       </article>
     </div>
-    <p class="oi-filtros__det">El filtro 3 por dentro: <strong>los 6 bloques de la revisión</strong></p>
 
 
-    <div class="oi-inspection__grid">
-      <article class="oi-inspection__item oi-reveal">
-        <div class="oi-inspection__item-num oi-num">01</div>
-        <h3 class="oi-inspection__item-title">Historial completo</h3>
-        <p class="oi-inspection__item-text">Verificamos kilometraje real, número de propietarios, accidentes registrados y mantenimientos en talleres oficiales.</p>
-      </article>
-      <article class="oi-inspection__item oi-reveal" style="transition-delay:0.05s">
-        <div class="oi-inspection__item-num oi-num">02</div>
-        <h3 class="oi-inspection__item-title">Estado mecánico</h3>
-        <p class="oi-inspection__item-text">Diagnóstico OBD, prueba en frío y en caliente, comprobación de fluidos, embrague, transmisión y sistema de frenos.</p>
-      </article>
-      <article class="oi-inspection__item oi-reveal" style="transition-delay:0.1s">
-        <div class="oi-inspection__item-num oi-num">03</div>
-        <h3 class="oi-inspection__item-title">Carrocería y chasis</h3>
-        <p class="oi-inspection__item-text">Medidor de espesor de pintura en cada panel para detectar repintados o reparaciones. Inspección visual de soldaduras y bajos.</p>
-      </article>
-      <article class="oi-inspection__item oi-reveal" style="transition-delay:0.15s">
-        <div class="oi-inspection__item-num oi-num">04</div>
-        <h3 class="oi-inspection__item-title">Electrónica y opcionales</h3>
-        <p class="oi-inspection__item-text">Probamos uno a uno todos los sistemas: navegador, asistentes de conducción, climatización, sensores y multimedia.</p>
-      </article>
-      <article class="oi-inspection__item oi-reveal" style="transition-delay:0.2s">
-        <div class="oi-inspection__item-num oi-num">05</div>
-        <h3 class="oi-inspection__item-title">Documentación legal</h3>
-        <p class="oi-inspection__item-text">Verificamos que el coche está libre de cargas, embargos o reservas de dominio. Validamos el COC y todos los permisos.</p>
-      </article>
-      <article class="oi-inspection__item oi-reveal" style="transition-delay:0.25s">
-        <div class="oi-inspection__item-num oi-num">06</div>
-        <h3 class="oi-inspection__item-title">Informe final compartido</h3>
-        <p class="oi-inspection__item-text">Recibes un informe con fotos, vídeo de la prueba dinámica y nuestra recomendación. Decides con todos los datos sobre la mesa.</p>
-      </article>
-    </div>
   </div>
 </section>
 
@@ -2326,7 +2293,7 @@
 </style>
 <style>
 /* Inspección en tres filtros (sustituye a la lista de descartes) */
-.oi-filtros { max-width: 1080px; margin: 56px auto 32px; display: grid; gap: 72px; }
+.oi-filtros { max-width: 1080px; margin: 56px auto 0; display: grid; gap: 72px; }
 .oi-filtro { display: grid; grid-template-columns: 1fr 1.1fr; gap: 56px; align-items: center; }
 .oi-filtro--inv .oi-filtro__txt { order: 2; }
 .oi-filtro__num { display: inline-block; font: 500 12px/1 var(--font-mono); letter-spacing: .04em; text-transform: uppercase; color: #93C5FD; background: rgba(96,165,250,.12); border: 1px solid rgba(96,165,250,.25); padding: 7px 10px; border-radius: 999px; }
