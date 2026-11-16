@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Cuánto cuesta traer un coche de Alemania (2026): desglose real | Orozco Import</title>
 <meta name="description" content="Además del precio del coche, cuenta con unos 3.300 € de costes fijos más el impuesto de matriculación (0 % a 14,75 % según CO₂). Desglose real, euro a euro, con casos de clientes.">
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="index, follow, max-image-preview:large">
 <link rel="canonical" href="https://orozcoimport.es/guias/cuanto-cuesta-traer-coche-alemania/">
 <meta name="theme-color" content="#0F172A">
 <link rel="icon" href="/favicon.ico">
@@ -27,8 +27,8 @@
       "headline": "Cuánto cuesta traer un coche de Alemania (2026): desglose real",
       "description": "Además del precio del coche, cuenta con unos 3.300 € de costes fijos más el impuesto de matriculación (0 % a 14,75 % según CO₂). Desglose real, euro a euro, con casos de clientes.",
       "inLanguage": "es-ES",
-      "datePublished": "2026-11-13",
-      "dateModified": "2026-11-13",
+      "datePublished": "2026-11-16",
+      "dateModified": "2026-11-16",
       "image": "https://orozcoimport.es/guias/a/fabian-cla.webp",
       "mainEntityOfPage": "https://orozcoimport.es/guias/cuanto-cuesta-traer-coche-alemania/",
       "author": { "@type": "Person", "name": "Francisco Orozco", "jobTitle": "Fundador de Orozco Import", "worksFor": { "@id": "https://orozcoimport.es/#empresa" } },
@@ -351,7 +351,7 @@
         <span class="err">Revisa el número: necesitamos un móvil válido.</span>
       </div>
       <input type="hidden" name="stage" value="decided">
-      <input type="hidden" name="oferta" value="analiza">
+      <input type="hidden" name="oferta" value="guia-costes">
       <input type="hidden" name="vehicle" id="f-vehicle" value="">
       <label class="priv"><input type="checkbox" id="f-priv" required> <span>Acepto la <a href="/privacidad/" target="_blank" rel="noopener">política de privacidad</a> para que me enviéis el análisis.</span></label>
       <button class="btn" type="submit" id="f-enviar">Calcular mi coche</button>
@@ -415,7 +415,6 @@
     if(mal){mal.focus();return}
     var l=document.getElementById('f-link').value.trim();
     document.getElementById('f-vehicle').value=/^https?:\/\//i.test(l)?'':l;
-    window.oiGraciasUrl=function(){var a=window.oiAtribucion?window.oiAtribucion():{},q=new URLSearchParams();['utm_source','utm_medium','utm_campaign','utm_content','utm_term','gclid','fbclid'].forEach(function(k){if(a[k])q.set(k,a[k])});var s=q.toString();return '/analiza/gracias/'+(s?'?'+s:'')};
     try{sessionStorage.setItem('oi_analiza_nombre',document.getElementById('f-name').value.trim().split(' ')[0])}catch(x){}
     if(PRE){alert('Vista previa: el formulario no envía nada.');return}
     window.oiEnviarLead(f,{ocupado:function(v){btn.disabled=v;btn.textContent=v?'Enviando…':'Calcular mi coche'},invalido:function(){var p=document.getElementById('f-phone');p.setAttribute('aria-invalid','true');p.focus()}});
