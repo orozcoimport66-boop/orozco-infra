@@ -6,6 +6,7 @@
  * 4. Guarda la etapa del lead (stage) para que /landing/gracias la publique en el dataLayer.
  * 5. Guarda la web de procedencia (sin parámetros) para reconocer buscadores y asistentes de IA (ChatGPT, Perplexity…).
  * 6. window.oiEnviarLead(form, op): envía al webhook y solo redirige a gracias con respuesta 2xx.
+ * 7. Guarda la última guía leída en la sesión (/guias/<slug>/) y la manda con el lead en «guia», sin tocar el canal.
  */
 (function () {
   var KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid', 'fbclid'];
@@ -41,6 +42,10 @@
       try { sessionStorage.setItem(STORE, JSON.stringify({ referente: referente, landing: window.location.pathname })); } catch (e) {}
     }
   }
+
+  // 7. Guía leída (16/11/2026): la última guía visitada en la sesión viaja con el lead, venga de donde venga
+  var guia = window.location.pathname.match(/^\/guias\/([a-z0-9-]+)\/?$/);
+  if (guia) { try { sessionStorage.setItem('oi_guia', guia[1]); } catch (e) {} }
 
   window.oiAtribucion = leer;
 
@@ -144,6 +149,7 @@
     }
     d.referente = a.referente || '';
     d.pagina = window.location.origin + window.location.pathname;
+    try { d.guia = sessionStorage.getItem('oi_guia') || ''; } catch (e) { d.guia = ''; }
     // Etapa del lead para la página de gracias (Tag Manager decide si cuenta como conversión).
     try { sessionStorage.setItem('oi_lead_stage', d.stage || ''); } catch (e) {}
     return d;

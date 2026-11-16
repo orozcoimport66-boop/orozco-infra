@@ -30,6 +30,8 @@ const fbclid = cut(t(b.fbclid), 300);
 const experimento = cut(t(b.experimento), 60);
 const pagina = cut(t(b.pagina || h.referer || h.origin), 300);
 const honeypot = t(b.website);
+// Última guía de /guias/ leída en la sesión (oi-captacion.js). No cambia el canal.
+const guia = cut(t(b.guia).toLowerCase().replace(/[^a-z0-9-]/g, ''), 80);
 
 const src = utmSource.toLowerCase();
 const med = utmMedium.toLowerCase();
@@ -44,6 +46,8 @@ const IA_SRC = /^(chatgpt|openai|perplexity|gemini|copilot|claude|deepseek|grok|
 // (las campañas llevan utm_medium=paid_social, ver LAN-5).
 const SOCIAL_SRC = /^(facebook|instagram|meta|fb|ig|threads|messenger|an)$/;
 const PAGO_MED = /^(paid_social|paid|paidsocial|cpc|cpm|ppc|ads?)$/;
+// Buscadores que no son Google (16/11/2026): antes caían en Directo
+const OTROS_BUSCADORES = /(^|\\.)(bing\\.com|duckduckgo\\.com|yahoo\\.[a-z.]+|ecosia\\.org|search\\.brave\\.com|qwant\\.com|startpage\\.com|yandex\\.[a-z.]+|baidu\\.com)$|^(bing|duckduckgo|yahoo|ecosia|brave|qwant|startpage|yandex|baidu)$/;
 let canal = 'Directo';
 if (gclid) canal = 'Google Ads';
 else if (med === 'paid_social' || (SOCIAL_SRC.test(src) && PAGO_MED.test(med))) canal = 'Meta Ads';
@@ -52,8 +56,9 @@ else if (IA.test(src) || IA_SRC.test(src) || IA.test(refHost)) canal = 'ChatGPT 
 else if (src === 'instagram' || src === 'ig') canal = 'Instagram';
 else if (src === 'tiktok') canal = 'TikTok';
 else if (src === 'facebook' || src === 'meta' || src === 'fb') canal = 'Facebook';
-else if (med === 'organic') canal = 'Google Orgánico';
+else if (med === 'organic') canal = OTROS_BUSCADORES.test(src) ? 'Otros buscadores' : 'Google Orgánico';
 else if (!src && /(^|\\.)google\\.[a-z.]+$/.test(refHost)) canal = 'Google Orgánico';
+else if (!src && OTROS_BUSCADORES.test(refHost)) canal = 'Otros buscadores';
 else if (!src && /instagram\\.com$/.test(refHost)) canal = 'Instagram';
 else if (!src && /tiktok\\.com$/.test(refHost)) canal = 'TikTok';
 else if (!src && /(^|\\.)facebook\\.com$/.test(refHost)) canal = 'Facebook';
@@ -111,7 +116,7 @@ const supabase = {
   nombre, email: emailOk ? email : '', telefono: telOk ? tel : telOriginal, codigo_postal: cp, situacion, modelo,
   presupuesto, url_anuncio: urlAnuncio, mensaje, canal, utm_source: utmSource, utm_medium: utmMedium,
   utm_campaign: utmCampaign, utm_content: utmContent, utm_term: utmTerm, gclid, fbclid,
-  pagina_origen: pagina, experimento, referente: referente || null
+  pagina_origen: pagina, experimento, referente: referente || null, guia_origen: guia || null
 };
 
 const primerNombre = nombre.split(' ')[0] || '';
@@ -120,7 +125,7 @@ const textoWa = 'Hola ' + primerNombre + ', soy Fran de Orozco Import. Acabo de 
 const whatsapp = telOk ? 'https://wa.me/' + tel.replace('+', '') + '?text=' + encodeURIComponent(textoWa) : '';
 
 return { json: { valido, motivo, nombre, email, emailOk, tel, telOk, telOriginal, canal, modelo, presupuesto,
-  situacion, mensaje, urlAnuncio, utmCampaign, pagina, gclid: gclid ? 'sí' : 'no', whatsapp,
+  situacion, mensaje, urlAnuncio, utmCampaign, pagina, guia, gclid: gclid ? 'sí' : 'no', whatsapp,
   supabase, notion, notionUpdate, notionFiltro, brevo } };
 `;
 
@@ -138,7 +143,7 @@ const html = '<div style="font-family:Arial,sans-serif;max-width:560px">' +
   '<table style="border-collapse:collapse;margin-top:12px;font-size:14px">' +
   fila('Teléfono', n.tel || n.telOriginal) + fila('Email', n.email) + fila('En qué punto está', n.situacion) +
   fila('Coche', n.modelo) + fila('Presupuesto', n.presupuesto) + fila('Anuncio', n.urlAnuncio) + fila('Mensaje', n.mensaje) +
-  fila('Página', n.pagina) + fila('gclid', n.gclid) + '</table></div>';
+  fila('Página', n.pagina) + fila('Guía leída', n.guia) + fila('gclid', n.gclid) + '</table></div>';
 return { json: {
   sender: { name: 'Orozco Import Leads', email: 'orozcoimport66@gmail.com' },
   to: [{ email: 'orozcoimport66@gmail.com' }],
