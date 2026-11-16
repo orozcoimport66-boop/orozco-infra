@@ -22,9 +22,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <title>Importar coche de Alemania con total seguridad | Orozco Import</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=optional" rel="stylesheet">
+  <link rel="preload" href="/fonts/inter-var-latin-v5.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/geist-var-latin-v5.woff2" as="font" type="font/woff2" crossorigin>
+  <style>
+    /* Fuentes servidas desde nuestro servidor (antes Google Fonts). Variables: un archivo por familia para todos los pesos. */
+    @font-face { font-family: 'Inter'; font-style: normal; font-weight: 100 900; font-display: optional; src: url(/fonts/inter-var-latin-v5.woff2) format('woff2'); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+    @font-face { font-family: 'Geist'; font-style: normal; font-weight: 100 900; font-display: optional; src: url(/fonts/geist-var-latin-v5.woff2) format('woff2'); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+  </style>
   <style>
     :root {
       /* Paleta refinada */
@@ -197,7 +201,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="oi-hero__bg">
     <div class="oi-hero__halo"></div>
     <div class="oi-hero__halo oi-hero__halo--gold"></div>
-    <img src="img/cla-sketch.png" fetchpriority="low" decoding="async" alt="" class="oi-hero__bg-img" aria-hidden="true" />
     <div class="oi-hero__grid-pattern" aria-hidden="true"></div>
   </div>
 
@@ -315,7 +318,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
           <article class="oi-hero__card oi-hero__card--bot-left">
             <div class="oi-hero__card-photo-wrap">
-              <img src="img/caso-5.webp" srcset="img/caso-5-640.webp 640w, img/caso-5.webp 1000w" sizes="(max-width: 768px) 92vw, 760px" alt="Volkswagen Golf GTI" class="oi-hero__card-img" />
+              <img loading="lazy" src="img/caso-5.webp" srcset="img/caso-5-640.webp 640w, img/caso-5.webp 1000w" sizes="(max-width: 768px) 92vw, 760px" alt="Volkswagen Golf GTI" class="oi-hero__card-img" />
               <span class="oi-hero__card-badge"><span class="oi-num">2026</span></span>
             </div>
             <div class="oi-hero__card-info">
@@ -332,7 +335,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
           <article class="oi-hero__card oi-hero__card--bot-right">
             <div class="oi-hero__card-photo-wrap">
-              <img src="img/caso-1.webp" srcset="img/caso-1-640.webp 640w, img/caso-1.webp 1000w" sizes="(max-width: 768px) 92vw, 760px" alt="Mercedes CLA 250e AMG" class="oi-hero__card-img" />
+              <img loading="lazy" src="img/caso-1.webp" srcset="img/caso-1-640.webp 640w, img/caso-1.webp 1000w" sizes="(max-width: 768px) 92vw, 760px" alt="Mercedes CLA 250e AMG" class="oi-hero__card-img" />
               <span class="oi-hero__card-badge"><span class="oi-num">2026</span></span>
             </div>
             <div class="oi-hero__card-info">
@@ -373,7 +376,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               <div class="oi-hero__slide">
                 <article class="oi-hero__card">
                   <div class="oi-hero__card-photo-wrap">
-                    <img src="img/caso-5.webp" srcset="img/caso-5-640.webp 640w, img/caso-5.webp 1000w" sizes="(max-width: 768px) 92vw, 760px" alt="Volkswagen Golf GTI" class="oi-hero__card-img" />
+                    <img data-src="img/caso-5.webp" data-srcset="img/caso-5-640.webp 640w, img/caso-5.webp 1000w" sizes="(max-width: 768px) 92vw, 760px" alt="Volkswagen Golf GTI" class="oi-hero__card-img" />
                     <span class="oi-hero__card-badge"><span class="oi-num">2026</span></span>
                   </div>
                   <div class="oi-hero__card-info">
@@ -391,7 +394,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               <div class="oi-hero__slide">
                 <article class="oi-hero__card">
                   <div class="oi-hero__card-photo-wrap">
-                    <img src="img/caso-1.webp" srcset="img/caso-1-640.webp 640w, img/caso-1.webp 1000w" sizes="(max-width: 768px) 92vw, 760px" alt="Mercedes CLA 250e AMG" class="oi-hero__card-img" />
+                    <img data-src="img/caso-1.webp" data-srcset="img/caso-1-640.webp 640w, img/caso-1.webp 1000w" sizes="(max-width: 768px) 92vw, 760px" alt="Mercedes CLA 250e AMG" class="oi-hero__card-img" />
                     <span class="oi-hero__card-badge"><span class="oi-num">2026</span></span>
                   </div>
                   <div class="oi-hero__card-info">
@@ -4627,7 +4630,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     var dots = document.querySelectorAll('.oi-hero__dot');
     if (!track || !dots.length) return;
     var total = 3, current = 0, startX = 0;
+    /* Las fotos 2 y 3 del carrusel se cargan al terminar la página o al pasar de foto, no al principio */
+    function cargarFotos() {
+      track.querySelectorAll('img[data-src]').forEach(function(img) {
+        img.srcset = img.getAttribute('data-srcset'); img.src = img.getAttribute('data-src');
+        img.removeAttribute('data-src'); img.removeAttribute('data-srcset');
+      });
+    }
+    if (document.readyState === 'complete') cargarFotos(); else window.addEventListener('load', cargarFotos);
     function goTo(i) {
+      cargarFotos();
       current = i;
       track.style.transform = 'translateX(-' + (i * 33.333) + '%)';
       dots.forEach(function(d, idx) {
