@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Comprobación de SEO técnico de las guías de orozcoimport.es/guias/.
+"""Comprobación de SEO técnico de las guías de orozcoimport.es/guias/ y de las páginas de marca (/bmw/, /mercedes/…).
 
 Uso:
   python3 tools/seo_guias.py sites/orozcoimport.es/guias/<slug>/index.html [...]           # borrador (espera noindex)
@@ -24,8 +24,10 @@ def revisa(ruta, publicar):
     s = open(ruta, encoding='utf-8').read()
     fallos, avisos = [], []
     g = lambda r: (lambda m: html.unescape(m.group(1)).strip() if m else None)(re.search(r, s, re.S | re.I))
-    slug = os.path.basename(os.path.dirname(os.path.abspath(ruta)))
-    url = f'https://orozcoimport.es/guias/{slug}/' if slug != 'guias' else 'https://orozcoimport.es/guias/'
+    rel = os.path.relpath(os.path.dirname(os.path.abspath(ruta)), RAIZ).replace(os.sep, '/')
+    slug = os.path.basename(rel)
+    url = f'https://orozcoimport.es/{rel}/'
+    guia = rel.startswith('guias/')
 
     t = g(r'<title>(.*?)</title>')
     if not t: fallos.append('sin <title>')
@@ -64,7 +66,8 @@ def revisa(ruta, publicar):
             fallos.append(f'JSON-LD no válido: {e}')
             continue
         tipos += [x.get('@type') for x in j.get('@graph', [j])]
-    esperados = ['CollectionPage', 'BreadcrumbList'] if slug == 'guias' else ['Article', 'BreadcrumbList', 'FAQPage']
+    esperados = (['CollectionPage', 'BreadcrumbList'] if rel == 'guias' else ['Article', 'BreadcrumbList', 'FAQPage'] if guia
+                 else ['Service', 'BreadcrumbList', 'FAQPage'])
     for k in esperados:
         if k not in tipos: fallos.append(f'falta JSON-LD {k}')
 
@@ -81,9 +84,9 @@ def revisa(ruta, publicar):
     if 'class="fran' in s or 'data-campo=' in s:
         (fallos if publicar else avisos).append('quedan huecos de Fran sin rellenar')
 
-    if publicar and slug != 'guias':
+    if publicar and rel != 'guias':
         if url not in open(os.path.join(RAIZ, 'sitemap.xml'), encoding='utf-8').read(): fallos.append('no está en sitemap.xml')
-        if f'/guias/{slug}/' not in open(os.path.join(RAIZ, 'guias', 'index.html'), encoding='utf-8').read(): fallos.append('no está enlazada desde /guias/')
+        if guia and f'/guias/{slug}/' not in open(os.path.join(RAIZ, 'guias', 'index.html'), encoding='utf-8').read(): fallos.append('no está enlazada desde /guias/')
     return fallos, avisos
 
 

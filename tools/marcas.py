@@ -1,469 +1,284 @@
 #!/usr/bin/env python3
-"""Genera las páginas por marca (/bmw/, /mercedes/, /audi/) a partir de la home.
+"""Genera las páginas por marca (/bmw/, /mercedes/, /audi/) con el diseño de las guías (guias/a/guia.css).
 
-Uso:  python3 tools/marcas.py            (desde la raíz del repo)
+Uso (desde la raíz del repo):
+  python3 tools/marcas.py              borrador: noindex y huecos de Fran (casos y fotos de modelos)
+  python3 tools/marcas.py --lanzar     indexable (solo cuando no quede ningún hueco)
 
-La home es la plantilla: se reutilizan su diseño, proceso, servicios, inspección,
-testimonios, formulario y scripts. Por marca cambian: cabecera SEO y schema, hero,
-"por qué importar", la sección de modelos, los casos del carrusel del hero, las FAQ,
-el título del formulario y el texto SEO del footer.
-
-Fotos: cada hueco apunta a un archivo dentro de la carpeta de la marca. Si existe
-la foto (.webp o .jpg) se usa; si no, se genera un marcador .svg con el nombre del hueco.
+Lo que aporta Fran llega por la página de revisión (panel.orozcoimport.es/revision/?guia=<marca>):
+  · caso_extra_1..3  (data-tipo="caso"): casos reales de la marca, con fotos
+  · foto_<modelo>    (data-tipo="foto"): una foto real de cada modelo
+Cuando Fran rellena un hueco, se integra aquí, en MARCAS, y se vuelve a generar la página.
+Un caso con datos completos lleva 'desglose'; uno con solo el ahorro, 'ahorro'.
+Un modelo con foto lleva 'foto' (ruta pública de la imagen 640 px, webp).
 """
 import html
 import json
 import os
-import re
+import sys
 
-RAIZ = os.path.join(os.path.dirname(__file__), '..', 'sites', 'orozcoimport.es')
+from PIL import Image
+
+RAIZ = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'sites', 'orozcoimport.es'))
 DOM = 'https://orozcoimport.es'
+BORRADOR = '--lanzar' not in sys.argv
+HOY = '2026-11-17'
+CASOS_EXTRA = 3
+
+FIJOS = [('Transporte en camión', 'Asegurado, puerta a puerta', '1.000–1.300 €'),
+         ('Impuesto de matriculación', 'Según las emisiones de CO₂', '0 a 14,75 %'),
+         ('ITV, tasas y placas', 'Las coordinamos nosotros', '≈ 300 €'),
+         ('Revisión del perito', 'En persona, en Alemania', '≈ 300 €'),
+         ('Servicio completo', '1.300 € + IVA', '1.573 €')]
 
 MARCAS = {
     'bmw': {
-        'marca': 'BMW', 'nombre_largo': 'BMW',
-        'title': 'Importar un BMW de Alemania | Orozco Import',
-        'description': 'Importa tu BMW desde Alemania: lo buscamos, lo inspeccionamos físicamente y te lo entregamos con matrícula española. Serie 3, Serie 4, X1, X3 y más.',
-        'og_description': 'Tu BMW desde Alemania hasta tu puerta. Lo buscamos, lo inspeccionamos y gestionamos todo. +400 coches importados desde 2017.',
-        'subtitulo': 'Alemania es el mercado de origen de BMW: más unidades, más versiones y mejor equipadas que en España. Buscamos tu BMW, lo inspeccionamos físicamente y te lo entregamos con matrícula española.',
-        'why_eyebrow': 'Por qué traer tu BMW de Alemania',
-        'why_title': 'El mismo BMW,<br>\n        <em>con más donde elegir y mejor equipado.</em>',
-        'why_lead': 'En Alemania hay muchas más unidades de BMW de ocasión que en España. Eso significa más opciones de motor, color y equipamiento, y precios más competitivos. Nosotros lo buscamos, lo revisamos en persona y nos encargamos de todo.',
-        'why': [
-            ('El mercado de origen de la marca', 'Hay muchas más unidades de BMW de ocasión en Alemania que en España, así que es más fácil dar con la versión, el motor y el color exactos que buscas.'),
+        'marca': 'BMW', 'largo': 'BMW', 'iedmt': 'BMW', 'og_src': 'landing/caso-7.jpg',
+        'title': 'Importar un BMW de Alemania (2026) | Orozco Import',
+        'description': 'Tu BMW desde Alemania con matrícula española: lo buscamos, un perito lo revisa en persona y coordinamos todo. Casos reales y lo que cuesta.',
+        'og_title': 'Importa tu BMW desde Alemania, con ahorro real',
+        'h1_em': 'Más donde elegir, mejor equipado y con ahorro real.',
+        'entradilla': 'Alemania es el mercado de origen de BMW: hay muchas más unidades, más versiones y mejor equipadas que en España. Te buscamos la tuya, un perito la revisa en persona y te la dejamos en casa con matrícula española.',
+        'respuesta': 'Traer un BMW de Alemania compensa sobre todo en coches de más de 20.000 € y en versiones bien equipadas (M Sport, motores de gama alta, híbridos enchufables). Además del precio del coche cuenta con <strong>unos 3.300 € de costes fijos</strong> y el impuesto de matriculación, que va del 0 % al 14,75 % según las emisiones. Nuestros clientes con BMW han ahorrado entre <strong>3.800 € y 4.800 €</strong> frente al mismo coche en España, con todo incluido.',
+        'razones': [
+            ('El mercado de origen de la marca', 'Hay muchas más unidades de BMW de ocasión en Alemania, así que es más fácil dar con la versión, el motor y el color exactos que buscas.'),
             ('Equipamiento que aquí cuesta encontrar', 'Paquete M Sport, Head-Up Display, techo panorámico o asientos confort aparecen con mucha más frecuencia en unidades alemanas.'),
             ('Historial de servicio verificable', 'La mayoría pasan sus revisiones en la red oficial BMW. Comprobamos el historial de mantenimiento antes de proponerte el coche.'),
         ],
-        'modelos_eyebrow': 'Los BMW que más nos piden',
-        'modelos_title': 'Del Serie 1 al X3.<br>\n        <em>Te buscamos la versión exacta.</em>',
         'modelos': [
-            ('modelo-serie-3', 'BMW Serie 3', 'Berlina y Touring, de gasolina, diésel o híbrido enchufable. Es el BMW que más nos piden.'),
-            ('modelo-serie-4', 'BMW Serie 4', 'Coupé, Cabrio y Gran Coupé. En Alemania hay mucha más oferta con paquete M Sport.'),
-            ('modelo-serie-1', 'BMW Serie 1', 'El compacto premium de BMW, con versiones deportivas M135i.'),
-            ('modelo-x1', 'BMW X1', 'SUV compacto, con tracción xDrive y versiones híbridas enchufables.'),
-            ('modelo-x3', 'BMW X3', 'El SUV medio de BMW, con muchas más combinaciones de motor y equipamiento.'),
+            ('serie-3', 'BMW Serie 3', 'Berlina y Touring, de gasolina, diésel o híbrido enchufable. Es el BMW que más nos piden.'),
+            ('serie-4', 'BMW Serie 4', 'Coupé, Cabrio y Gran Coupé. En Alemania hay mucha más oferta con paquete M Sport.'),
+            ('serie-1', 'BMW Serie 1', 'El compacto premium de BMW, también en versión deportiva M135i.'),
+            ('x1', 'BMW X1', 'SUV compacto, con tracción xDrive y versiones híbridas enchufables.'),
+            ('x3', 'BMW X3', 'El SUV medio de BMW, con muchas más combinaciones de motor y equipamiento.'),
         ],
-        # Casos reales ya publicados en la web (foto existente, modelo, cliente, ahorro)
         'casos': [
-            ('/landing/caso-4.jpg', 'BMW Serie 1', 'Eric · Bilbao', '3.900€'),
-            ('/landing/caso-7.jpg', 'BMW X4 30d', 'Sole · Madrid', '3.800€'),
+            {'modelo': 'BMW 330i M Sport', 'meta': 'Ander · Bilbao · 2025 · 10.000 km', 'img': '/guias/a/caso-bmw-330i-640.webp', 'w': 640, 'h': 853,
+             'alt': 'BMW 330i M Sport importado de Alemania para Ander, de Bilbao', 'tag': 'Alemania → Bilbao',
+             'desglose': [('Coche en Alemania', '34.000 €'), ('Transporte', '1.100 €'), ('Impuestos y tasas', '3.100 €'), ('Revisión del perito', '300 €'), ('Servicio', '1.573 €')],
+             'total': '40.073 €', 'espana': '44.873 €', 'ahorro': '4.800 €'},
+            {'modelo': 'BMW Serie 1', 'meta': 'Eric · Bilbao', 'src': 'landing/caso-4.jpg', 'foto': 'caso-serie-1',
+             'alt': 'BMW Serie 1 negro importado de Alemania para Eric, de Bilbao', 'tag': 'Alemania → Bilbao', 'ahorro': '3.900 €'},
+            {'modelo': 'BMW X4 30d', 'meta': 'Sole · Madrid', 'src': 'landing/caso-7.jpg', 'foto': 'caso-x4',
+             'alt': 'BMW X4 30d plateado importado de Alemania para Sole, de Madrid', 'tag': 'Alemania → Madrid', 'ahorro': '3.800 €'},
         ],
-        'faq': [
-            ('¿Cuánto se ahorra importando un BMW de Alemania?',
-             'Depende del modelo, la versión y el equipamiento. Dos casos reales: un <strong>BMW Serie 1</strong> para Eric, de Bilbao, con <span class="oi-num">3.900€</span> de ahorro, y un <strong>BMW X4 30d</strong> para Sole, de Madrid, con <span class="oi-num">3.800€</span>, ya contando transporte, matriculación e impuestos. Antes de empezar te damos el desglose de tu caso.'),
-            ('¿Se mantiene la garantía oficial de BMW en España?',
-             'Sí. La garantía de fábrica de BMW es europea: si el coche todavía la tiene, <strong>sigue siendo válida en España</strong> en cualquier taller oficial. Lo comprobamos antes de la compra.'),
-            ('¿Qué BMW conviene traer de Alemania?',
-             'Los que más nos piden son el <strong>Serie 3, Serie 4, Serie 1, X1 y X3</strong>. Donde más se nota la diferencia es en versiones bien equipadas (M Sport, motores de gama alta) y en modelos con poca oferta en España. Si nos dices qué buscas, te decimos si merece la pena traerlo.'),
-        ],
-        'form_title': 'Importa tu BMW desde Alemania.',
-        'placeholder': 'Modelo, versión y cualquier detalle (p. ej. BMW Serie 3 Touring M Sport)',
-        'seo_text': 'Orozco Import es una empresa española especializada en la <strong>importación de BMW desde Alemania</strong>, con más de 9 años de experiencia y más de 400 vehículos gestionados. Buscamos tu BMW (Serie 1, Serie 3, Serie 4, X1, X3, X5 o modelos M), lo inspeccionamos físicamente en Alemania, negociamos el precio, gestionamos el transporte, la ITV y la matriculación, y te lo entregamos en tu domicilio. Si quieres <strong>importar un BMW de Alemania a España</strong> con total seguridad, somos tu solución.',
+        'faq_modelos': 'Los que más nos piden son el <strong>Serie 3, Serie 4, Serie 1, X1 y X3</strong>. Donde más se nota la diferencia es en versiones bien equipadas (M Sport, motores de gama alta, híbridos enchufables) y en modelos con poca oferta en España. Si nos dices qué buscas, te decimos si merece la pena traerlo.',
+        'placeholder': 'https://www.mobile.de/…',
+        'ayuda': '¿Aún no tienes anuncio? Escribe modelo y versión, por ejemplo «BMW 320d Touring M Sport».',
     },
     'mercedes': {
-        'marca': 'Mercedes', 'nombre_largo': 'Mercedes-Benz',
-        'title': 'Importar un Mercedes de Alemania | Orozco Import',
-        'description': 'Importa tu Mercedes-Benz desde Alemania: lo buscamos, lo inspeccionamos físicamente y te lo entregamos con matrícula española. Clase A, Clase C, CLA, GLC y más.',
-        'og_description': 'Tu Mercedes desde Alemania hasta tu puerta. Lo buscamos, lo inspeccionamos y gestionamos todo. +400 coches importados desde 2017.',
-        'subtitulo': 'Alemania es el mercado de origen de Mercedes-Benz: más unidades, más versiones y mejor equipadas que en España. Buscamos tu Mercedes, lo inspeccionamos físicamente y te lo entregamos con matrícula española.',
-        'why_eyebrow': 'Por qué traer tu Mercedes de Alemania',
-        'why_title': 'El mismo Mercedes,<br>\n        <em>con más donde elegir y mejor equipado.</em>',
-        'why_lead': 'En Alemania hay muchas más unidades de Mercedes-Benz de ocasión que en España. Eso significa más opciones de motor, color y equipamiento, y precios más competitivos. Nosotros lo buscamos, lo revisamos en persona y nos encargamos de todo.',
-        'why': [
-            ('El mercado de origen de la marca', 'Hay muchas más unidades de Mercedes de ocasión en Alemania que en España, así que es más fácil dar con la versión, el motor y el color exactos que buscas.'),
-            ('AMG Line e híbridos enchufables', 'Acabados AMG Line, paquete Night, sonido Burmester o versiones híbridas enchufables aparecen con mucha más frecuencia en unidades alemanas.'),
+        'marca': 'Mercedes', 'largo': 'Mercedes-Benz', 'iedmt': 'MERCEDES', 'og_src': 'landing/caso-8.jpg',
+        'title': 'Importar un Mercedes de Alemania (2026) | Orozco Import',
+        'description': 'Tu Mercedes-Benz desde Alemania con matrícula española: lo buscamos, un perito lo revisa en persona y coordinamos todo. Casos reales y costes.',
+        'og_title': 'Importa tu Mercedes desde Alemania, con ahorro real',
+        'h1_em': 'Más donde elegir, mejor equipado y con ahorro real.',
+        'entradilla': 'Alemania es el mercado de origen de Mercedes-Benz: hay muchas más unidades, más versiones y mejor equipadas que en España. Te buscamos el tuyo, un perito lo revisa en persona y te lo dejamos en casa con matrícula española.',
+        'respuesta': 'Traer un Mercedes de Alemania compensa sobre todo en coches de más de 20.000 € y en versiones bien equipadas (AMG Line, híbridos enchufables, motores de gama alta). Además del precio del coche cuenta con <strong>unos 3.300 € de costes fijos</strong> y el impuesto de matriculación, que va del 0 % al 14,75 % según las emisiones. Nuestros clientes con Mercedes han ahorrado entre <strong>2.000 € y 5.477 €</strong> frente al mismo coche en España, con todo incluido.',
+        'razones': [
+            ('El mercado de origen de la marca', 'Hay muchas más unidades de Mercedes de ocasión en Alemania, así que es más fácil dar con la versión, el motor y el color exactos que buscas.'),
+            ('AMG Line e híbridos enchufables', 'Acabado AMG Line, paquete Night, sonido Burmester o versiones híbridas enchufables aparecen con mucha más frecuencia en unidades alemanas.'),
             ('Historial de servicio verificable', 'La mayoría pasan sus revisiones en la red oficial Mercedes-Benz. Comprobamos el historial de mantenimiento antes de proponerte el coche.'),
         ],
-        'modelos_eyebrow': 'Los Mercedes que más nos piden',
-        'modelos_title': 'De la Clase A al GLC.<br>\n        <em>Te buscamos la versión exacta.</em>',
         'modelos': [
-            ('modelo-clase-a', 'Mercedes Clase A', 'Compacto y berlina, con acabado AMG Line y sistema MBUX.'),
-            ('modelo-clase-c', 'Mercedes Clase C', 'Berlina y Estate, de gasolina, diésel o híbrido enchufable.'),
-            ('modelo-cla', 'Mercedes CLA', 'Coupé de cuatro puertas y Shooting Brake, también en híbrido enchufable 250e.'),
-            ('modelo-gla', 'Mercedes GLA', 'SUV compacto, con versiones híbridas enchufables.'),
-            ('modelo-glc', 'Mercedes GLC', 'SUV y Coupé, con muchas más combinaciones de motor y equipamiento.'),
+            ('clase-c', 'Mercedes Clase C', 'Berlina y Estate, de gasolina, diésel o híbrido enchufable.'),
+            ('cla', 'Mercedes CLA', 'Coupé de cuatro puertas y Shooting Brake, también en híbrido enchufable 250e.'),
+            ('clase-a', 'Mercedes Clase A', 'Compacto y berlina, con acabado AMG Line y sistema MBUX.'),
+            ('gla', 'Mercedes GLA', 'SUV compacto, con versiones híbridas enchufables.'),
+            ('glc', 'Mercedes GLC', 'SUV y Coupé, con muchas más combinaciones de motor y equipamiento.'),
         ],
         'casos': [
-            ('/landing/caso-8.jpg', 'Mercedes C200 AMG', 'Enrique · Sevilla', '2.000€'),
-            ('/landing/caso-1.jpg', 'Mercedes CLA 250e AMG', 'Fabián · Valencia', '5.324€'),
+            {'modelo': 'Mercedes CLA 250e AMG', 'meta': 'Fabián G. · Valencia · 2024 · 12.000 km', 'img': '/guias/a/fabian-cla-640.webp', 'w': 640, 'h': 427,
+             'alt': 'Mercedes CLA 250e AMG importado de Alemania para Fabián, de Valencia', 'tag': 'Hamburgo → Valencia',
+             'desglose': [('Coche en Alemania', '33.250 €'), ('Transporte', '1.100 €'), ('Impuestos y tasas', '300 €'), ('Revisión del perito', '300 €'), ('Servicio', '1.573 €')],
+             'total': '36.523 €', 'espana': '42.000 €', 'ahorro': '5.477 €'},
+            {'modelo': 'Mercedes C200 AMG', 'meta': 'Enrique · Sevilla', 'src': 'landing/caso-8.jpg', 'foto': 'caso-c200',
+             'alt': 'Mercedes C200 AMG gris importado de Alemania para Enrique, de Sevilla', 'tag': 'Alemania → Sevilla', 'ahorro': '2.000 €'},
         ],
-        'faq': [
-            ('¿Cuánto se ahorra importando un Mercedes de Alemania?',
-             'Depende del modelo, la versión y el equipamiento. Dos casos reales: un <strong>Mercedes CLA 250e AMG</strong> para Fabián, de Valencia, con <span class="oi-num">5.324€</span> de ahorro, y un <strong>Mercedes C200 AMG</strong> para Enrique, de Sevilla, con <span class="oi-num">2.000€</span>, ya contando transporte, matriculación e impuestos. Antes de empezar te damos el desglose de tu caso.'),
-            ('¿Se mantiene la garantía oficial de Mercedes-Benz en España?',
-             'Sí. La garantía de fábrica de Mercedes-Benz es europea: si el coche todavía la tiene, <strong>sigue siendo válida en España</strong> en cualquier taller oficial. Lo comprobamos antes de la compra.'),
-            ('¿Qué Mercedes conviene traer de Alemania?',
-             'Los que más nos piden son la <strong>Clase A, Clase C, CLA, GLA y GLC</strong>. Donde más se nota la diferencia es en versiones bien equipadas (AMG Line, híbridos enchufables) y en modelos con poca oferta en España. Si nos dices qué buscas, te decimos si merece la pena traerlo.'),
-        ],
-        'form_title': 'Importa tu Mercedes desde Alemania.',
-        'placeholder': 'Modelo, versión y cualquier detalle (p. ej. Mercedes Clase C 300e AMG Line)',
-        'seo_text': 'Orozco Import es una empresa española especializada en la <strong>importación de Mercedes-Benz desde Alemania</strong>, con más de 9 años de experiencia y más de 400 vehículos gestionados. Buscamos tu Mercedes (Clase A, Clase C, Clase E, CLA, GLA, GLC o modelos AMG), lo inspeccionamos físicamente en Alemania, negociamos el precio, gestionamos el transporte, la ITV y la matriculación, y te lo entregamos en tu domicilio. Si quieres <strong>importar un Mercedes de Alemania a España</strong> con total seguridad, somos tu solución.',
+        'faq_modelos': 'Los que más nos piden son la <strong>Clase C, CLA, Clase A, GLA y GLC</strong>. Donde más se nota la diferencia es en versiones bien equipadas (AMG Line, híbridos enchufables) y en modelos con poca oferta en España. Si nos dices qué buscas, te decimos si merece la pena traerlo.',
+        'placeholder': 'https://www.mobile.de/…',
+        'ayuda': '¿Aún no tienes anuncio? Escribe modelo y versión, por ejemplo «Mercedes C 300e AMG Line».',
     },
     'audi': {
-        'marca': 'Audi', 'nombre_largo': 'Audi',
-        'title': 'Importar un Audi de Alemania | Orozco Import',
-        'description': 'Importa tu Audi desde Alemania: lo buscamos, lo inspeccionamos físicamente y te lo entregamos con matrícula española. A3, A4, A5, Q3, Q5 y más.',
-        'og_description': 'Tu Audi desde Alemania hasta tu puerta. Lo buscamos, lo inspeccionamos y gestionamos todo. +400 coches importados desde 2017.',
-        'subtitulo': 'Alemania es el mercado de origen de Audi: más unidades, más versiones y mejor equipadas que en España. Buscamos tu Audi, lo inspeccionamos físicamente y te lo entregamos con matrícula española.',
-        'why_eyebrow': 'Por qué traer tu Audi de Alemania',
-        'why_title': 'El mismo Audi,<br>\n        <em>con más donde elegir y mejor equipado.</em>',
-        'why_lead': 'En Alemania hay muchas más unidades de Audi de ocasión que en España. Eso significa más opciones de motor, color y equipamiento, y precios más competitivos. Nosotros lo buscamos, lo revisamos en persona y nos encargamos de todo.',
-        'why': [
-            ('El mercado de origen de la marca', 'Hay muchas más unidades de Audi de ocasión en Alemania que en España, así que es más fácil dar con la versión, el motor y el color exactos que buscas.'),
+        'marca': 'Audi', 'largo': 'Audi', 'iedmt': 'AUDI', 'og_src': 'landing/caso-3.jpg',
+        'title': 'Importar un Audi de Alemania (2026) | Orozco Import',
+        'description': 'Tu Audi desde Alemania con matrícula española: lo buscamos, un perito lo revisa en persona y coordinamos todo. Casos reales y lo que cuesta.',
+        'og_title': 'Importa tu Audi desde Alemania, con ahorro real',
+        'h1_em': 'Más donde elegir, mejor equipado y con ahorro real.',
+        'entradilla': 'Alemania es el mercado de origen de Audi: hay muchas más unidades, más versiones y mejor equipadas que en España. Te buscamos el tuyo, un perito lo revisa en persona y te lo dejamos en casa con matrícula española.',
+        'respuesta': 'Traer un Audi de Alemania compensa sobre todo en coches de más de 20.000 € y en versiones bien equipadas (S line, quattro, modelos S y RS). Además del precio del coche cuenta con <strong>unos 3.300 € de costes fijos</strong> y el impuesto de matriculación, que va del 0 % al 14,75 % según las emisiones. Nuestros clientes con Audi han ahorrado entre <strong>4.700 € y 6.900 €</strong> frente al mismo coche en España, con todo incluido.',
+        'razones': [
+            ('El mercado de origen de la marca', 'Hay muchas más unidades de Audi de ocasión en Alemania, así que es más fácil dar con la versión, el motor y el color exactos que buscas.'),
             ('quattro, S line y Matrix LED', 'Tracción quattro, acabado S line, faros Matrix LED o Virtual Cockpit aparecen con mucha más frecuencia en unidades alemanas.'),
             ('Historial de servicio verificable', 'La mayoría pasan sus revisiones en la red oficial Audi. Comprobamos el historial de mantenimiento antes de proponerte el coche.'),
         ],
-        'modelos_eyebrow': 'Los Audi que más nos piden',
-        'modelos_title': 'Del A3 al Q5.<br>\n        <em>Te buscamos la versión exacta.</em>',
         'modelos': [
-            ('modelo-a5', 'Audi A5', 'Sportback, Coupé y Cabrio. Es el Audi que más nos piden.'),
-            ('modelo-q3', 'Audi Q3', 'SUV compacto y Sportback, con acabado S line.'),
-            ('modelo-a3', 'Audi A3', 'Sportback y Sedán, de gasolina, diésel o híbrido enchufable.'),
-            ('modelo-a4', 'Audi A4', 'Berlina y Avant, con muchas más unidades quattro en Alemania.'),
-            ('modelo-q5', 'Audi Q5', 'SUV y Sportback, con tracción quattro e híbridos enchufables.'),
+            ('a4', 'Audi A4', 'Berlina y Avant, con muchas más unidades quattro en Alemania.'),
+            ('a5', 'Audi A5', 'Sportback, Coupé y Cabrio, con acabado S line.'),
+            ('a3', 'Audi A3', 'Sportback y Sedán, de gasolina, diésel o híbrido enchufable.'),
+            ('q3', 'Audi Q3', 'SUV compacto y Sportback, con acabado S line.'),
+            ('q5', 'Audi Q5', 'SUV y Sportback, con tracción quattro e híbridos enchufables.'),
         ],
         'casos': [
-            ('/caso-9.jpg', 'Audi A4 Avant', 'Mario · Burgos', '4.700€'),
-            ('/landing/caso-3.jpg', 'Audi TT RS', 'Miguel L. · Barcelona', '6.900€'),
+            {'modelo': 'Audi TT RS', 'meta': 'Miguel L. · Barcelona', 'src': 'landing/caso-3.jpg', 'foto': 'caso-tt-rs',
+             'alt': 'Audi TT RS amarillo importado de Alemania para Miguel, de Barcelona', 'tag': 'Alemania → Barcelona', 'ahorro': '6.900 €'},
+            {'modelo': 'Audi A4 Avant', 'meta': 'Mario · Burgos', 'src': 'caso-9.jpg', 'foto': 'caso-a4-avant',
+             'alt': 'Mario recoge su Audi A4 Avant importado de Alemania', 'tag': 'Alemania → Burgos', 'ahorro': '4.700 €'},
         ],
-        'faq': [
-            ('¿Cuánto se ahorra importando un Audi de Alemania?',
-             'Depende del modelo, la versión y el equipamiento. Dos casos reales: un <strong>Audi TT RS</strong> para Miguel, de Barcelona, con <span class="oi-num">6.900€</span> de ahorro, y un <strong>Audi A4 Avant</strong> para Mario, de Burgos, con <span class="oi-num">4.700€</span>, ya contando transporte, matriculación e impuestos. Antes de empezar te damos el desglose de tu caso.'),
-            ('¿Se mantiene la garantía oficial de Audi en España?',
-             'Sí. La garantía de fábrica de Audi es europea: si el coche todavía la tiene, <strong>sigue siendo válida en España</strong> en cualquier taller oficial. Lo comprobamos antes de la compra.'),
-            ('¿Qué Audi conviene traer de Alemania?',
-             'Los que más nos piden son el <strong>A5, Q3, A3, A4 y Q5</strong>. Donde más se nota la diferencia es en versiones bien equipadas (S line, quattro, motores de gama alta) y en modelos RS con poca oferta en España. Si nos dices qué buscas, te decimos si merece la pena traerlo.'),
-        ],
-        'form_title': 'Importa tu Audi desde Alemania.',
-        'placeholder': 'Modelo, versión y cualquier detalle (p. ej. Audi A5 Sportback S line quattro)',
-        'seo_text': 'Orozco Import es una empresa española especializada en la <strong>importación de Audi desde Alemania</strong>, con más de 9 años de experiencia y más de 400 vehículos gestionados. Buscamos tu Audi (A3, A4, A5, A6, Q3, Q5 o modelos RS), lo inspeccionamos físicamente en Alemania, negociamos el precio, gestionamos el transporte, la ITV y la matriculación, y te lo entregamos en tu domicilio. Si quieres <strong>importar un Audi de Alemania a España</strong> con total seguridad, somos tu solución.',
+        'faq_modelos': 'Los que más nos piden son el <strong>A4, A5, A3, Q3 y Q5</strong>. Donde más se nota la diferencia es en versiones bien equipadas (S line, quattro, motores de gama alta) y en modelos S y RS con poca oferta en España. Si nos dices qué buscas, te decimos si merece la pena traerlo.',
+        'placeholder': 'https://www.mobile.de/…',
+        'ayuda': '¿Aún no tienes anuncio? Escribe modelo y versión, por ejemplo «Audi A4 Avant S line quattro».',
     },
 }
 
-# Mientras las páginas son un borrador (fotos pendientes) van con noindex. Al lanzarlas: --lanzar
-import sys
-BORRADOR = '--lanzar' not in sys.argv
-
-# Huecos de casos reales que faltan en el carrusel del hero (foto + datos del cliente)
-CASOS_EXTRA = 3
-
-ENLACES_MARCA = [('/bmw/', 'Importar un BMW de Alemania'), ('/mercedes/', 'Importar un Mercedes de Alemania'),
-                 ('/audi/', 'Importar un Audi de Alemania'), ('/golf-gti/', 'Importar un Golf GTI de Alemania')]
-
-CSS_MODELOS = """
-/* ---------- Modelos por marca ---------- */
-.oi-models { background: var(--oi-bg-light); color: var(--oi-text-dark); width: 100%; padding: 120px 28px; font-family: var(--font-sans); }
-.oi-models__container { max-width: 1180px; margin: 0 auto; width: 100%; }
-.oi-models__header { max-width: 760px; margin: 0 auto 64px; text-align: center; }
-.oi-models__title { font-size: clamp(32px, 4.4vw, 52px); line-height: 1.08; letter-spacing: -0.02em; margin: 14px 0 0; color: var(--oi-text-dark); }
-.oi-models__title em { color: var(--oi-text-mute); font-style: italic; }
-.oi-models__grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
-.oi-models__card { flex: 0 1 calc((100% - 40px) / 3); }
-.oi-models__card { background: #fff; border: 1px solid var(--oi-line-light); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; }
-.oi-models__photo { aspect-ratio: 16 / 10; background: var(--oi-bg-paper); overflow: hidden; }
-.oi-models__photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.oi-models__info { padding: 22px 24px 26px; display: flex; flex-direction: column; gap: 8px; }
-.oi-models__name { font-size: 19px; font-weight: 600; margin: 0; }
-.oi-models__text { font-size: 15px; line-height: 1.55; color: var(--oi-text-body); margin: 0; }
-.oi-models__cta { text-align: center; margin-top: 48px; }
-@media (max-width: 900px) { .oi-models__card { flex-basis: calc((100% - 20px) / 2); } }
-@media (max-width: 600px) { .oi-models { padding: 88px 16px; } .oi-models__card { flex-basis: 100%; } }
-"""
+e = lambda s: html.escape(s, quote=True)
 
 
-def t(s):
-    return html.unescape(re.sub(r'\s+', ' ', re.sub('<[^>]+>', '', s))).strip()
+def foto_caso(slug, c):
+    """Pasa la foto del caso (jpg del repo) a webp 640 px dentro de la carpeta de la marca."""
+    dst = os.path.join(RAIZ, slug, c['foto'] + '-640.webp')
+    im = Image.open(os.path.join(RAIZ, c['src'])).convert('RGB')
+    if im.width > 640:
+        im = im.resize((640, round(im.height * 640 / im.width)), Image.LANCZOS)
+    im.save(dst, 'WEBP', quality=80, method=6)
+    c.update(img=f'/{slug}/{c["foto"]}-640.webp', w=im.width, h=im.height)
 
 
-def uno(h, viejo, nuevo):
-    n = h.count(viejo)
-    if n != 1:
-        raise SystemExit(f'Se esperaba 1 coincidencia y hay {n}: {viejo[:80]!r}')
-    return h.replace(viejo, nuevo)
+def og(slug, src):
+    """Imagen para redes: la foto de un caso real recortada a 1200×630."""
+    im = Image.open(os.path.join(RAIZ, src)).convert('RGB')
+    r = max(1200 / im.width, 630 / im.height)
+    im = im.resize((round(im.width * r), round(im.height * r)), Image.LANCZOS)
+    x, y = (im.width - 1200) // 2, (im.height - 630) // 2
+    os.makedirs(os.path.join(RAIZ, 'og'), exist_ok=True)
+    im.crop((x, y, x + 1200, y + 630)).save(os.path.join(RAIZ, 'og', f'marca-{slug}.jpg'), 'JPEG', quality=82, optimize=True, progressive=True)
 
 
-def sub_re(h, patron, nuevo, flags=re.S):
-    m = list(re.finditer(patron, h, flags))
-    if len(m) != 1:
-        raise SystemExit(f'Se esperaba 1 coincidencia y hay {len(m)}: {patron[:80]!r}')
-    g = m[0]
-    texto = nuevo
-    for n in (1, 2):
-        if f'\\{n}' in texto:
-            texto = texto.replace(f'\\{n}', g.group(n))
-    return h[:g.start()] + texto + h[g.end():]
+def caso_html(c):
+    img = (f'<div class="caso__img"><img src="{c["img"]}" alt="{e(c["alt"])}" loading="lazy" width="{c["w"]}" height="{c["h"]}">'
+           f'<span class="tag">{e(c["tag"])}</span></div>')
+    if 'desglose' in c:
+        filas = ''.join(f'\n              <li><span>{a}</span><span class="mono">{b}</span></li>' for a, b in c['desglose'])
+        cuerpo = (f'<ul>{filas}\n              <li class="tot"><span>Total en su casa</span><span class="mono">{c["total"]}</span></li>\n            </ul>\n'
+                  f'            <div class="vs"><span>En España: {c["espana"]}</span><b>−{c["ahorro"]}</b></div>')
+    else:
+        cuerpo = ('<p>Ahorro frente al mismo coche en España, ya contando transporte, impuestos y servicio.</p>\n'
+                  f'            <div class="vs"><span>Ahorro final</span><b>−{c["ahorro"]}</b></div>')
+    return f'''        <article class="caso">
+          {img}
+          <div class="caso__body">
+            <h3>{e(c["modelo"])}</h3>
+            <p class="meta">{e(c["meta"])}</p>
+            {cuerpo}
+          </div>
+        </article>'''
 
 
-def foto(slug, carpeta, nombre, etiqueta):
-    """Ruta pública de la foto del hueco. Si aún no existe, crea un marcador SVG."""
-    for ext in ('webp', 'jpg', 'jpeg', 'png'):
-        if os.path.exists(os.path.join(carpeta, f'{nombre}.{ext}')):
-            return f'/{slug}/{nombre}.{ext}'
-    svg = (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000"><rect width="1600" height="1000" fill="#E6E1D8"/>'
-           f'<rect x="24" y="24" width="1552" height="952" fill="none" stroke="#B9AF9E" stroke-width="6" stroke-dasharray="28 20"/>'
-           f'<text x="800" y="470" text-anchor="middle" font-family="Arial, sans-serif" font-size="64" fill="#6B6255">FOTO PENDIENTE</text>'
-           f'<text x="800" y="560" text-anchor="middle" font-family="Arial, sans-serif" font-size="48" fill="#6B6255">{html.escape(etiqueta)}</text></svg>')
-    with open(os.path.join(carpeta, f'{nombre}.svg'), 'w', encoding='utf-8') as f:
-        f.write(svg)
-    return f'/{slug}/{nombre}.svg'
+def hueco_caso(m, n):
+    preg = (f'Otro caso real de un {m["marca"]} que hayáis traído. Modelo, nombre del cliente, ciudad, año, km, precio en Alemania, '
+            'transporte, impuestos, gastos, total y precio del mismo coche en España (si solo sabes el ahorro final, pon eso). '
+            'Sube 1 a 3 fotos y confirma que el cliente da permiso para publicarlo.')
+    return f'''        <article class="caso" data-campo="caso_extra_{n}" data-tipo="caso" data-pregunta="{e(preg)}">
+          <div class="caso__img"><div class="caso__vacia">Foto de otro {e(m["marca"])} que hayáis traído</div></div>
+          <div class="caso__body">
+            <h3><span class="fran">modelo</span></h3>
+            <p class="meta"><span class="fran">nombre · ciudad · año · km</span></p>
+            <div class="vs"><span>Ahorro final</span><b><span class="fran">€</span></b></div>
+          </div>
+        </article>'''
 
 
-def generar(slug, m, home):
-    carpeta = os.path.join(RAIZ, slug)
-    os.makedirs(carpeta, exist_ok=True)
-    url = f'{DOM}/{slug}/'
-    h = home
+def modelo_html(m, mod):
+    slug, nombre, texto = mod[:3]
+    foto = mod[3] if len(mod) > 3 else None
+    if foto:
+        img = f'<div class="mod__img"><img src="{foto}" alt="{e(nombre)} importado de Alemania por Orozco Import" loading="lazy" width="640" height="400"></div>'
+        attrs = ''
+    else:
+        preg = (f'Sube una foto real de un {nombre} que hayáis traído (mejor en horizontal y de 3/4 delantero). '
+                'Si se ve la matrícula, la tapamos nosotros.')
+        img = f'<div class="mod__img"><div class="caso__vacia">Foto de un {e(nombre)}</div></div>'
+        attrs = f' data-campo="foto_{slug.replace("-", "_")}" data-tipo="foto" data-pregunta="{e(preg)}"'
+    return f'''        <article class="mod"{attrs}>
+          {img}
+          <div class="mod__body"><h3>{e(nombre)}</h3><p>{e(texto)}</p></div>
+        </article>'''
 
-    # ---------- cabecera ----------
-    h = uno(h, '<title>Importación de coches desde Alemania | Orozco Import</title>', f'<title>{m["title"]}</title>')
-    h = sub_re(h, r'<meta name="description" content="[^"]*" />', f'<meta name="description" content="{m["description"]}" />')
-    h = uno(h, '<link rel="canonical" href="https://orozcoimport.es/" />', f'<link rel="canonical" href="{url}" />')
-    if BORRADOR:
-        h = uno(h, '<meta name="robots" content="index, follow" />', '<meta name="robots" content="noindex, nofollow" />')
-    h = sub_re(h, r'<meta property="og:title" content="[^"]*" />', f'<meta property="og:title" content="{m["title"]}" />')
-    h = sub_re(h, r'<meta property="og:description" content="[^"]*" />', f'<meta property="og:description" content="{m["og_description"]}" />')
-    h = uno(h, '<meta property="og:url" content="https://orozcoimport.es/" />', f'<meta property="og:url" content="{url}" />')
-    og = foto(slug, carpeta, 'og', f'Portada para compartir {m["marca"]} (1200×630)')
-    if not og.endswith('.svg'):
-        h = uno(h, '<meta property="og:image" content="https://orozcoimport.es/og/home.jpg" />', f'<meta property="og:image" content="{DOM}{og}" />')
 
-    # ---------- hero ----------
-    h = uno(h, '<span>Desde 2017 · <span class="oi-num">+400</span> importaciones</span>',
-            f'<span>{m["nombre_largo"]} desde Alemania · <span class="oi-num">+400</span> importaciones</span>')
-    h = sub_re(h, r'(<h1 class="oi-hero__title oi-display">).*?(</h1>)',
-               f'\\1\n          Importa tu {m["marca"]}<br>\n          <span class="oi-hero__title-accent">desde Alemania</span><br>\n          con total seguridad.\n        \\2')
-    h = sub_re(h, r'(<p class="oi-hero__subtitle">).*?(</p>)', f'\\1\n          {m["subtitulo"]}\n        \\2')
-    tarjetas = []
-    casos = list(m['casos'])
-    for i in range(CASOS_EXTRA):
-        casos.append((foto(slug, carpeta, f'caso-{i + 1}', f'Caso real {m["marca"]} {i + 1}'), f'Caso real {m["marca"]}', 'Nombre · Ciudad', '—'))
-    for i, (src, modelo, cliente, ahorro) in enumerate(casos):
-        tarjetas.append(f'''              <article class="oi-fan__card" data-index="{i}">
-                <div class="oi-fan__card-photo">
-                  <img src="{src}" alt="{modelo} importado desde Alemania" loading="lazy" />
-                  <span class="oi-fan__card-saving"><span class="oi-fan__card-saving-label">Ahorro</span><span class="oi-num">{ahorro}</span></span>
-                </div>
-                <div class="oi-fan__card-info">
-                  <p class="oi-fan__card-model">{modelo}</p>
-                  <p class="oi-fan__card-client">{cliente}</p>
-                </div>
-              </article>''')
-    h = sub_re(h, r'(<div class="oi-fan__stage" id="oi-fan-stage">).*?(\s*</div>\s*<div class="oi-fan__surface")',
-               '\\1\n' + '\n'.join(tarjetas) + '\n            \\2')
+def faq(m):
+    M, L = m['marca'], m['largo']
+    ah = [c for c in m['casos']]
+    ej = ' y '.join(f'un <strong>{e(c["modelo"])}</strong> para {e(c["meta"].split(" · ")[0])}, de {e(c["meta"].split(" · ")[1])}, con {c["ahorro"]} de ahorro' for c in ah[:2])
+    return [
+        (f'¿Cuánto se ahorra importando un {M} de Alemania?',
+         f'Depende del modelo, la versión y el equipamiento. Dos casos reales: {ej}, ya contando transporte, impuestos, revisión y servicio. Antes de empezar te damos el desglose de tu caso.'),
+        (f'¿Qué {M} conviene traer de Alemania?', m['faq_modelos']),
+        (f'¿Cuánto cuesta traer un {M} de Alemania además del coche?',
+         'Unos 3.300 € de costes fijos: transporte en camión (1.000–1.300 €), ITV, tasas y placas (≈ 300 €), la revisión técnica presencial del perito en Alemania (≈ 300 €) y nuestro servicio (1.300 € + IVA, 1.573 €). A eso se suma el impuesto de matriculación, del 0 % al 14,75 % según las emisiones de CO₂.'),
+        (f'¿Un {M} híbrido enchufable paga impuesto de matriculación?',
+         'Si sus emisiones homologadas (WLTP) no pasan de 120 g/km de CO₂, no paga impuesto de matriculación. Es el caso de la mayoría de híbridos enchufables, y por eso suelen ser de los coches que más compensa traer.'),
+        ('¿Quién se encarga de la ITV y la matriculación?',
+         'Los trámites oficiales los realizan el organismo o la empresa autorizada correspondiente. Nosotros los coordinamos para que no tengas que pedir cita ni ir a ningún sitio, y te entregamos el coche con matrícula española.'),
+    ]
 
-    # ---------- por qué + modelos ----------
-    s = h.find('<section class="oi-why">')
-    e = h.find('</section>', s) + len('</section>')
-    why = h[s:e]
-    iconos = re.findall(r'<div class="oi-why__item-icon" aria-hidden="true">.*?</div>', why, re.S)
-    items = []
-    for i, (tit, txt) in enumerate(m['why']):
-        delay = f' style="transition-delay:{i / 10:.1f}s"' if i else ''
-        items.append(f'''      <article class="oi-why__item oi-reveal"{delay}>
-        {iconos[i]}
-        <h3 class="oi-why__item-title">{tit}</h3>
-        <p class="oi-why__item-text">{txt}</p>
-      </article>''')
-    why_nuevo = f'''<section class="oi-why">
-  <div class="oi-why__container">
-    <header class="oi-why__header oi-reveal">
-      <p class="oi-eyebrow">{m["why_eyebrow"]}</p>
-      <h2 class="oi-why__title oi-display">
-        {m["why_title"]}
-      </h2>
-      <p class="oi-why__lead">
-        {m["why_lead"]}
-      </p>
-    </header>
 
-    <div class="oi-why__grid">
-{chr(10).join(items)}
-    </div>
-  </div>
-</section>'''
-    tarjetas_mod = []
-    for i, (archivo, nombre, txt) in enumerate(m['modelos']):
-        src = foto(slug, carpeta, archivo, nombre)
-        delay = f' style="transition-delay:{(i % 3) / 10:.1f}s"' if i % 3 else ''
-        tarjetas_mod.append(f'''      <article class="oi-models__card oi-reveal"{delay}>
-        <div class="oi-models__photo"><img src="{src}" alt="{nombre} importado desde Alemania" loading="lazy" /></div>
-        <div class="oi-models__info">
-          <h3 class="oi-models__name">{nombre}</h3>
-          <p class="oi-models__text">{txt}</p>
-        </div>
-      </article>''')
-    modelos = f'''
-
-<!-- ============================================================
-     MODELOS
-     ============================================================ -->
-
-<section class="oi-models" id="modelos">
-  <div class="oi-models__container">
-    <header class="oi-models__header oi-reveal">
-      <p class="oi-eyebrow">{m["modelos_eyebrow"]}</p>
-      <h2 class="oi-models__title oi-display">
-        {m["modelos_title"]}
-      </h2>
-    </header>
-    <div class="oi-models__grid">
-{chr(10).join(tarjetas_mod)}
-    </div>
-    <div class="oi-models__cta oi-reveal">
-      <a href="#contacto" class="oi-cta-primary"><span>¿Buscas otro {m["marca"]}? Cuéntanos</span></a>
-    </div>
-  </div>
-</section>'''
-    h = h[:s] + why_nuevo + modelos + h[e:]
-    i = h.find('</style>')
-    h = h[:i] + CSS_MODELOS + h[i:]
-
-    # ---------- FAQ: 3 de la marca + pago, inspección y plazos de la home ----------
-    fs = h.find('<div class="oi-faq__list">')
-    fe = h.find('</section>', fs)
-    bloque = h[fs:fe]
-    detalles = re.findall(r'<details class="oi-faq__item oi-reveal">.*?</details>', bloque, re.S)
-    generales = [detalles[0], detalles[2], detalles[4]]   # pago, inspección, plazos
-    lista = []
-    for q, a in m['faq']:
-        lista.append(f'''      <details class="oi-faq__item oi-reveal">
-        <summary class="oi-faq__question">
-          <span class="oi-faq__question-num oi-num">00</span>
-          <span class="oi-faq__question-text">{q}</span>
-          <span class="oi-faq__icon" aria-hidden="true"></span>
-        </summary>
-        <div class="oi-faq__answer">
-          <p>{a}</p>
-        </div>
-      </details>''')
-    lista += generales
-    lista = [re.sub(r'oi-faq__question-num oi-num">\d+<', f'oi-faq__question-num oi-num">{i + 1:02d}<', d) for i, d in enumerate(lista)]
-    lista_txt = '\n\n'.join(lista)
-    fin_lista = bloque.rfind('</details>') + len('</details>')
-    h = h[:fs] + '<div class="oi-faq__list">\n\n' + lista_txt + bloque[fin_lista:] + h[fe:]
-    h = uno(h, '<em>sobre importar un coche de Alemania.</em>', f'<em>sobre importar un {m["marca"]} de Alemania.</em>')
-    faq_ld = []
-    for d in lista:
-        q = re.search(r'<span class="oi-faq__question-text">(.*?)</span>', d, re.S).group(1)
-        a = re.search(r'<div class="oi-faq__answer">\s*(.*?)\s*</div>', d, re.S).group(1)
-        faq_ld.append({'@type': 'Question', 'name': t(q), 'acceptedAnswer': {'@type': 'Answer', 'text': t(a)}})
-
-    # ---------- schema: Service + BreadcrumbList + FAQPage ----------
-    ld = {'@context': 'https://schema.org', '@graph': [
-        {'@type': 'Service', 'name': f'Importación de {m["nombre_largo"]} desde Alemania', 'serviceType': 'Importación de vehículos',
-         'description': f'Búsqueda, inspección física en Alemania, negociación, transporte en camión, ITV y matriculación de un {m["nombre_largo"]} hasta la entrega en España.',
-         'brand': {'@type': 'Brand', 'name': m['nombre_largo']},
-         'provider': {'@type': 'LocalBusiness', '@id': f'{DOM}/#empresa', 'name': 'Orozco Import', 'url': f'{DOM}/'},
-         'areaServed': {'@type': 'Country', 'name': 'España'}, 'url': url},
+def ld(slug, m, url, preguntas):
+    txt = lambda s: html.unescape(__import__('re').sub('<[^>]+>', '', s))
+    g = [
+        {'@type': 'Service', '@id': url + '#servicio', 'name': f'Importación de {m["largo"]} desde Alemania',
+         'serviceType': 'Importación de coches desde Alemania', 'description': m['description'], 'url': url,
+         'image': f'{DOM}/og/marca-{slug}.jpg', 'areaServed': {'@type': 'Country', 'name': 'España'},
+         'provider': {'@type': 'Organization', '@id': f'{DOM}/#empresa', 'name': 'Orozco Import', 'url': DOM + '/',
+                      'logo': {'@type': 'ImageObject', 'url': f'{DOM}/logo-orozco-import.png'}},
+         'offers': {'@type': 'Offer', 'price': '1573', 'priceCurrency': 'EUR',
+                    'description': 'Servicio completo: búsqueda, revisión, negociación, transporte coordinado y entrega con matrícula española (1.300 € + IVA)'}},
         {'@type': 'BreadcrumbList', 'itemListElement': [
-            {'@type': 'ListItem', 'position': 1, 'name': 'Inicio', 'item': f'{DOM}/'},
-            {'@type': 'ListItem', 'position': 2, 'name': m['marca'], 'item': url}]},
-        {'@type': 'FAQPage', 'mainEntity': faq_ld}]}
-    ld_txt = json.dumps(ld, ensure_ascii=False, indent=2).replace('\n', '\n  ')
-    h = sub_re(h, r'<!-- Schema.org LocalBusiness -->.*?<!-- Schema.org FAQPage.*?</script>',
-               f'<!-- Schema.org: servicio, miga de pan y preguntas frecuentes -->\n  <script type="application/ld+json">\n  {ld_txt}\n  </script>')
-
-    # ---------- formulario ----------
-    h = uno(h, '<h2 class="oi-form__title oi-display">Importa tu coche desde Alemania.</h2>',
-            f'<h2 class="oi-form__title oi-display">{m["form_title"]}</h2>')
-    h = uno(h, 'placeholder="Marca, modelo y cualquier detalle que tengas claro"', f'placeholder="{m["placeholder"]}"')
-
-    # ---------- footer ----------
-    h = sub_re(h, r'(<div class="oi-footer__seo-text">\s*<p>).*?(</p>)', f'\\1{m["seo_text"]}\\2')
-    h = footer_marcas(h)
-    # enlaces internos de la home que ahora son anclas de esta página
-    h = h.replace('href="#servicios"', 'href="/#servicios"')
-
-    with open(os.path.join(carpeta, 'index.html'), 'w', encoding='utf-8') as f:
-        f.write(h)
-    for b in re.findall(r'<script type="application/ld\+json">(.*?)</script>', h, re.S):
-        json.loads(b)
-    return casos, m['modelos']
+            {'@type': 'ListItem', 'position': 1, 'name': 'Inicio', 'item': DOM + '/'},
+            {'@type': 'ListItem', 'position': 2, 'name': f'Importar un {m["marca"]} de Alemania', 'item': url}]},
+        {'@type': 'FAQPage', 'mainEntity': [{'@type': 'Question', 'name': q, 'acceptedAnswer': {'@type': 'Answer', 'text': txt(a)}} for q, a in preguntas]},
+    ]
+    return json.dumps({'@context': 'https://schema.org', '@graph': g}, ensure_ascii=False, indent=2)
 
 
-def footer_marcas(h):
-    """Añade la columna "Importa por marca" al footer (antes de "Información")."""
-    if 'aria-label="Marcas"' in h:
-        return h
-    enlaces = '\n'.join(f'          <a href="{u}" class="oi-footer__link">{txt}</a>' for u, txt in ENLACES_MARCA)
-    col = f'''<div class="oi-footer__links-col">
-        <p class="oi-footer__links-title">Importa por marca</p>
-        <nav aria-label="Marcas">
-{enlaces}
-        </nav>
-      </div>
+def pagina(slug, m):
+    url = f'{DOM}/{slug}/'
+    M = m['marca']
+    for c in m['casos']:
+        if 'src' in c:
+            foto_caso(slug, c)
+    og(slug, m['og_src'])
+    preguntas = faq(m)
+    otras = [(s, x['marca']) for s, x in MARCAS.items() if s != slug]
+    robots = 'noindex, follow' if BORRADOR else 'index, follow, max-image-preview:large'
+    ticket = ''.join(f'\n          <li><span>{e(c["modelo"])}<small>{e(c["meta"].split(" · ")[0])} · {e(c["meta"].split(" · ")[1])}</small></span><span class="mono ah">−{c["ahorro"]}</span></li>' for c in m['casos'])
+    fijos = ''.join(f'\n          <tr><td>{a}<br><small>{b}</small></td><td class="mono">{c}</td></tr>' for a, b, c in FIJOS)
+    razones = ''.join(f'\n        <li><span><b>{e(a)}.</b> {e(b)}</span></li>' for a, b in m['razones'])
+    modelos = '\n'.join(modelo_html(m, x) for x in m['modelos'])
+    casos = '\n'.join([caso_html(c) for c in m['casos']] + [hueco_caso(m, n) for n in range(1, CASOS_EXTRA + 1)])
+    faqs = ''.join(f'\n        <details><summary>{e(q)}</summary><div><p>{a}</p></div></details>' for q, a in preguntas)
+    rel_marcas = ''.join(f'\n      <a href="/{s}/"><small>Por marca</small><b>Importar un {n} de Alemania</b></a>' for s, n in otras)
+    nav_marcas = ''.join(f'<a href="/{s}/">{n}</a>' for s, n in otras)
+    garantia = (f'La garantía de fábrica de {m["largo"]} es europea: si el coche todavía la tiene, <strong>sigue siendo válida en España</strong> '
+                'en cualquier taller oficial de la marca. Lo comprobamos antes de que pagues el coche.')
+    preg_gar = f'¿Es correcto lo que decimos de la garantía oficial de {m["largo"]} en un coche importado de Alemania? Si hay algún matiz (extensiones de garantía, contratos de mantenimiento…), corrígelo.'
 
-      <div class="oi-footer__links-col">
-        <p class="oi-footer__links-title">Información</p>'''
-    h = uno(h, '<div class="oi-footer__links-col">\n        <p class="oi-footer__links-title">Información</p>', col)
-    h = h.replace('          <a href="/golf-gti/" class="oi-footer__link">Importar un Golf GTI de Alemania</a>\n          <a href="/privacidad"', '          <a href="/privacidad"')
-    h = uno(h, '.oi-footer__top { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }',
-            '.oi-footer__top { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 48px; }')
-    return h
-
-
-HOME_MARCAS = [
-    ('/bmw/', '/landing/caso-7.jpg', 'BMW', 'Serie 1, Serie 3, Serie 4, X1, X3 y más.'),
-    ('/mercedes/', '/landing/caso-8.jpg', 'Mercedes-Benz', 'Clase A, Clase C, CLA, GLA, GLC y más.'),
-    ('/audi/', '/caso-9.jpg', 'Audi', 'A3, A4, A5, Q3, Q5 y más.'),
-    ('/golf-gti/', '/golf-gti/gti_performance_1.jpeg', 'Golf GTI', 'Performance, Clubsport y TCR.'),
-]
-
-
-def home_con_marcas(home):
-    """Home + bloque "Importa por marca" (antes de las FAQ) + columna de marcas en el footer."""
-    h = home
-    if 'id="marcas"' not in h:
-        tarjetas = '\n'.join(f'''      <a href="{u}" class="oi-models__card oi-models__card--link oi-reveal">
-        <div class="oi-models__photo"><img src="{img}" alt="{n} importado desde Alemania" loading="lazy" /></div>
-        <div class="oi-models__info">
-          <h3 class="oi-models__name">Importar un {n} de Alemania</h3>
-          <p class="oi-models__text">{txt}</p>
-        </div>
-      </a>''' for u, img, n, txt in HOME_MARCAS)
-        seccion = f'''<!-- ============================================================
-     IMPORTA POR MARCA
-     ============================================================ -->
-
-<section class="oi-models oi-models--marcas" id="marcas">
-  <div class="oi-models__container">
-    <header class="oi-models__header oi-reveal">
-      <p class="oi-eyebrow">Importa por marca</p>
-      <h2 class="oi-models__title oi-display">
-        ¿Ya sabes qué marca buscas?<br>
-        <em>Así lo hacemos con la tuya.</em>
-      </h2>
-    </header>
-    <div class="oi-models__grid">
-{tarjetas}
-    </div>
-  </div>
-</section>
-
-
-'''
-        i = h.find('<section class="oi-faq" id="preguntas-frecuentes">')
-        i = h.rfind('<!-- ====', 0, i)
-        h = h[:i] + seccion + h[i:]
-        css = CSS_MODELOS + """.oi-models--marcas .oi-models__card { flex-basis: calc((100% - 60px) / 4); text-decoration: none; color: inherit; transition: border-color .3s, transform .3s; }
-.oi-models--marcas .oi-models__card:hover { border-color: var(--oi-gold); transform: translateY(-2px); }
-@media (max-width: 900px) { .oi-models--marcas .oi-models__card { flex-basis: calc((100% - 20px) / 2); } }
-@media (max-width: 600px) { .oi-models--marcas .oi-models__card { flex-basis: 100%; } }
-"""
-        j = h.find('</style>')
-        h = h[:j] + css + h[j:]
-    return footer_marcas(h)
+    plantilla = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'marca.html'), encoding='utf-8').read()
+    reemplazos = {
+        'TITLE': e(m['title']), 'DESC': e(m['description']), 'ROBOTS': robots, 'URL': url, 'SLUG': slug,
+        'OG_TITLE': e(m['og_title']), 'LD': ld(slug, m, url, preguntas), 'M': M, 'LARGO': m['largo'], 'H1_EM': e(m['h1_em']),
+        'ENTRADILLA': e(m['entradilla']), 'TICKET': ticket, 'RESPUESTA': m['respuesta'], 'RAZONES': razones,
+        'MODELOS': modelos, 'CASOS': casos, 'FIJOS': fijos, 'IEDMT': m['iedmt'], 'GARANTIA': garantia, 'PREG_GAR': e(preg_gar),
+        'FAQS': faqs, 'AYUDA': e(m['ayuda']), 'REL_MARCAS': rel_marcas, 'NAV_MARCAS': nav_marcas,
+    }
+    out = plantilla
+    for k, v in reemplazos.items():
+        out = out.replace('{{' + k + '}}', v)
+    assert '{{' not in out, out[out.index('{{'):out.index('{{') + 40]
+    with open(os.path.join(RAIZ, slug, 'index.html'), 'w', encoding='utf-8') as f:
+        f.write(out)
+    print(f'✓ /{slug}/  ({"borrador, noindex" if BORRADOR else "indexable"})')
 
 
 if __name__ == '__main__':
-    with open(os.path.join(RAIZ, 'index.html'), encoding='utf-8') as f:
-        home = f.read()
-    for slug, m in MARCAS.items():
-        casos, modelos = generar(slug, m, home)
-        pend = [n for n in os.listdir(os.path.join(RAIZ, slug)) if n.endswith('.svg')]
-        print(f'/{slug}/: {len(pend)} fotos pendientes -> {", ".join(sorted(pend))}')
-    import sys
-    if '--home' in sys.argv:
-        with open(os.path.join(RAIZ, 'index.html'), 'w', encoding='utf-8') as f:
-            f.write(home_con_marcas(home))
-        print('home: bloque "Importa por marca" y columna del footer añadidos')
+    for s, m in MARCAS.items():
+        os.makedirs(os.path.join(RAIZ, s), exist_ok=True)
+        pagina(s, m)

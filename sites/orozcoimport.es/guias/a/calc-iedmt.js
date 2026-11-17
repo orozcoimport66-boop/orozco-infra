@@ -102,6 +102,9 @@
       cargando = rpc('iedmt_marcas').then(function (rs) {
         marcas = rs.map(function (r) { return r.marca; });
         dl.innerHTML = marcas.map(function (m) { return '<option value="' + esc(bonita(m)) + '">'; }).join('');
+        // páginas de marca: la calculadora llega con la marca puesta (data-marca="BMW")
+        var pre = raiz.getAttribute('data-marca');
+        if (pre && !elMarca.value) { elMarca.value = pre; var m = marcaElegida(); if (m) { elMarca.value = bonita(m); cargaVersiones(); } }
       }).catch(function () { cargando = null; elMarca.placeholder = 'No se han podido cargar las marcas. Pon el precio a mano.'; });
       return cargando;
     }

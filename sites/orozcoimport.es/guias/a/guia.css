@@ -301,3 +301,21 @@ p{margin:0}
 .ci-extra a{color:var(--azc);font-weight:600}
 .art .ci-pasos{padding-left:0}.art .ci-pasos li{margin:0;padding-left:0}.art .ci-pasos li::before{content:none}
 .cab nav a.btn{color:#fff;font-weight:700}
+/* Páginas de marca (/bmw/, /mercedes/, /audi/) */
+.modelos{display:grid;gap:14px;margin-top:22px}
+@media (min-width:560px){.modelos{grid-template-columns:repeat(2,1fr)}}
+@media (min-width:1100px){.modelos{grid-template-columns:repeat(3,1fr)}}
+.mod{border-radius:16px;overflow:hidden;background:#fff;box-shadow:0 0 0 1px var(--ln)}
+.mod__img{position:relative;aspect-ratio:16/10;background:var(--ln)}
+.mod__img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.mod__img .caso__vacia{position:absolute;inset:0;min-height:0}
+.mod__body{padding:14px 16px 16px}
+.mod__body h3{font-size:17px}
+.art .mod__body p{margin-top:4px;font-size:15px;line-height:1.5}
+.proc{list-style:none;padding:0!important;counter-reset:p;display:grid;gap:12px}
+.art .proc li{counter-increment:p;display:grid;grid-template-columns:36px 1fr;gap:4px 14px;margin:0;padding:14px 16px;border-radius:14px;background:var(--bl)}
+.proc li::before{content:counter(p);grid-row:span 2;width:32px;height:32px;border-radius:50%;background:var(--nv);color:#fff;display:grid;place-items:center;font:700 14px/1 var(--h)}
+.proc b{font:700 16px/1.3 var(--h);color:var(--nv)}
+.proc span{font-size:15.5px;line-height:1.55}
+.ticket .ah{color:#15803D}
+.caso__body>p:not(.meta){margin-top:8px;font-size:15px;line-height:1.5}
