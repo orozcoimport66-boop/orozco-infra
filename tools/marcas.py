@@ -213,7 +213,6 @@ PAGINAS = {
 }
 # Filtros de la inspección: el coche del ejemplo es el de la foto de fondo del filtro 3 y el del informe
 # (tools/informe_perito.py genera las imágenes). precios = los 5 anuncios del filtro 1, en el orden de la home.
-PRECIOS_HOME = ['27.900 €', '24.300 €', '28.400 €', '31.900 €', '28.750 €']
 INSPECCION = {
     'golf-gti': {'modelo': 'Volkswagen Golf GTI Clubsport', 'corto': 'Golf GTI Clubsport', 'vin': 'WVWZZZCD…41', 'cv': 300,
                  'foto': 'golf-gti/gti_clubsport_2.jpeg', 'foco': (.5, .55), 'precios': ['33.900 €', '29.400 €', '34.500 €', '38.900 €', '34.800 €']},
@@ -606,16 +605,18 @@ def pagina(slug, p, home):
 
     # ---- inspección: el ejemplo, con un coche de la marca
     ins = uno(b['INSPECCIÓN'], '<section class="oi-inspection">', '<section class="oi-inspection" id="revision">')
-    d = INSPECCION[slug]
-    n = ins.count('BMW 320d Touring')
-    if n != 8:
-        raise SystemExit(f'La home ha cambiado el ejemplo de la inspección ({n} menciones de BMW 320d Touring)')
-    ins = ins.replace('BMW 320d Touring', d['corto'])
-    for viejo, nuevo in zip(PRECIOS_HOME, d['precios']):
-        ins = uno(ins, f'<span class="oi-ads__precio">{viejo}</span>', f'<span class="oi-ads__precio">{nuevo}</span>')
-    ins = uno(ins, 'src="/img/inspeccion/coche-perito.webp"', f'src="/img/inspeccion/coche-{slug}.webp"')
-    ins = uno(ins, 'src="/img/inspeccion/informe.webp"', f'src="/img/inspeccion/informe-{slug}.webp"')
-    ins = uno(ins, 'alt="Ejemplo de informe de inspección de Orozco Import"', f'alt="Ejemplo de informe de inspección de Orozco Import de un {e(d["modelo"])}"')
+    # La home usa el ejemplo de BMW (INSPECCION['bmw']): se cambia por el de esta página
+    d, h0 = INSPECCION[slug], INSPECCION['bmw']
+    n = ins.count(h0['corto'])
+    if n != 9:  # 8 en los filtros 1 y 2 y 1 en el alt del informe
+        raise SystemExit(f'La home ha cambiado el ejemplo de la inspección ({n} menciones de {h0["corto"]})')
+    if slug != 'bmw':
+        ins = uno(ins, f'de un {h0["modelo"]}"', f'de un {e(d["modelo"])}"')
+        ins = ins.replace(h0['corto'], d['corto'])
+        for viejo, nuevo in zip(h0['precios'], d['precios']):
+            ins = uno(ins, f'<span class="oi-ads__precio">{viejo}</span>', f'<span class="oi-ads__precio">{nuevo}</span>')
+        ins = uno(ins, 'src="/img/inspeccion/coche-bmw.webp"', f'src="/img/inspeccion/coche-{slug}.webp"')
+        ins = uno(ins, 'src="/img/inspeccion/informe-bmw.webp"', f'src="/img/inspeccion/informe-{slug}.webp"')
 
     # ---- preguntas frecuentes
     faq = b['FAQ — SEO AMPLIADO']
