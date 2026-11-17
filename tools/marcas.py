@@ -211,6 +211,20 @@ PAGINAS = {
         'seo': 'Orozco Import es una empresa española privada de intermediación especializada en la <strong>importación de Audi desde Alemania</strong>, con más de 9 años de experiencia y más de 400 vehículos importados. Buscamos tu Audi (A3, A4, A5, A6, Q3, Q5 o modelos S y RS), lo revisamos en persona en Alemania antes de que pagues, negociamos el precio, coordinamos el transporte, la ITV y la matriculación con el organismo o la empresa autorizada correspondiente, y te lo entregamos en tu domicilio.',
     },
 }
+# Filtros de la inspección: el coche del ejemplo es el de la foto de fondo del filtro 3 y el del informe
+# (tools/informe_perito.py genera las imágenes). precios = los 5 anuncios del filtro 1, en el orden de la home.
+PRECIOS_HOME = ['27.900 €', '24.300 €', '28.400 €', '31.900 €', '28.750 €']
+INSPECCION = {
+    'golf-gti': {'modelo': 'Volkswagen Golf GTI Clubsport', 'corto': 'Golf GTI Clubsport', 'vin': 'WVWZZZCD…41', 'cv': 300,
+                 'foto': 'golf-gti/gti_clubsport_2.jpeg', 'foco': (.5, .55), 'precios': ['33.900 €', '29.400 €', '34.500 €', '38.900 €', '34.800 €']},
+    'bmw': {'modelo': 'BMW X4 xDrive30d', 'corto': 'BMW X4 xDrive30d', 'vin': 'WBAVJ910…73', 'cv': 286,
+            'foto': 'img/inspeccion/coche-perito.webp', 'precios': ['44.900 €', '38.500 €', '45.400 €', '51.900 €', '45.900 €']},
+    'mercedes': {'modelo': 'Mercedes-Benz C 220d', 'corto': 'Mercedes C 220d', 'vin': 'W1K2060…18', 'cv': 200,
+                 'foto': 'landing/caso-8.jpg', 'precios': ['32.900 €', '28.300 €', '33.400 €', '37.900 €', '33.750 €']},
+    'audi': {'modelo': 'Audi TT RS Coupé', 'corto': 'Audi TT RS', 'vin': 'TRUZZZFV…52', 'cv': 400,
+             'foto': 'landing/caso-3.jpg', 'precios': ['54.900 €', '47.500 €', '55.800 €', '62.900 €', '56.400 €']},
+}
+
 # Páginas de marca: borrador (noindex, huecos de Fran) hasta lanzarlas. El GTI ya está publicado.
 BORRADOR = {'bmw', 'mercedes', 'audi'} - LANZAR
 
@@ -592,8 +606,16 @@ def pagina(slug, p, home):
 
     # ---- inspección: el ejemplo, con un coche de la marca
     ins = uno(b['INSPECCIÓN'], '<section class="oi-inspection">', '<section class="oi-inspection" id="revision">')
-    if p['ejemplo'] != 'BMW 320d Touring':
-        ins = ins.replace('BMW 320d Touring', p['ejemplo'])
+    d = INSPECCION[slug]
+    n = ins.count('BMW 320d Touring')
+    if n != 8:
+        raise SystemExit(f'La home ha cambiado el ejemplo de la inspección ({n} menciones de BMW 320d Touring)')
+    ins = ins.replace('BMW 320d Touring', d['corto'])
+    for viejo, nuevo in zip(PRECIOS_HOME, d['precios']):
+        ins = uno(ins, f'<span class="oi-ads__precio">{viejo}</span>', f'<span class="oi-ads__precio">{nuevo}</span>')
+    ins = uno(ins, 'src="/img/inspeccion/coche-perito.webp"', f'src="/img/inspeccion/coche-{slug}.webp"')
+    ins = uno(ins, 'src="/img/inspeccion/informe.webp"', f'src="/img/inspeccion/informe-{slug}.webp"')
+    ins = uno(ins, 'alt="Ejemplo de informe de inspección de Orozco Import"', f'alt="Ejemplo de informe de inspección de Orozco Import de un {e(d["modelo"])}"')
 
     # ---- preguntas frecuentes
     faq = b['FAQ — SEO AMPLIADO']
