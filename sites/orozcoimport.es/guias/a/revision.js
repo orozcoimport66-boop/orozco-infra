@@ -20,7 +20,8 @@
     var h = sec.querySelector('h2');
     if (!h) return sec.id;
     var c = h.cloneNode(true); var n = c.querySelector('.num'); if (n) n.remove();
-    return c.textContent.trim();
+    [].forEach.call(c.querySelectorAll('br'), function (br) { br.replaceWith(' '); });
+    return c.textContent.replace(/\s+/g, ' ').trim();
   }
 
   var secciones = [{ id: 'inicio', titulo: 'Cabecera', el: document.querySelector('.hero') }];
@@ -29,7 +30,7 @@
     secciones.push({ id: s.id, titulo: tituloDe(s), el: s });
   });
   var campos = [].map.call(document.querySelectorAll('[data-campo]'), function (el) {
-    return { campo: el.dataset.campo, tipo: el.dataset.tipo || 'texto', pregunta: el.dataset.pregunta || '', seccion: seccionDe(el), actual: el.dataset.tipo === 'caso' ? '' : el.textContent.trim().slice(0, 200) };
+    return { campo: el.dataset.campo, tipo: el.dataset.tipo || 'texto', pregunta: el.dataset.pregunta || '', seccion: seccionDe(el), repetible: el.dataset.repetible || '', actual: el.dataset.tipo === 'caso' ? '' : el.textContent.trim().slice(0, 200) };
   });
   // los huecos sin data-campo (dentro de un caso) no se preguntan por separado
 

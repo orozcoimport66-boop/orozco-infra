@@ -304,7 +304,7 @@ def tarjeta_hueco(M, n):
             'año, días que tardó, ahorro final frente al mismo coche en España y, si la tienes, una frase suya. '
             'Si tienes el desglose (precio en Alemania, transporte, impuestos, gastos, total y precio en España), ponlo también. '
             'Sube 1 a 3 fotos y confirma que el cliente da permiso para publicarlo.')
-    return f'''          <article class="oi-cases__card" data-campo="caso_extra_{n}" data-tipo="caso" data-pregunta="{e(preg)}">
+    return f'''          <article class="oi-cases__card" data-campo="caso_extra_{n}" data-tipo="caso" data-repetible="caso_extra" data-pregunta="{e(preg)}">
             <div class="oi-cases__photo"><div class="oi-hueco">Foto de otro {e(M)} que hayáis traído</div></div>
             <div class="oi-cases__info">
               <div class="oi-cases__info-top">
@@ -367,9 +367,11 @@ def modelos(p, slug):
             img = f'<img src="{m["foto"]}" alt="{e(m["nombre"])} importado de Alemania por Orozco Import" loading="lazy" />'
             attrs = ''
         else:
-            preg = f'Sube una foto real de un {m["nombre"]} que hayáis traído (mejor en horizontal y de 3/4 delantero). Si se ve la matrícula, la tapamos nosotros.'
+            preg = (f'Sube una o varias fotos reales de un {m["nombre"]} que hayáis traído (mejor en horizontal y de 3/4 delantero). '
+                    'Si la foto es de otro modelo, escribe cuál. Si se ve la matrícula, la tapamos nosotros.')
             img = f'<div class="oi-hueco">Foto de un {e(m["nombre"])}</div>'
-            attrs = f' data-campo="foto_{m["slug"].replace("-", "_")}" data-tipo="foto" data-pregunta="{e(preg)}"'
+            attrs = (f' data-campo="foto_{m["slug"].replace("-", "_")}" data-tipo="modelo" data-repetible="modelo_extra" data-pregunta="{e(preg)}"'
+                     if slug in BORRADOR else '')
         cards.append(f'''      <article class="oi-models__card oi-reveal"{attrs}>
         <div class="oi-models__photo">{img}</div>
         <div class="oi-models__info"><h3 class="oi-models__name oi-display">{e(m["nombre"])}</h3><p class="oi-models__text">{e(m["texto"])}</p></div>
@@ -665,7 +667,7 @@ def pagina(slug, p, home):
     resto = pie + ''.join(b[k] for k in orden[orden.index('FOOTER SEO') + 1:])
     if borrador:
         resto = uno(resto, '<script src="/js/oi-captacion.js?v=6"></script>',
-                    '<script src="/js/oi-captacion.js?v=6"></script>\n<script src="/guias/a/revision.js?v=1" defer></script>\n'
+                    '<script src="/js/oi-captacion.js?v=6"></script>\n<script src="/guias/a/revision.js?v=2" defer></script>\n'
                     '<script>if(/^pre\\.|localhost|127\\.0\\.0\\.1/.test(location.hostname))document.getElementById(\'oi-borrador\').hidden=false;</script>')
     out = h + cuerpo + resto
     out = medidas(out)
