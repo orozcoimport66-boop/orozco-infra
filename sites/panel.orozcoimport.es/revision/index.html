@@ -241,11 +241,13 @@ button,input,textarea{font:inherit;color:inherit}
   sc.addEventListener('change',async function(e){
     var t=e.target; if(!t.dataset.sube||!t.files.length)return;
     var campo=t.dataset.sube,lista=(aportes[campo]&&aportes[campo].archivos||[]).slice();
-    estadoGuardado('Subiendo '+t.files.length+(t.files.length>1?' fotos…':' foto…'));
+    estadoGuardado('Subiendo '+t.files.length+(t.files.length>1?' fotos…':' foto…'));var fallos=[];
     for(var i=0;i<t.files.length;i++){var f=t.files[i],nom=f.name.toLowerCase().replace(/[^a-z0-9.]+/g,'-').slice(-60),ruta=rev.id+'/'+campo+'/'+Date.now()+'-'+nom;
-      var r=await sb.storage.from(BUCKET).upload(ruta,f,{contentType:f.type||'image/jpeg',upsert:false});
-      if(r.error){estadoGuardado('No se ha podido subir '+f.name+': '+r.error.message);continue} lista.push(ruta)}
+      var ext=(f.name.split('.').pop()||'').toLowerCase(),tipo=f.type||({heic:'image/heic',heif:'image/heif',avif:'image/avif',png:'image/png',webp:'image/webp',gif:'image/gif',tif:'image/tiff',tiff:'image/tiff'})[ext]||'image/jpeg';
+      var r=await sb.storage.from(BUCKET).upload(ruta,f,{contentType:tipo,upsert:false});
+      if(r.error){fallos.push(f.name+(/size|large|exceed/i.test(r.error.message)?' (pesa más de 30 MB)':/mime|type/i.test(r.error.message)?' (formato no admitido: usa JPG, PNG o HEIC)':' ('+r.error.message+')'));continue} lista.push(ruta)}
     await guarda(campo,{archivos:lista}); pinta();
+    if(fallos.length){estadoGuardado('Alguna foto no se ha subido');alert('No se han podido subir estas fotos:\n\n'+fallos.join('\n')+'\n\nEl resto sí se ha guardado.')}
   });
 
   $('enviar').addEventListener('click',async function(){
