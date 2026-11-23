@@ -230,7 +230,7 @@ p{margin:0}
 .flechas button:disabled{opacity:.35;cursor:default;border-color:var(--ln)}
 .flechas svg{width:18px;height:18px}
 .caso{background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 0 0 1px var(--ln)}
-.caso--no{display:grid;grid-template-columns:132px 1fr;min-height:190px}
+.caso--no{display:grid;grid-template-columns:44% 1fr;min-height:200px}
 .caso--si{display:flex;flex-direction:column}
 .foto-c{position:relative;aspect-ratio:4/3;overflow:hidden;background:var(--nv)}
 .foto-c::before{content:"";position:absolute;inset:-24px;background:var(--i) center/cover;filter:blur(18px) brightness(.65)}
@@ -238,7 +238,7 @@ p{margin:0}
 .caso--si .caso__txt{flex:1;padding:14px 16px 16px}
 .caso--si .entregado{left:10px;bottom:10px}
 .caso__foto{position:relative;background:var(--nv)}
-.caso__foto img{position:absolute;inset:0;width:100%;height:100%!important;object-fit:cover;object-position:50% 55%}
+.caso__foto img{position:absolute;inset:0;width:100%;height:100%!important;object-fit:cover;object-position:50% 50%}
 .caso__txt{padding:16px 16px 16px 18px;display:flex;flex-direction:column;gap:6px;min-width:0}
 .caso h3{font-size:16.5px;line-height:1.25}
 .ruta-c{font:500 12.5px/1.35 var(--m);color:var(--ac)}
@@ -382,7 +382,6 @@ footer.pie nav{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px}
   .carr__pista>*{flex-basis:calc(50% - 7px)}
   .carr--si .carr__pista>*{flex-basis:calc((100% - 28px)/3)}
   .carr__pista{margin:0;padding:4px 0 10px;scroll-padding:0}
-  .caso--no{grid-template-columns:160px 1fr}
   .vs{grid-template-columns:1fr 1fr}
   .fases{grid-template-columns:repeat(3,1fr)}
   .cuanto{grid-template-columns:1fr auto;padding:26px 30px}
@@ -404,7 +403,7 @@ footer.pie nav{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px}
   .fija{display:none}
   .carr__pista>*{flex-basis:calc((100% - 28px)/3)}
   .carr--si .carr__pista>*{flex-basis:calc((100% - 42px)/4)}
-  .caso--no{grid-template-columns:140px 1fr}
+  .carr--no .carr__pista>*{flex-basis:calc(50% - 7px)}
   footer.pie{padding-bottom:40px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
@@ -703,7 +702,7 @@ footer.pie nav{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px}
     </div>
     <h3 class="sub">Y estos son los coches a los que decimos que no.</h3>
     <p style="margin-top:8px">Casos tipo, como los que vemos cada semana. Cada uno es un susto que alguien no se llevó.</p>
-    <div class="carr" data-carr>
+    <div class="carr carr--no" data-carr>
       <div class="carr__pista" id="pista-no" tabindex="0" role="region" aria-label="Coches que descartamos">
         <article class="caso caso--no"><div class="caso__foto"><img src="/analiza/a/no/cayenne.jpg" width="500" height="333" alt="Foto ilustrativa de un Porsche Cayenne" loading="lazy"><span class="luz" data-c="rojo"><i></i><i></i><i></i></span><span class="sello">DESCARTADO</span></div><div class="caso__txt"><span class="fase-tag">Detectado en fase 2</span><h3>Porsche Cayenne</h3><p>Kilómetros que no cuadran: una revisión antigua del historial marca más que el anuncio.</p><p class="hicimos"><b>Qué hacemos:</b> Lo descartamos y buscamos otro con historial completo.</p></div></article>
         <article class="caso caso--no"><div class="caso__foto"><img src="/analiza/a/no/x5.jpg" width="500" height="333" alt="Foto ilustrativa de un BMW X5 «europeo»" loading="lazy"><span class="luz" data-c="rojo"><i></i><i></i><i></i></span><span class="sello">DESCARTADO</span></div><div class="caso__txt"><span class="fase-tag">Detectado en fase 2</span><h3>BMW X5 «europeo»</h3><p>Viene de Estados Unidos: reimportado y anunciado como europeo.</p><p class="hicimos"><b>Qué hacemos:</b> Descartado. Buscamos uno de origen europeo.</p></div></article>
