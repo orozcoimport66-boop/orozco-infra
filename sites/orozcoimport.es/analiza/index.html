@@ -207,21 +207,47 @@ p{margin:0}
 .stats div{display:flex;align-items:baseline;gap:10px}
 .stats b{font:800 44px/1 var(--h);color:var(--nv);letter-spacing:-.04em}
 .stats span{font-size:15px;max-width:16ch;line-height:1.3}
-.fotos{display:flex;gap:12px;margin:36px calc(var(--g)*-1) 0;padding:0 var(--g);overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
-.fotos::-webkit-scrollbar{display:none}
-.fotos figure{margin:0;flex:0 0 78%;scroll-snap-align:start;border-radius:16px;overflow:hidden;position:relative}
-.fotos img{width:100%;aspect-ratio:8/5;object-fit:cover}
-.fotos figcaption{position:absolute;left:10px;bottom:10px;background:rgba(15,23,42,.8);color:#fff;font:500 12px/1 var(--m);padding:7px 9px;border-radius:8px}
 .chat{display:grid;gap:14px;margin-top:40px}
 .msg{background:#fff;border-radius:18px 18px 18px 6px;padding:18px 20px;box-shadow:0 0 0 1px var(--ln)}
 .msg p{font-size:16px;color:var(--nv2)}
 .msg footer{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:13.5px;color:var(--ac)}
 .msg footer img,.msg footer i{width:32px;height:32px;border-radius:50%;object-fit:cover;display:grid;place-items:center;background:var(--ln);color:var(--nv);font:700 13px/1 var(--h);font-style:normal}
 .msg footer b{color:var(--nv)}
-.nos{display:grid;gap:14px;margin-top:40px}
-.no{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;background:#fff;border-radius:16px;padding:18px;box-shadow:0 0 0 1px var(--ln)}
-.no p{font-size:15px;margin-top:4px}
-.no .ej{margin-top:10px}
+/* carruseles de casos */
+.carr{margin-top:28px}
+.carr__pista{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin:0 calc(var(--g)*-1);padding:4px var(--g) 10px;scroll-padding:0 var(--g);overscroll-behavior-x:contain}
+.carr__pista::-webkit-scrollbar{display:none}
+.carr__pista:focus-visible{outline-offset:-3px}
+.carr__pista>*{flex:0 0 88%;scroll-snap-align:start}
+.carr__nav{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:10px}
+.puntitos{display:flex;flex-wrap:wrap;gap:2px}
+.puntitos button{width:18px;height:28px;padding:0;border:0;background:none;cursor:pointer;display:grid;place-items:center}
+.puntitos button::after{content:"";width:8px;height:8px;border-radius:99px;background:#CBD5E1;transition:width .2s,background .2s}
+.puntitos button[aria-current=true]::after{width:22px;background:var(--nv)}
+.flechas{display:flex;gap:8px}
+.flechas button{width:46px;height:46px;border-radius:50%;border:1.5px solid var(--ln);background:#fff;color:var(--nv);display:grid;place-items:center;cursor:pointer}
+.flechas button:hover{border-color:var(--nv)}
+.flechas button:disabled{opacity:.35;cursor:default;border-color:var(--ln)}
+.flechas svg{width:18px;height:18px}
+.caso{display:grid;grid-template-columns:118px 1fr;background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 0 0 1px var(--ln);min-height:178px}
+.caso__foto{position:relative;background:var(--nv)}
+.caso__foto img{position:absolute;inset:0;width:100%;height:100%!important;object-fit:cover}
+.caso__txt{padding:16px 16px 16px 18px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.caso h3{font-size:16.5px;line-height:1.25}
+.ruta-c{font:500 12.5px/1.35 var(--m);color:var(--ac)}
+.caso q{font-size:15px;line-height:1.45;color:var(--nv2);quotes:"«" "»"}
+.caso__pie{margin-top:auto;font-size:13px;color:var(--ac)}
+.caso__pie b{color:var(--nv)}
+.entregado{position:absolute;left:8px;bottom:8px;display:inline-flex;align-items:center;gap:5px;background:#fff;color:#15803D;font:700 11px/1 var(--h);padding:6px 7px;border-radius:7px}
+.entregado::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--ok)}
+.sello{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-12deg);border:2.5px solid #F87171;color:#FCA5A5;font:800 12.5px/1 var(--h);letter-spacing:.04em;padding:6px 8px;border-radius:7px;background:rgba(15,23,42,.6);white-space:nowrap}
+.caso--no .caso__foto .luz{position:absolute;left:8px;top:8px;padding:4px 6px}
+.caso--no .caso__foto .luz i{width:9px;height:9px}
+.caso--no p{font-size:14.5px;line-height:1.45}
+.fase-tag{align-self:flex-start;white-space:nowrap;font:500 11.5px/1 var(--m);color:#B91C1C;background:#FEF2F2;padding:5px 7px;border-radius:6px}
+.hicimos{margin-top:auto;font-size:13.5px;color:var(--nv)}
+.hicimos b{color:#15803D}
+.nota-ej{margin-top:6px;font-size:13.5px;color:var(--ac)}
 .sub{margin-top:64px;font-size:22px}
 /* tres fases */
 .fases-h{margin-top:72px}
@@ -339,9 +365,9 @@ footer.pie nav{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px}
   .contra{grid-template-columns:1fr 1fr}
   .pasos{grid-template-columns:repeat(3,1fr)}
   .chat{grid-template-columns:repeat(3,1fr)}
-  .nos{grid-template-columns:1fr 1fr}
-  .fotos{margin:36px 0 0;padding:0;overflow:visible}
-  .fotos figure{flex:1}
+  .carr__pista>*{flex-basis:calc(50% - 7px)}
+  .carr__pista{margin:0;padding:4px 0 10px;scroll-padding:0}
+  .caso{grid-template-columns:150px 1fr}
   .vs{grid-template-columns:1fr 1fr}
   .fases{grid-template-columns:repeat(3,1fr)}
   .cuanto{grid-template-columns:1fr auto;padding:26px 30px}
@@ -361,6 +387,8 @@ footer.pie nav{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px}
   .tramo--camion::after{bottom:auto;top:50%;left:-14px;right:-14px;z-index:0}
   .tramo--camion>*{position:relative;z-index:1;background:var(--nv)}
   .fija{display:none}
+  .carr__pista>*{flex-basis:calc((100% - 28px)/3)}
+  .caso{grid-template-columns:128px 1fr}
   footer.pie{padding-bottom:40px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
@@ -380,6 +408,8 @@ footer.pie nav{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px}
   <symbol id="i-firma" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17c3-1 4-8 6-8s0 7 2 7 2-4 4-4 1 3 3 3 2-1 3-2"/><path d="M3 21h18"/></symbol>
   <symbol id="i-matricula" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="10" rx="2"/><path d="M6 7v10"/><path d="M9 12h3M14.5 12h4"/></symbol>
   <symbol id="i-casa" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 11 12 4l8.5 7"/><path d="M5.5 9.5V20h13V9.5"/><path d="M10 20v-5.5h4V20"/></symbol>
+  <symbol id="i-izq" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 5-7 7 7 7"/></symbol>
+  <symbol id="i-der" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 5 7 7-7 7"/></symbol>
   <symbol id="i-tel" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3.5h3.5l1.8 4.5-2.3 1.4a11 11 0 0 0 6.6 6.6l1.4-2.3 4.5 1.8V19a2 2 0 0 1-2 2A16.5 16.5 0 0 1 3 5.5a2 2 0 0 1 2-2Z"/></symbol>
 </svg>
 
@@ -629,10 +659,18 @@ footer.pie nav{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px}
   <div class="wrap">
     <h2 id="t-prueba">Ellos ya compraron sabiendo lo que compraban.</h2>
     <div class="stats"><div><b>9</b><span>años comprando en Alemania</span></div><div><b>+400</b><span>coches entregados en España</span></div></div>
-    <div class="fotos">
-      <figure><img src="/analiza/a/entrega-2.webp" width="640" height="400" alt="Clientes de Orozco Import junto a su Mercedes CLA recién entregado" loading="lazy"><figcaption>Mercedes CLA</figcaption></figure>
-      <figure><img src="/analiza/a/entrega-5.webp" width="640" height="400" alt="Cliente de Orozco Import con su Volkswagen Golf GTI blanco" loading="lazy"><figcaption>Golf GTI</figcaption></figure>
-      <figure><img src="/analiza/a/entrega-9.webp" width="640" height="400" alt="Clientes de Orozco Import recogiendo su Audi en Alemania" loading="lazy"><figcaption>Audi · recogida en Alemania</figcaption></figure>
+    <div class="carr" data-carr>
+      <div class="carr__pista" id="pista-si" tabindex="0" role="region" aria-label="Coches que ya hemos entregado">
+        <article class="caso"><div class="caso__foto"><img src="/analiza/a/c-9.webp" width="300" height="340" alt="Audi A4 Avant 30 TFSI entregado a Mario" loading="lazy"><span class="entregado">Entregado</span></div><div class="caso__txt"><h3>Audi A4 Avant 30 TFSI</h3><span class="ruta-c">Colonia → Burgos</span><q>Tuve todos los costes claros</q><span class="caso__pie"><b>Mario</b> · 2026 · 9 días</span></div></article>
+        <article class="caso"><div class="caso__foto"><img src="/analiza/a/c-3.webp" width="300" height="340" alt="Audi TT RS entregado a Miguel L." loading="lazy"><span class="entregado">Entregado</span></div><div class="caso__txt"><h3>Audi TT RS</h3><span class="ruta-c">Múnich → Barcelona</span><q>Decidí tras saber el estado real</q><span class="caso__pie"><b>Miguel L.</b> · 2023 · 18 días</span></div></article>
+        <article class="caso"><div class="caso__foto"><img src="/analiza/a/c-7.webp" width="300" height="340" alt="BMW X4 30d M entregado a Sole" loading="lazy"><span class="entregado">Entregado</span></div><div class="caso__txt"><h3>BMW X4 30d M</h3><span class="ruta-c">Núremberg → Madrid</span><q>No tuve que hacer nada</q><span class="caso__pie"><b>Sole</b> · 2026 · 17 días</span></div></article>
+        <article class="caso"><div class="caso__foto"><img src="/analiza/a/c-8.webp" width="300" height="340" alt="Mercedes C200 AMG entregado a Enrique" loading="lazy"><span class="entregado">Entregado</span></div><div class="caso__txt"><h3>Mercedes C200 AMG</h3><span class="ruta-c">Bremen → Sevilla</span><span class="caso__pie"><b>Enrique</b> · 2025 · 15 días</span></div></article>
+        <article class="caso"><div class="caso__foto"><img src="/analiza/a/c-4.webp" width="300" height="340" alt="BMW Serie 1 entregado a Eric" loading="lazy"><span class="entregado">Entregado</span></div><div class="caso__txt"><h3>BMW Serie 1</h3><span class="ruta-c">Stuttgart → Bilbao</span><q>Lo mejor ha sido el trato</q><span class="caso__pie"><b>Eric</b> · 2024 · 12 días</span></div></article>
+        <article class="caso"><div class="caso__foto"><img src="/analiza/a/c-6.webp" width="300" height="340" alt="BMW 220i Gran Coupé M entregado a Miguel" loading="lazy"><span class="entregado">Entregado</span></div><div class="caso__txt"><h3>BMW 220i Gran Coupé M</h3><span class="ruta-c">Colonia → Málaga</span><q>Lo recomendaría a todos</q><span class="caso__pie"><b>Miguel</b> · 2025 · 16 días</span></div></article>
+        <article class="caso"><div class="caso__foto"><img src="/analiza/a/c-1.webp" width="300" height="340" alt="Mercedes CLA 250e AMG entregado a Fabián" loading="lazy"><span class="entregado">Entregado</span></div><div class="caso__txt"><h3>Mercedes CLA 250e AMG</h3><span class="ruta-c">Entregado en Valencia</span><span class="caso__pie"><b>Fabián</b></span></div></article>
+        <article class="caso"><div class="caso__foto"><img src="/analiza/a/c-5.webp" width="300" height="340" alt="Volkswagen Golf GTI entregado a Félix" loading="lazy"><span class="entregado">Entregado</span></div><div class="caso__txt"><h3>Volkswagen Golf GTI</h3><span class="ruta-c">Entregado en Madrid</span><span class="caso__pie"><b>Félix</b></span></div></article>
+      </div>
+      <div class="carr__nav"><div class="puntitos" aria-label="Ir a un caso"></div><div class="flechas"><button type="button" data-dir="-1" aria-label="Casos anteriores" aria-controls="pista-si"><svg><use href="#i-izq"/></svg></button><button type="button" data-dir="1" aria-label="Más casos" aria-controls="pista-si"><svg><use href="#i-der"/></svg></button></div></div>
     </div>
     <div class="chat">
       <article class="msg"><p>Llevaba meses mirando coches de segunda mano y siempre había algo que no cuadraba. Fran me envió fotos, vídeos y un informe completo antes de decidir. Cuando llegó, estaba exactamente como me había dicho.</p><footer><img src="/analiza/a/carlos.webp" width="32" height="32" alt="" loading="lazy"><span><b>Carlos M.</b> · Zaragoza</span></footer></article>
@@ -640,9 +678,20 @@ footer.pie nav{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px}
       <article class="msg"><p>Pensaba que importar desde Alemania era un lío enorme. Fran me mantuvo informado en todo momento y yo no tuve que hacer nada. Llegó a mi puerta con matrícula española.</p><footer><i aria-hidden="true">A</i><span><b>Adrián F.</b> · Bilbao</span></footer></article>
     </div>
     <h3 class="sub">Y a estos les dijimos que no.</h3>
-    <div class="nos">
-      <article class="no"><span class="luz" data-c="rojo"><i></i><i></i><i></i></span><div><h3>Un Porsche Cayenne con los kilómetros que no cuadraban</h3><p>El anuncio y el historial no contaban la misma historia. Lo descartamos antes de que el cliente pagara un euro.</p><span class="ej">Ejemplo: pendiente de caso real de Fran</span></div></article>
-      <article class="no"><span class="luz" data-c="rojo"><i></i><i></i><i></i></span><div><h3>Un coche «europeo» que venía de Estados Unidos</h3><p>Reimportado y anunciado como si nada. Le buscamos otro igual, con su historia limpia.</p><span class="ej">Ejemplo: pendiente de caso real de Fran</span></div></article>
+    <p style="margin-top:8px">Cada coche que descartamos es un susto que alguien no se llevó.</p>
+    <p class="nota-ej"><span class="ej">Ejemplo</span> Casos y fotos pendientes de material real de Fran.</p>
+    <div class="carr" data-carr>
+      <div class="carr__pista" id="pista-no" tabindex="0" role="region" aria-label="Coches que descartamos">
+        <article class="caso caso--no"><div class="caso__foto"><img src="/analiza/a/no-foto.webp" width="300" height="340" alt="" loading="lazy"><span class="luz" data-c="rojo"><i></i><i></i><i></i></span><span class="sello">DESCARTADO</span></div><div class="caso__txt"><span class="fase-tag">Detectado en fase 2</span><h3>Porsche Cayenne</h3><p>Los kilómetros no cuadraban: una revisión antigua del historial ya marcaba más que el anuncio.</p><p class="hicimos"><b>Qué hicimos:</b> Le buscamos otro con historial completo.</p></div></article>
+        <article class="caso caso--no"><div class="caso__foto"><img src="/analiza/a/no-foto.webp" width="300" height="340" alt="" loading="lazy"><span class="luz" data-c="rojo"><i></i><i></i><i></i></span><span class="sello">DESCARTADO</span></div><div class="caso__txt"><span class="fase-tag">Detectado en fase 2</span><h3>BMW X5 «europeo»</h3><p>Venía de Estados Unidos. Reimportado y anunciado como si nada.</p><p class="hicimos"><b>Qué hicimos:</b> Descartado. Encontramos uno de origen alemán.</p></div></article>
+        <article class="caso caso--no"><div class="caso__foto"><img src="/analiza/a/no-foto.webp" width="300" height="340" alt="" loading="lazy"><span class="luz" data-c="rojo"><i></i><i></i><i></i></span><span class="sello">DESCARTADO</span></div><div class="caso__txt"><span class="fase-tag">Detectado en fase 1</span><h3>Audi RS3</h3><p>Un 30 % más barato que otros iguales, y el vendedor pedía pagar por adelantado.</p><p class="hicimos"><b>Qué hicimos:</b> Era una estafa. El cliente no perdió nada.</p></div></article>
+        <article class="caso caso--no"><div class="caso__foto"><img src="/analiza/a/no-foto.webp" width="300" height="340" alt="" loading="lazy"><span class="luz" data-c="rojo"><i></i><i></i><i></i></span><span class="sello">DESCARTADO</span></div><div class="caso__txt"><span class="fase-tag">Detectado en fase 1</span><h3>Mercedes Clase C</h3><p>En las fotos se notaba otro tono de pintura en dos puertas: repintado sin declarar.</p><p class="hicimos"><b>Qué hicimos:</b> Pasamos a la siguiente unidad.</p></div></article>
+        <article class="caso caso--no"><div class="caso__foto"><img src="/analiza/a/no-foto.webp" width="300" height="340" alt="" loading="lazy"><span class="luz" data-c="rojo"><i></i><i></i><i></i></span><span class="sello">DESCARTADO</span></div><div class="caso__txt"><span class="fase-tag">Detectado en fase 1</span><h3>BMW 320d</h3><p>Motor con un fallo conocido en ese modelo y sin facturas que demostraran la reparación.</p><p class="hicimos"><b>Qué hicimos:</b> Le propusimos uno con el fallo ya resuelto.</p></div></article>
+        <article class="caso caso--no"><div class="caso__foto"><img src="/analiza/a/no-foto.webp" width="300" height="340" alt="" loading="lazy"><span class="luz" data-c="rojo"><i></i><i></i><i></i></span><span class="sello">DESCARTADO</span></div><div class="caso__txt"><span class="fase-tag">Detectado en fase 3</span><h3>Volkswagen Golf GTI</h3><p>El medidor de pintura detectó un golpe trasero reparado que no aparecía en ningún papel.</p><p class="hicimos"><b>Qué hicimos:</b> Descartado en la revisión presencial.</p></div></article>
+        <article class="caso caso--no"><div class="caso__foto"><img src="/analiza/a/no-foto.webp" width="300" height="340" alt="" loading="lazy"><span class="luz" data-c="rojo"><i></i><i></i><i></i></span><span class="sello">DESCARTADO</span></div><div class="caso__txt"><span class="fase-tag">Detectado en fase 2</span><h3>Audi A6 Avant</h3><p>Tenía una financiación pendiente en Alemania: no se podía comprar limpio.</p><p class="hicimos"><b>Qué hicimos:</b> Descartado antes de pagar nada.</p></div></article>
+        <article class="caso caso--no"><div class="caso__foto"><img src="/analiza/a/no-foto.webp" width="300" height="340" alt="" loading="lazy"><span class="luz" data-c="rojo"><i></i><i></i><i></i></span><span class="sello">DESCARTADO</span></div><div class="caso__txt"><span class="fase-tag">Detectado en fase 3</span><h3>Volkswagen Tiguan</h3><p>El vendedor, particular, no dejaba revisarlo en persona.</p><p class="hicimos"><b>Qué hicimos:</b> Si no se puede ver, no se compra.</p></div></article>
+      </div>
+      <div class="carr__nav"><div class="puntitos" aria-label="Ir a un caso"></div><div class="flechas"><button type="button" data-dir="-1" aria-label="Casos anteriores" aria-controls="pista-no"><svg><use href="#i-izq"/></svg></button><button type="button" data-dir="1" aria-label="Más casos" aria-controls="pista-no"><svg><use href="#i-der"/></svg></button></div></div>
     </div>
   </div>
 </section>
@@ -786,6 +835,20 @@ footer.pie nav{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px}
   var tabs=[].slice.call(document.querySelectorAll('.tab'));
   function sel(t,foco){tabs.forEach(function(x){var on=x===t;x.setAttribute('aria-selected',on);x.tabIndex=on?0:-1;document.getElementById(x.getAttribute('aria-controls')).hidden=!on});if(foco)t.focus()}
   tabs.forEach(function(t,i){t.addEventListener('click',function(){sel(t)});t.addEventListener('keydown',function(e){var k=e.key,n=k==='ArrowDown'||k==='ArrowRight'?1:k==='ArrowUp'||k==='ArrowLeft'?-1:0;if(n){e.preventDefault();sel(tabs[(i+n+tabs.length)%tabs.length],true)}})});
+
+  /* carruseles: deslizar, flechas y puntos */
+  [].forEach.call(document.querySelectorAll('[data-carr]'),function(c){
+    var p=c.querySelector('.carr__pista'),items=[].slice.call(p.children),dots=c.querySelector('.puntitos'),fl=c.querySelectorAll('.flechas button');
+    function paso(){var r=items[0].getBoundingClientRect();return r.width+14}
+    function porVista(){return Math.max(1,Math.round(p.clientWidth/paso()))}
+    var n=0,bs=[];
+    function pinta(){var i=Math.round(p.scrollLeft/paso()),pv=porVista(),pags=Math.max(1,items.length-pv+1);
+      if(bs.length!==pags){dots.innerHTML='';bs=[];for(var k=0;k<pags;k++){(function(k){var b=document.createElement('button');b.type='button';b.setAttribute('aria-label','Ir al caso '+(k+1));b.addEventListener('click',function(){p.scrollTo({left:k*paso(),behavior:'smooth'})});dots.appendChild(b);bs.push(b)})(k)}}
+      i=Math.min(i,pags-1);bs.forEach(function(b,k){b.setAttribute('aria-current',k===i)});
+      fl[0].disabled=p.scrollLeft<4;fl[1].disabled=p.scrollLeft>p.scrollWidth-p.clientWidth-4}
+    fl.forEach(function(b){b.addEventListener('click',function(){p.scrollBy({left:+b.dataset.dir*paso()*porVista(),behavior:'smooth'})})});
+    var t;p.addEventListener('scroll',function(){clearTimeout(t);t=setTimeout(pinta,60)},{passive:true});addEventListener('resize',pinta);pinta();
+  });
 
   /* barra fija en móvil: aparece al pasar el hero y se esconde en el formulario */
   var fija=document.getElementById('fija'),hero=document.getElementById('cta-hero'),form=document.getElementById('form'),vHero=true,vForm=false;
