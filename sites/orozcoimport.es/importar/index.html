@@ -901,7 +901,7 @@ footer.pie nav{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px}
   bud.addEventListener('change',function(){document.getElementById('aviso15').classList.toggle('on',bud.value==='lt15');bud.removeAttribute('aria-invalid')});
   function ok(el){var v=el.value.trim();if(el.id==='f-postal')return /^\d{5}$/.test(v);if(el.id==='f-phone')return v.replace(/\D/g,'').length>=9;if(el.type==='checkbox')return el.checked;return v.length>1}
   [].forEach.call(f.querySelectorAll('input[required],select[required]'),function(el){el.addEventListener('blur',function(){if(el.value)el.setAttribute('aria-invalid',!ok(el))});el.addEventListener('input',function(){if(el.getAttribute('aria-invalid')==='true'&&ok(el))el.removeAttribute('aria-invalid')})});
-  /* dos caminos: con anuncio (situación decidido) o buscando modelo (con idea, sin decidir) */
+  /* dos caminos: con anuncio o con un modelo concreto. En los dos casos sabe lo que quiere (situación decidido) */
   var lk=document.getElementById('f-link'),ll=document.getElementById('l-link'),hl=document.getElementById('h-link'),st=document.getElementById('f-stage');
   [].forEach.call(document.querySelectorAll('input[name=camino]'),function(r){r.addEventListener('change',function(){
     var m=r.value==='modelo'&&r.checked;if(!r.checked)return;
@@ -909,7 +909,7 @@ footer.pie nav{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px}
     lk.placeholder=m?'Por ejemplo: Audi A4 Avant 2021, diésel':'https://www.mobile.de/…';
     lk.setAttribute('inputmode',m?'text':'url');
     hl.textContent=m?'Modelo, versión y año aproximado. Te proponemos unidades revisadas.':'De mobile.de, AutoScout24 o donde lo hayas visto. Te decimos si es buena compra.';
-    st.value=m?'undecided':'decided';lk.removeAttribute('aria-invalid');
+    st.value='decided';lk.removeAttribute('aria-invalid');
   })});
   var PRE=/^pre\.|localhost|127\.0\.0\.1/.test(location.hostname);
   f.addEventListener('submit',function(e){
