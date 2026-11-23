@@ -229,9 +229,16 @@ p{margin:0}
 .flechas button:hover{border-color:var(--nv)}
 .flechas button:disabled{opacity:.35;cursor:default;border-color:var(--ln)}
 .flechas svg{width:18px;height:18px}
-.caso{display:grid;grid-template-columns:118px 1fr;background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 0 0 1px var(--ln);min-height:178px}
+.caso{background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 0 0 1px var(--ln)}
+.caso--no{display:grid;grid-template-columns:132px 1fr;min-height:190px}
+.caso--si{display:flex;flex-direction:column}
+.foto-c{position:relative;aspect-ratio:4/3;overflow:hidden;background:var(--nv)}
+.foto-c::before{content:"";position:absolute;inset:-24px;background:var(--i) center/cover;filter:blur(18px) brightness(.65)}
+.foto-c img{position:relative;width:100%;height:100%!important;object-fit:contain}
+.caso--si .caso__txt{flex:1;padding:14px 16px 16px}
+.caso--si .entregado{left:10px;bottom:10px}
 .caso__foto{position:relative;background:var(--nv)}
-.caso__foto img{position:absolute;inset:0;width:100%;height:100%!important;object-fit:cover}
+.caso__foto img{position:absolute;inset:0;width:100%;height:100%!important;object-fit:cover;object-position:50% 55%}
 .caso__txt{padding:16px 16px 16px 18px;display:flex;flex-direction:column;gap:6px;min-width:0}
 .caso h3{font-size:16.5px;line-height:1.25}
 .ruta-c{font:500 12.5px/1.35 var(--m);color:var(--ac)}
@@ -248,6 +255,13 @@ p{margin:0}
 .hicimos{margin-top:auto;font-size:13.5px;color:var(--nv)}
 .hicimos b{color:#15803D}
 .nota-ej{margin-top:6px;font-size:13.5px;color:var(--ac)}
+.creditos{margin-top:14px;font-size:12px;line-height:1.5;color:var(--ac)}
+.creditos summary{display:inline;padding:0;font:inherit;color:var(--ac);text-decoration:underline;cursor:pointer}
+.creditos summary::after{display:none}
+.creditos p{padding:6px 0 0;font-size:12px;max-width:none}
+.creditos a{color:var(--ac)}
+.puntitos.cuenta{font:500 13px/28px var(--m);color:var(--nv)}
+.carr--si .carr__pista>*{flex-basis:72%}
 .sub{margin-top:64px;font-size:22px}
 /* tres fases */
 .fases-h{margin-top:72px}
@@ -366,8 +380,9 @@ footer.pie nav{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px}
   .pasos{grid-template-columns:repeat(3,1fr)}
   .chat{grid-template-columns:repeat(3,1fr)}
   .carr__pista>*{flex-basis:calc(50% - 7px)}
+  .carr--si .carr__pista>*{flex-basis:calc((100% - 28px)/3)}
   .carr__pista{margin:0;padding:4px 0 10px;scroll-padding:0}
-  .caso{grid-template-columns:150px 1fr}
+  .caso--no{grid-template-columns:160px 1fr}
   .vs{grid-template-columns:1fr 1fr}
   .fases{grid-template-columns:repeat(3,1fr)}
   .cuanto{grid-template-columns:1fr auto;padding:26px 30px}
@@ -388,7 +403,8 @@ footer.pie nav{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px}
   .tramo--camion>*{position:relative;z-index:1;background:var(--nv)}
   .fija{display:none}
   .carr__pista>*{flex-basis:calc((100% - 28px)/3)}
-  .caso{grid-template-columns:128px 1fr}
+  .carr--si .carr__pista>*{flex-basis:calc((100% - 42px)/4)}
+  .caso--no{grid-template-columns:140px 1fr}
   footer.pie{padding-bottom:40px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
@@ -517,8 +533,8 @@ footer.pie nav{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px}
       <li class="paso">
         <h3>Nos pasas el anuncio</h3>
         <p>De mobile.de, AutoScout24 o donde lo hayas visto. ¿Aún no tienes uno? Dinos modelo y versión.</p>
-        <div class="demo" aria-hidden="true"><div class="url"><i></i><i></i><i></i><span>mobile.de/coches/bmw-218i-gran-coupe-…</span></div>
-          <div class="por"><img src="/analiza/a/anuncio-480.webp" width="480" height="300" alt="" loading="lazy"><div><b>BMW 218i Gran Coupé</b><span class="mono">24.900 €</span><small>2021 · 48.300 km · Múnich</small></div></div>
+        <div class="demo" aria-hidden="true"><div class="url"><i></i><i></i><i></i><span>mobile.de/coches/bmw-220i-gran-coupe-…</span></div>
+          <div class="por"><img src="/analiza/a/anuncio-480.webp" width="480" height="300" alt="" loading="lazy"><div><b>BMW 220i Gran Coupé</b><span class="mono">24.900 €</span><small>2021 · 48.300 km · Colonia</small></div></div>
           <div class="cursor"><svg><use href="#i-link"/></svg>Enlace copiado</div></div>
       </li>
       <li class="paso">
@@ -530,7 +546,7 @@ footer.pie nav{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px}
         <h3>Te llega por WhatsApp</h3>
         <p>Un informe con semáforo, el coste total desglosado y, si hace falta, alternativas mejores.</p>
         <div class="demo" aria-hidden="true"><div class="inf">
-          <div class="inf__top"><div><b>Tu informe</b><small>BMW 218i Gran Coupé</small></div><span class="luz" data-c="verde"><i></i><i></i><i></i></span></div>
+          <div class="inf__top"><div><b>Tu informe</b><small>BMW 220i Gran Coupé</small></div><span class="luz" data-c="verde"><i></i><i></i><i></i></span></div>
           <p class="inf__ver" data-c="verde">Buena compra</p>
           <ul><li><span>Precio</span><span class="bien">3 % por debajo</span></li><li><span>Vendedor</span><span class="bien">Verificado</span></li><li><span>Daños en fotos</span><span class="bien">Ninguno</span></li><li><span>Accidentado</span><span class="bien">No</span></li></ul>
           <div class="inf__tot"><span>Puesto en tu casa</span><b>28.750 €</b></div>
@@ -626,10 +642,10 @@ footer.pie nav{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px}
       <div class="ficha">
         <div class="ficha__img"><img src="/analiza/a/anuncio-480.webp" width="480" height="300" alt="Foto del anuncio de ejemplo" loading="lazy"><span class="n pin" style="bottom:22%;left:46%" aria-hidden="true">4</span></div>
         <div class="ficha__body">
-          <h3>BMW Serie 2 Gran Coupé 218i</h3>
+          <h3>BMW 220i Gran Coupé M</h3>
           <div class="dat"><span>Gasolina</span><span>Automático</span><span>Paquete M</span></div>
           <div class="fila"><span>Precio</span><span class="mono">24.900 €</span><span class="n" aria-hidden="true">1</span></div>
-          <div class="fila"><span>Vendedor</span><span>Concesionario · Múnich</span><span class="n" aria-hidden="true">2</span></div>
+          <div class="fila"><span>Vendedor</span><span>Concesionario · Colonia</span><span class="n" aria-hidden="true">2</span></div>
           <div class="fila"><span>Tipo</span><span>Berlina coupé, 4 puertas</span><span class="n" aria-hidden="true">3</span></div>
           <div class="nuestro">
             <div><svg class="ico" style="color:var(--az)"><use href="#i-lupa"/></svg><span>Fallos típicos: 1 a vigilar</span><span class="n" aria-hidden="true">5</span></div>
@@ -659,16 +675,24 @@ footer.pie nav{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px}
   <div class="wrap">
     <h2 id="t-prueba">Ellos ya compraron sabiendo lo que compraban.</h2>
     <div class="stats"><div><b>9</b><span>años comprando en Alemania</span></div><div><b>+400</b><span>coches entregados en España</span></div></div>
-    <div class="carr" data-carr>
+    <div class="carr carr--si" data-carr>
       <div class="carr__pista" id="pista-si" tabindex="0" role="region" aria-label="Coches que ya hemos entregado">
-        <article class="caso"><div class="caso__foto"><img src="/analiza/a/c-9.webp" width="300" height="340" alt="Audi A4 Avant 30 TFSI entregado a Mario" loading="lazy"><span class="entregado">Entregado</span></div><div class="caso__txt"><h3>Audi A4 Avant 30 TFSI</h3><span class="ruta-c">Colonia → Burgos</span><q>Tuve todos los costes claros</q><span class="caso__pie"><b>Mario</b> · 2026 · 9 días</span></div></article>
-        <article class="caso"><div class="caso__foto"><img src="/analiza/a/c-3.webp" width="300" height="340" alt="Audi TT RS entregado a Miguel L." loading="lazy"><span class="entregado">Entregado</span></div><div class="caso__txt"><h3>Audi TT RS</h3><span class="ruta-c">Múnich → Barcelona</span><q>Decidí tras saber el estado real</q><span class="caso__pie"><b>Miguel L.</b> · 2023 · 18 días</span></div></article>
-        <article class="caso"><div class="caso__foto"><img src="/analiza/a/c-7.webp" width="300" height="340" alt="BMW X4 30d M entregado a Sole" loading="lazy"><span class="entregado">Entregado</span></div><div class="caso__txt"><h3>BMW X4 30d M</h3><span class="ruta-c">Núremberg → Madrid</span><q>No tuve que hacer nada</q><span class="caso__pie"><b>Sole</b> · 2026 · 17 días</span></div></article>
-        <article class="caso"><div class="caso__foto"><img src="/analiza/a/c-8.webp" width="300" height="340" alt="Mercedes C200 AMG entregado a Enrique" loading="lazy"><span class="entregado">Entregado</span></div><div class="caso__txt"><h3>Mercedes C200 AMG</h3><span class="ruta-c">Bremen → Sevilla</span><span class="caso__pie"><b>Enrique</b> · 2025 · 15 días</span></div></article>
-        <article class="caso"><div class="caso__foto"><img src="/analiza/a/c-4.webp" width="300" height="340" alt="BMW Serie 1 entregado a Eric" loading="lazy"><span class="entregado">Entregado</span></div><div class="caso__txt"><h3>BMW Serie 1</h3><span class="ruta-c">Stuttgart → Bilbao</span><q>Lo mejor ha sido el trato</q><span class="caso__pie"><b>Eric</b> · 2024 · 12 días</span></div></article>
-        <article class="caso"><div class="caso__foto"><img src="/analiza/a/c-6.webp" width="300" height="340" alt="BMW 220i Gran Coupé M entregado a Miguel" loading="lazy"><span class="entregado">Entregado</span></div><div class="caso__txt"><h3>BMW 220i Gran Coupé M</h3><span class="ruta-c">Colonia → Málaga</span><q>Lo recomendaría a todos</q><span class="caso__pie"><b>Miguel</b> · 2025 · 16 días</span></div></article>
-        <article class="caso"><div class="caso__foto"><img src="/analiza/a/c-1.webp" width="300" height="340" alt="Mercedes CLA 250e AMG entregado a Fabián" loading="lazy"><span class="entregado">Entregado</span></div><div class="caso__txt"><h3>Mercedes CLA 250e AMG</h3><span class="ruta-c">Entregado en Valencia</span><span class="caso__pie"><b>Fabián</b></span></div></article>
-        <article class="caso"><div class="caso__foto"><img src="/analiza/a/c-5.webp" width="300" height="340" alt="Volkswagen Golf GTI entregado a Félix" loading="lazy"><span class="entregado">Entregado</span></div><div class="caso__txt"><h3>Volkswagen Golf GTI</h3><span class="ruta-c">Entregado en Madrid</span><span class="caso__pie"><b>Félix</b></span></div></article>
+        <article class="caso caso--si"><div class="foto-c" style="--i:url(/analiza/a/e-a4.webp)"><img src="/analiza/a/e-a4.webp" width="560" height="350" alt="Audi A4 Avant 30 TFSI entregado a Mario" loading="lazy"><span class="entregado">Entregado</span></div><div class="caso__txt"><h3>Audi A4 Avant 30 TFSI</h3><span class="ruta-c">Colonia → Burgos</span><q>Tuve todos los costes claros</q><span class="caso__pie"><b>Mario</b> · 2026 · 9 días</span></div></article>
+        <article class="caso caso--si"><div class="foto-c" style="--i:url(/analiza/a/e-gti-daniel.webp)"><img src="/analiza/a/e-gti-daniel.webp" width="560" height="420" alt="Golf GTI Clubsport entregado a Daniel" loading="lazy"><span class="entregado">Entregado</span></div><div class="caso__txt"><h3>Golf GTI Clubsport</h3><span class="ruta-c">Entregado en Málaga</span><span class="caso__pie"><b>Daniel</b></span></div></article>
+        <article class="caso caso--si"><div class="foto-c" style="--i:url(/analiza/a/e-ttrs.webp)"><img src="/analiza/a/e-ttrs.webp" width="560" height="350" alt="Audi TT RS entregado a Miguel L." loading="lazy"><span class="entregado">Entregado</span></div><div class="caso__txt"><h3>Audi TT RS</h3><span class="ruta-c">Múnich → Barcelona</span><q>Decidí tras saber el estado real</q><span class="caso__pie"><b>Miguel L.</b> · 2023 · 18 días</span></div></article>
+        <article class="caso caso--si"><div class="foto-c" style="--i:url(/analiza/a/e-cla.webp)"><img src="/analiza/a/e-cla.webp" width="560" height="374" alt="Mercedes CLA 250e AMG entregado a Fabián" loading="lazy"><span class="entregado">Entregado</span></div><div class="caso__txt"><h3>Mercedes CLA 250e AMG</h3><span class="ruta-c">Hamburgo → Valencia</span><span class="caso__pie"><b>Fabián</b> · 2024</span></div></article>
+        <article class="caso caso--si"><div class="foto-c" style="--i:url(/analiza/a/e-x4.webp)"><img src="/analiza/a/e-x4.webp" width="560" height="350" alt="BMW X4 30d M entregado a Sole" loading="lazy"><span class="entregado">Entregado</span></div><div class="caso__txt"><h3>BMW X4 30d M</h3><span class="ruta-c">Núremberg → Madrid</span><q>No tuve que hacer nada</q><span class="caso__pie"><b>Sole</b> · 2026 · 17 días</span></div></article>
+        <article class="caso caso--si"><div class="foto-c" style="--i:url(/guias/a/caso-bmw-330i-640.webp)"><img src="/guias/a/caso-bmw-330i-640.webp" width="640" height="853" alt="BMW 330i M Sport entregado a Ander" loading="lazy"><span class="entregado">Entregado</span></div><div class="caso__txt"><h3>BMW 330i M Sport</h3><span class="ruta-c">Alemania → Bilbao</span><span class="caso__pie"><b>Ander</b> · 2025</span></div></article>
+        <article class="caso caso--si"><div class="foto-c" style="--i:url(/analiza/a/e-gti-oriol.webp)"><img src="/analiza/a/e-gti-oriol.webp" width="560" height="544" alt="Golf GTI TCR entregado a Oriol" loading="lazy"><span class="entregado">Entregado</span></div><div class="caso__txt"><h3>Golf GTI TCR</h3><span class="ruta-c">Entregado en Madrid</span><span class="caso__pie"><b>Oriol</b></span></div></article>
+        <article class="caso caso--si"><div class="foto-c" style="--i:url(/analiza/a/e-c200.webp)"><img src="/analiza/a/e-c200.webp" width="560" height="350" alt="Mercedes C200 AMG entregado a Enrique" loading="lazy"><span class="entregado">Entregado</span></div><div class="caso__txt"><h3>Mercedes C200 AMG</h3><span class="ruta-c">Bremen → Sevilla</span><span class="caso__pie"><b>Enrique</b> · 2025 · 15 días</span></div></article>
+        <article class="caso caso--si"><div class="foto-c" style="--i:url(/guias/a/caso-volvo-xc90-640.webp)"><img src="/guias/a/caso-volvo-xc90-640.webp" width="640" height="1126" alt="Volvo XC90 T8 entregado a Verena" loading="lazy"><span class="entregado">Entregado</span></div><div class="caso__txt"><h3>Volvo XC90 T8</h3><span class="ruta-c">Híbrido enchufable</span><span class="caso__pie"><b>Verena</b> · 2025</span></div></article>
+        <article class="caso caso--si"><div class="foto-c" style="--i:url(/analiza/a/e-serie1.webp)"><img src="/analiza/a/e-serie1.webp" width="560" height="350" alt="BMW Serie 1 entregado a Eric" loading="lazy"><span class="entregado">Entregado</span></div><div class="caso__txt"><h3>BMW Serie 1</h3><span class="ruta-c">Stuttgart → Bilbao</span><q>Lo mejor ha sido el trato</q><span class="caso__pie"><b>Eric</b> · 2024 · 12 días</span></div></article>
+        <article class="caso caso--si"><div class="foto-c" style="--i:url(/analiza/a/e-gti-mario.webp)"><img src="/analiza/a/e-gti-mario.webp" width="560" height="448" alt="Golf GTI Performance entregado a Mario" loading="lazy"><span class="entregado">Entregado</span></div><div class="caso__txt"><h3>Golf GTI Performance</h3><span class="ruta-c">Entregado en Burgos</span><span class="caso__pie"><b>Mario</b></span></div></article>
+        <article class="caso caso--si"><div class="foto-c" style="--i:url(/analiza/a/e-220i.webp)"><img src="/analiza/a/e-220i.webp" width="560" height="350" alt="BMW 220i Gran Coupé M entregado a Miguel" loading="lazy"><span class="entregado">Entregado</span></div><div class="caso__txt"><h3>BMW 220i Gran Coupé M</h3><span class="ruta-c">Colonia → Málaga</span><q>Lo recomendaría a todos</q><span class="caso__pie"><b>Miguel</b> · 2025 · 16 días</span></div></article>
+        <article class="caso caso--si"><div class="foto-c" style="--i:url(/analiza/a/e-gti-sergio.webp)"><img src="/analiza/a/e-gti-sergio.webp" width="560" height="477" alt="Golf GTI Performance entregado a Sergio" loading="lazy"><span class="entregado">Entregado</span></div><div class="caso__txt"><h3>Golf GTI Performance</h3><span class="ruta-c">Entregado en Madrid</span><span class="caso__pie"><b>Sergio</b></span></div></article>
+        <article class="caso caso--si"><div class="foto-c" style="--i:url(/analiza/a/e-gti-ruben.webp)"><img src="/analiza/a/e-gti-ruben.webp" width="560" height="420" alt="Golf GTI TCR entregado a Rubén" loading="lazy"><span class="entregado">Entregado</span></div><div class="caso__txt"><h3>Golf GTI TCR</h3><span class="ruta-c">Entregado en Zaragoza</span><span class="caso__pie"><b>Rubén</b></span></div></article>
+        <article class="caso caso--si"><div class="foto-c" style="--i:url(/analiza/a/e-gti-ivan.webp)"><img src="/analiza/a/e-gti-ivan.webp" width="560" height="679" alt="Golf GTI Clubsport entregado a Iván" loading="lazy"><span class="entregado">Entregado</span></div><div class="caso__txt"><h3>Golf GTI Clubsport</h3><span class="ruta-c">Entregado en Bilbao</span><span class="caso__pie"><b>Iván</b></span></div></article>
+        <article class="caso caso--si"><div class="foto-c" style="--i:url(/analiza/a/e-gti-alvaro.webp)"><img src="/analiza/a/e-gti-alvaro.webp" width="560" height="747" alt="Golf GTI TCR entregado a Álvaro" loading="lazy"><span class="entregado">Entregado</span></div><div class="caso__txt"><h3>Golf GTI TCR</h3><span class="ruta-c">Entregado en Sevilla</span><span class="caso__pie"><b>Álvaro</b></span></div></article>
       </div>
       <div class="carr__nav"><div class="puntitos" aria-label="Ir a un caso"></div><div class="flechas"><button type="button" data-dir="-1" aria-label="Casos anteriores" aria-controls="pista-si"><svg><use href="#i-izq"/></svg></button><button type="button" data-dir="1" aria-label="Más casos" aria-controls="pista-si"><svg><use href="#i-der"/></svg></button></div></div>
     </div>
@@ -677,22 +701,22 @@ footer.pie nav{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px}
       <article class="msg"><p>No tenía claro qué coche quería. En la primera llamada Fran me hizo las preguntas correctas y me propuso opciones que yo no había considerado. Acerté de lleno.</p><footer><i aria-hidden="true">R</i><span><b>Roberto S.</b> · Madrid</span></footer></article>
       <article class="msg"><p>Pensaba que importar desde Alemania era un lío enorme. Fran me mantuvo informado en todo momento y yo no tuve que hacer nada. Llegó a mi puerta con matrícula española.</p><footer><i aria-hidden="true">A</i><span><b>Adrián F.</b> · Bilbao</span></footer></article>
     </div>
-    <h3 class="sub">Y a estos les dijimos que no.</h3>
-    <p style="margin-top:8px">Cada coche que descartamos es un susto que alguien no se llevó.</p>
-    <p class="nota-ej"><span class="ej">Ejemplo</span> Casos y fotos pendientes de material real de Fran.</p>
+    <h3 class="sub">Y estos son los coches a los que decimos que no.</h3>
+    <p style="margin-top:8px">Casos tipo, como los que vemos cada semana. Cada uno es un susto que alguien no se llevó.</p>
     <div class="carr" data-carr>
       <div class="carr__pista" id="pista-no" tabindex="0" role="region" aria-label="Coches que descartamos">
-        <article class="caso caso--no"><div class="caso__foto"><img src="/analiza/a/no-foto.webp" width="300" height="340" alt="" loading="lazy"><span class="luz" data-c="rojo"><i></i><i></i><i></i></span><span class="sello">DESCARTADO</span></div><div class="caso__txt"><span class="fase-tag">Detectado en fase 2</span><h3>Porsche Cayenne</h3><p>Los kilómetros no cuadraban: una revisión antigua del historial ya marcaba más que el anuncio.</p><p class="hicimos"><b>Qué hicimos:</b> Le buscamos otro con historial completo.</p></div></article>
-        <article class="caso caso--no"><div class="caso__foto"><img src="/analiza/a/no-foto.webp" width="300" height="340" alt="" loading="lazy"><span class="luz" data-c="rojo"><i></i><i></i><i></i></span><span class="sello">DESCARTADO</span></div><div class="caso__txt"><span class="fase-tag">Detectado en fase 2</span><h3>BMW X5 «europeo»</h3><p>Venía de Estados Unidos. Reimportado y anunciado como si nada.</p><p class="hicimos"><b>Qué hicimos:</b> Descartado. Encontramos uno de origen alemán.</p></div></article>
-        <article class="caso caso--no"><div class="caso__foto"><img src="/analiza/a/no-foto.webp" width="300" height="340" alt="" loading="lazy"><span class="luz" data-c="rojo"><i></i><i></i><i></i></span><span class="sello">DESCARTADO</span></div><div class="caso__txt"><span class="fase-tag">Detectado en fase 1</span><h3>Audi RS3</h3><p>Un 30 % más barato que otros iguales, y el vendedor pedía pagar por adelantado.</p><p class="hicimos"><b>Qué hicimos:</b> Era una estafa. El cliente no perdió nada.</p></div></article>
-        <article class="caso caso--no"><div class="caso__foto"><img src="/analiza/a/no-foto.webp" width="300" height="340" alt="" loading="lazy"><span class="luz" data-c="rojo"><i></i><i></i><i></i></span><span class="sello">DESCARTADO</span></div><div class="caso__txt"><span class="fase-tag">Detectado en fase 1</span><h3>Mercedes Clase C</h3><p>En las fotos se notaba otro tono de pintura en dos puertas: repintado sin declarar.</p><p class="hicimos"><b>Qué hicimos:</b> Pasamos a la siguiente unidad.</p></div></article>
-        <article class="caso caso--no"><div class="caso__foto"><img src="/analiza/a/no-foto.webp" width="300" height="340" alt="" loading="lazy"><span class="luz" data-c="rojo"><i></i><i></i><i></i></span><span class="sello">DESCARTADO</span></div><div class="caso__txt"><span class="fase-tag">Detectado en fase 1</span><h3>BMW 320d</h3><p>Motor con un fallo conocido en ese modelo y sin facturas que demostraran la reparación.</p><p class="hicimos"><b>Qué hicimos:</b> Le propusimos uno con el fallo ya resuelto.</p></div></article>
-        <article class="caso caso--no"><div class="caso__foto"><img src="/analiza/a/no-foto.webp" width="300" height="340" alt="" loading="lazy"><span class="luz" data-c="rojo"><i></i><i></i><i></i></span><span class="sello">DESCARTADO</span></div><div class="caso__txt"><span class="fase-tag">Detectado en fase 3</span><h3>Volkswagen Golf GTI</h3><p>El medidor de pintura detectó un golpe trasero reparado que no aparecía en ningún papel.</p><p class="hicimos"><b>Qué hicimos:</b> Descartado en la revisión presencial.</p></div></article>
-        <article class="caso caso--no"><div class="caso__foto"><img src="/analiza/a/no-foto.webp" width="300" height="340" alt="" loading="lazy"><span class="luz" data-c="rojo"><i></i><i></i><i></i></span><span class="sello">DESCARTADO</span></div><div class="caso__txt"><span class="fase-tag">Detectado en fase 2</span><h3>Audi A6 Avant</h3><p>Tenía una financiación pendiente en Alemania: no se podía comprar limpio.</p><p class="hicimos"><b>Qué hicimos:</b> Descartado antes de pagar nada.</p></div></article>
-        <article class="caso caso--no"><div class="caso__foto"><img src="/analiza/a/no-foto.webp" width="300" height="340" alt="" loading="lazy"><span class="luz" data-c="rojo"><i></i><i></i><i></i></span><span class="sello">DESCARTADO</span></div><div class="caso__txt"><span class="fase-tag">Detectado en fase 3</span><h3>Volkswagen Tiguan</h3><p>El vendedor, particular, no dejaba revisarlo en persona.</p><p class="hicimos"><b>Qué hicimos:</b> Si no se puede ver, no se compra.</p></div></article>
+        <article class="caso caso--no"><div class="caso__foto"><img src="/analiza/a/no/cayenne.jpg" width="500" height="333" alt="Foto ilustrativa de un Porsche Cayenne" loading="lazy"><span class="luz" data-c="rojo"><i></i><i></i><i></i></span><span class="sello">DESCARTADO</span></div><div class="caso__txt"><span class="fase-tag">Detectado en fase 2</span><h3>Porsche Cayenne</h3><p>Kilómetros que no cuadran: una revisión antigua del historial marca más que el anuncio.</p><p class="hicimos"><b>Qué hacemos:</b> Lo descartamos y buscamos otro con historial completo.</p></div></article>
+        <article class="caso caso--no"><div class="caso__foto"><img src="/analiza/a/no/x5.jpg" width="500" height="333" alt="Foto ilustrativa de un BMW X5 «europeo»" loading="lazy"><span class="luz" data-c="rojo"><i></i><i></i><i></i></span><span class="sello">DESCARTADO</span></div><div class="caso__txt"><span class="fase-tag">Detectado en fase 2</span><h3>BMW X5 «europeo»</h3><p>Viene de Estados Unidos: reimportado y anunciado como europeo.</p><p class="hicimos"><b>Qué hacemos:</b> Descartado. Buscamos uno de origen europeo.</p></div></article>
+        <article class="caso caso--no"><div class="caso__foto"><img src="/analiza/a/no/rs3.jpg" width="500" height="333" alt="Foto ilustrativa de un Audi RS3" loading="lazy"><span class="luz" data-c="rojo"><i></i><i></i><i></i></span><span class="sello">DESCARTADO</span></div><div class="caso__txt"><span class="fase-tag">Detectado en fase 1</span><h3>Audi RS3</h3><p>Un 30 % más barato que otros iguales, y el vendedor pide pagar por adelantado.</p><p class="hicimos"><b>Qué hacemos:</b> Huele a estafa. Ni lo tocamos.</p></div></article>
+        <article class="caso caso--no"><div class="caso__foto"><img src="/analiza/a/no/clase-c.jpg" width="500" height="333" alt="Foto ilustrativa de un Mercedes Clase C" loading="lazy"><span class="luz" data-c="rojo"><i></i><i></i><i></i></span><span class="sello">DESCARTADO</span></div><div class="caso__txt"><span class="fase-tag">Detectado en fase 1</span><h3>Mercedes Clase C</h3><p>En las fotos, dos puertas con otro tono: repintado sin declarar.</p><p class="hicimos"><b>Qué hacemos:</b> Pasamos a la siguiente unidad.</p></div></article>
+        <article class="caso caso--no"><div class="caso__foto"><img src="/analiza/a/no/320d.jpg" width="500" height="333" alt="Foto ilustrativa de un BMW 320d" loading="lazy"><span class="luz" data-c="rojo"><i></i><i></i><i></i></span><span class="sello">DESCARTADO</span></div><div class="caso__txt"><span class="fase-tag">Detectado en fase 1</span><h3>BMW 320d</h3><p>Un fallo conocido de ese motor, sin facturas que demuestren la reparación.</p><p class="hicimos"><b>Qué hacemos:</b> Proponemos uno con el fallo ya resuelto.</p></div></article>
+        <article class="caso caso--no"><div class="caso__foto"><img src="/analiza/a/no/golf-gti.jpg" width="500" height="333" alt="Foto ilustrativa de un Volkswagen Golf GTI" loading="lazy"><span class="luz" data-c="rojo"><i></i><i></i><i></i></span><span class="sello">DESCARTADO</span></div><div class="caso__txt"><span class="fase-tag">Detectado en fase 3</span><h3>Volkswagen Golf GTI</h3><p>El medidor de pintura detecta un golpe trasero reparado que no aparece en ningún papel.</p><p class="hicimos"><b>Qué hacemos:</b> Descartado en la revisión presencial.</p></div></article>
+        <article class="caso caso--no"><div class="caso__foto"><img src="/analiza/a/no/a6-avant.jpg" width="500" height="333" alt="Foto ilustrativa de un Audi A6 Avant" loading="lazy"><span class="luz" data-c="rojo"><i></i><i></i><i></i></span><span class="sello">DESCARTADO</span></div><div class="caso__txt"><span class="fase-tag">Detectado en fase 2</span><h3>Audi A6 Avant</h3><p>Tiene una financiación pendiente en Alemania: no se puede comprar limpio.</p><p class="hicimos"><b>Qué hacemos:</b> Descartado antes de pagar nada.</p></div></article>
+        <article class="caso caso--no"><div class="caso__foto"><img src="/analiza/a/no/tiguan.jpg" width="500" height="333" alt="Foto ilustrativa de un Volkswagen Tiguan" loading="lazy"><span class="luz" data-c="rojo"><i></i><i></i><i></i></span><span class="sello">DESCARTADO</span></div><div class="caso__txt"><span class="fase-tag">Detectado en fase 3</span><h3>Volkswagen Tiguan</h3><p>El vendedor, particular, no deja revisarlo en persona.</p><p class="hicimos"><b>Qué hacemos:</b> Si no se puede ver, no se compra.</p></div></article>
       </div>
       <div class="carr__nav"><div class="puntitos" aria-label="Ir a un caso"></div><div class="flechas"><button type="button" data-dir="-1" aria-label="Casos anteriores" aria-controls="pista-no"><svg><use href="#i-izq"/></svg></button><button type="button" data-dir="1" aria-label="Más casos" aria-controls="pista-no"><svg><use href="#i-der"/></svg></button></div></div>
     </div>
+    <details class="creditos"><summary>Fotos ilustrativas del modelo: créditos</summary><p>Wikimedia Commons. Porsche Cayenne, BMW X5 y Audi A6 Avant: Vauxford (<a href="https://creativecommons.org/licenses/by-sa/4.0/" rel="noopener">CC BY-SA 4.0</a>). Audi RS3: Alexandre Prevot (<a href="https://creativecommons.org/licenses/by-sa/2.0/" rel="noopener">CC BY-SA 2.0</a>). Mercedes Clase C: Charles from Port Chester (<a href="https://creativecommons.org/licenses/by/2.0/" rel="noopener">CC BY 2.0</a>). BMW 320d: EditorGeorge. Golf GTI: Alexander-93. Tiguan: Виталий Барсов (<a href="https://creativecommons.org/licenses/by-sa/4.0/" rel="noopener">CC BY-SA 4.0</a>). Fotos recortadas.</p></details>
   </div>
 </section>
 
@@ -843,7 +867,8 @@ footer.pie nav{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px}
     function porVista(){return Math.max(1,Math.round(p.clientWidth/paso()))}
     var n=0,bs=[];
     function pinta(){var i=Math.round(p.scrollLeft/paso()),pv=porVista(),pags=Math.max(1,items.length-pv+1);
-      if(bs.length!==pags){dots.innerHTML='';bs=[];for(var k=0;k<pags;k++){(function(k){var b=document.createElement('button');b.type='button';b.setAttribute('aria-label','Ir al caso '+(k+1));b.addEventListener('click',function(){p.scrollTo({left:k*paso(),behavior:'smooth'})});dots.appendChild(b);bs.push(b)})(k)}}
+      if(pags>9){dots.classList.add('cuenta');dots.textContent=(Math.min(i,pags-1)+1)+' / '+pags;fl[0].disabled=p.scrollLeft<4;fl[1].disabled=p.scrollLeft>p.scrollWidth-p.clientWidth-4;return}
+      dots.classList.remove('cuenta');if(bs.length!==pags){dots.innerHTML='';bs=[];for(var k=0;k<pags;k++){(function(k){var b=document.createElement('button');b.type='button';b.setAttribute('aria-label','Ir al caso '+(k+1));b.addEventListener('click',function(){p.scrollTo({left:k*paso(),behavior:'smooth'})});dots.appendChild(b);bs.push(b)})(k)}}
       i=Math.min(i,pags-1);bs.forEach(function(b,k){b.setAttribute('aria-current',k===i)});
       fl[0].disabled=p.scrollLeft<4;fl[1].disabled=p.scrollLeft>p.scrollWidth-p.clientWidth-4}
     fl.forEach(function(b){b.addEventListener('click',function(){p.scrollBy({left:+b.dataset.dir*paso()*porVista(),behavior:'smooth'})})});
