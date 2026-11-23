@@ -230,7 +230,10 @@ p{margin:0}
 .flechas button:disabled{opacity:.35;cursor:default;border-color:var(--ln)}
 .flechas svg{width:18px;height:18px}
 .caso{background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 0 0 1px var(--ln)}
-.caso--no{display:grid;grid-template-columns:44% 1fr;min-height:200px}
+.caso--no{display:flex;flex-direction:column}
+.anuncio-c{position:relative;background:#1c1c22}
+.anuncio-c img{width:100%;height:auto}
+.anuncio-c .sello{top:36%}
 .caso--si{display:flex;flex-direction:column}
 .foto-c{position:relative;aspect-ratio:4/3;overflow:hidden;background:var(--nv)}
 .foto-c::before{content:"";position:absolute;inset:-24px;background:var(--i) center/cover;filter:blur(18px) brightness(.65)}
@@ -261,7 +264,7 @@ p{margin:0}
 .creditos p{padding:6px 0 0;font-size:12px;max-width:none}
 .creditos a{color:var(--ac)}
 .puntitos.cuenta{font:500 13px/28px var(--m);color:var(--nv)}
-.carr--si .carr__pista>*{flex-basis:72%}
+.carr--si .carr__pista>*,.carr--no .carr__pista>*{flex-basis:72%}
 .sub{margin-top:64px;font-size:22px}
 /* tres fases */
 .fases-h{margin-top:72px}
@@ -380,7 +383,7 @@ footer.pie nav{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px}
   .pasos{grid-template-columns:repeat(3,1fr)}
   .chat{grid-template-columns:repeat(3,1fr)}
   .carr__pista>*{flex-basis:calc(50% - 7px)}
-  .carr--si .carr__pista>*{flex-basis:calc((100% - 28px)/3)}
+  .carr--si .carr__pista>*,.carr--no .carr__pista>*{flex-basis:calc((100% - 28px)/3)}
   .carr__pista{margin:0;padding:4px 0 10px;scroll-padding:0}
   .vs{grid-template-columns:1fr 1fr}
   .fases{grid-template-columns:repeat(3,1fr)}
@@ -403,7 +406,6 @@ footer.pie nav{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px}
   .fija{display:none}
   .carr__pista>*{flex-basis:calc((100% - 28px)/3)}
   .carr--si .carr__pista>*{flex-basis:calc((100% - 42px)/4)}
-  .carr--no .carr__pista>*{flex-basis:calc(50% - 7px)}
   footer.pie{padding-bottom:40px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
@@ -704,18 +706,17 @@ footer.pie nav{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px}
     <p style="margin-top:8px">Casos tipo, como los que vemos cada semana. Cada uno es un susto que alguien no se llevó.</p>
     <div class="carr carr--no" data-carr>
       <div class="carr__pista" id="pista-no" tabindex="0" role="region" aria-label="Coches que descartamos">
-        <article class="caso caso--no"><div class="caso__foto"><img src="/analiza/a/no/cayenne.jpg" width="500" height="333" alt="Foto ilustrativa de un Porsche Cayenne" loading="lazy"><span class="luz" data-c="rojo"><i></i><i></i><i></i></span><span class="sello">DESCARTADO</span></div><div class="caso__txt"><span class="fase-tag">Detectado en fase 2</span><h3>Porsche Cayenne</h3><p>Kilómetros que no cuadran: una revisión antigua del historial marca más que el anuncio.</p><p class="hicimos"><b>Qué hacemos:</b> Lo descartamos y buscamos otro con historial completo.</p></div></article>
-        <article class="caso caso--no"><div class="caso__foto"><img src="/analiza/a/no/x5.jpg" width="500" height="333" alt="Foto ilustrativa de un BMW X5 «europeo»" loading="lazy"><span class="luz" data-c="rojo"><i></i><i></i><i></i></span><span class="sello">DESCARTADO</span></div><div class="caso__txt"><span class="fase-tag">Detectado en fase 2</span><h3>BMW X5 «europeo»</h3><p>Viene de Estados Unidos: reimportado y anunciado como europeo.</p><p class="hicimos"><b>Qué hacemos:</b> Descartado. Buscamos uno de origen europeo.</p></div></article>
-        <article class="caso caso--no"><div class="caso__foto"><img src="/analiza/a/no/rs3.jpg" width="500" height="333" alt="Foto ilustrativa de un Audi RS3" loading="lazy"><span class="luz" data-c="rojo"><i></i><i></i><i></i></span><span class="sello">DESCARTADO</span></div><div class="caso__txt"><span class="fase-tag">Detectado en fase 1</span><h3>Audi RS3</h3><p>Un 30 % más barato que otros iguales, y el vendedor pide pagar por adelantado.</p><p class="hicimos"><b>Qué hacemos:</b> Huele a estafa. Ni lo tocamos.</p></div></article>
-        <article class="caso caso--no"><div class="caso__foto"><img src="/analiza/a/no/clase-c.jpg" width="500" height="333" alt="Foto ilustrativa de un Mercedes Clase C" loading="lazy"><span class="luz" data-c="rojo"><i></i><i></i><i></i></span><span class="sello">DESCARTADO</span></div><div class="caso__txt"><span class="fase-tag">Detectado en fase 1</span><h3>Mercedes Clase C</h3><p>En las fotos, dos puertas con otro tono: repintado sin declarar.</p><p class="hicimos"><b>Qué hacemos:</b> Pasamos a la siguiente unidad.</p></div></article>
-        <article class="caso caso--no"><div class="caso__foto"><img src="/analiza/a/no/320d.jpg" width="500" height="333" alt="Foto ilustrativa de un BMW 320d" loading="lazy"><span class="luz" data-c="rojo"><i></i><i></i><i></i></span><span class="sello">DESCARTADO</span></div><div class="caso__txt"><span class="fase-tag">Detectado en fase 1</span><h3>BMW 320d</h3><p>Un fallo conocido de ese motor, sin facturas que demuestren la reparación.</p><p class="hicimos"><b>Qué hacemos:</b> Proponemos uno con el fallo ya resuelto.</p></div></article>
-        <article class="caso caso--no"><div class="caso__foto"><img src="/analiza/a/no/golf-gti.jpg" width="500" height="333" alt="Foto ilustrativa de un Volkswagen Golf GTI" loading="lazy"><span class="luz" data-c="rojo"><i></i><i></i><i></i></span><span class="sello">DESCARTADO</span></div><div class="caso__txt"><span class="fase-tag">Detectado en fase 3</span><h3>Volkswagen Golf GTI</h3><p>El medidor de pintura detecta un golpe trasero reparado que no aparece en ningún papel.</p><p class="hicimos"><b>Qué hacemos:</b> Descartado en la revisión presencial.</p></div></article>
-        <article class="caso caso--no"><div class="caso__foto"><img src="/analiza/a/no/a6-avant.jpg" width="500" height="333" alt="Foto ilustrativa de un Audi A6 Avant" loading="lazy"><span class="luz" data-c="rojo"><i></i><i></i><i></i></span><span class="sello">DESCARTADO</span></div><div class="caso__txt"><span class="fase-tag">Detectado en fase 2</span><h3>Audi A6 Avant</h3><p>Tiene una financiación pendiente en Alemania: no se puede comprar limpio.</p><p class="hicimos"><b>Qué hacemos:</b> Descartado antes de pagar nada.</p></div></article>
-        <article class="caso caso--no"><div class="caso__foto"><img src="/analiza/a/no/tiguan.jpg" width="500" height="333" alt="Foto ilustrativa de un Volkswagen Tiguan" loading="lazy"><span class="luz" data-c="rojo"><i></i><i></i><i></i></span><span class="sello">DESCARTADO</span></div><div class="caso__txt"><span class="fase-tag">Detectado en fase 3</span><h3>Volkswagen Tiguan</h3><p>El vendedor, particular, no deja revisarlo en persona.</p><p class="hicimos"><b>Qué hacemos:</b> Si no se puede ver, no se compra.</p></div></article>
+        <article class="caso caso--no"><div class="anuncio-c"><img src="/analiza/a/no/cayenne.webp" width="520" height="535" alt="Captura de un anuncio de Porsche Cayenne en una web de coches de Alemania" loading="lazy"><span class="sello">DESCARTADO</span></div><div class="caso__txt"><span class="fase-tag">Detectado en fase 2</span><h3>Porsche Cayenne</h3><p>Kilómetros que no cuadran: una revisión antigua del historial marca más que el anuncio.</p><p class="hicimos"><b>Qué hacemos:</b> Lo descartamos y buscamos otro con historial completo.</p></div></article>
+        <article class="caso caso--no"><div class="anuncio-c"><img src="/analiza/a/no/x5.webp" width="520" height="535" alt="Captura de un anuncio de BMW X5 «europeo» en una web de coches de Alemania" loading="lazy"><span class="sello">DESCARTADO</span></div><div class="caso__txt"><span class="fase-tag">Detectado en fase 2</span><h3>BMW X5 «europeo»</h3><p>Viene de Estados Unidos: reimportado y anunciado como europeo.</p><p class="hicimos"><b>Qué hacemos:</b> Descartado. Buscamos uno de origen europeo.</p></div></article>
+        <article class="caso caso--no"><div class="anuncio-c"><img src="/analiza/a/no/rs3.webp" width="520" height="535" alt="Captura de un anuncio de Audi RS3 en una web de coches de Alemania" loading="lazy"><span class="sello">DESCARTADO</span></div><div class="caso__txt"><span class="fase-tag">Detectado en fase 1</span><h3>Audi RS3</h3><p>Un 30 % más barato que otros iguales, y el vendedor pide pagar por adelantado.</p><p class="hicimos"><b>Qué hacemos:</b> Huele a estafa. Ni lo tocamos.</p></div></article>
+        <article class="caso caso--no"><div class="anuncio-c"><img src="/analiza/a/no/clase-c.webp" width="520" height="535" alt="Captura de un anuncio de Mercedes Clase C en una web de coches de Alemania" loading="lazy"><span class="sello">DESCARTADO</span></div><div class="caso__txt"><span class="fase-tag">Detectado en fase 1</span><h3>Mercedes Clase C</h3><p>En las fotos, dos puertas con otro tono: repintado sin declarar.</p><p class="hicimos"><b>Qué hacemos:</b> Pasamos a la siguiente unidad.</p></div></article>
+        <article class="caso caso--no"><div class="anuncio-c"><img src="/analiza/a/no/serie3.webp" width="520" height="535" alt="Captura de un anuncio de BMW Serie 3 Touring en una web de coches de Alemania" loading="lazy"><span class="sello">DESCARTADO</span></div><div class="caso__txt"><span class="fase-tag">Detectado en fase 1</span><h3>BMW Serie 3 Touring</h3><p>Un fallo conocido de ese motor, sin facturas que demuestren la reparación.</p><p class="hicimos"><b>Qué hacemos:</b> Proponemos uno con el fallo ya resuelto.</p></div></article>
+        <article class="caso caso--no"><div class="anuncio-c"><img src="/analiza/a/no/golf-gti.webp" width="520" height="535" alt="Captura de un anuncio de Golf GTI Clubsport en una web de coches de Alemania" loading="lazy"><span class="sello">DESCARTADO</span></div><div class="caso__txt"><span class="fase-tag">Detectado en fase 3</span><h3>Golf GTI Clubsport</h3><p>El medidor de pintura detecta un golpe trasero reparado que no aparece en ningún papel.</p><p class="hicimos"><b>Qué hacemos:</b> Descartado en la revisión presencial.</p></div></article>
+        <article class="caso caso--no"><div class="anuncio-c"><img src="/analiza/a/no/a4-avant.webp" width="520" height="535" alt="Captura de un anuncio de Audi A4 Avant en una web de coches de Alemania" loading="lazy"><span class="sello">DESCARTADO</span></div><div class="caso__txt"><span class="fase-tag">Detectado en fase 2</span><h3>Audi A4 Avant</h3><p>Tiene una financiación pendiente en Alemania: no se puede comprar limpio.</p><p class="hicimos"><b>Qué hacemos:</b> Descartado antes de pagar nada.</p></div></article>
+        <article class="caso caso--no"><div class="anuncio-c"><img src="/analiza/a/no/tiguan.webp" width="520" height="535" alt="Captura de un anuncio de Volkswagen Tiguan en una web de coches de Alemania" loading="lazy"><span class="sello">DESCARTADO</span></div><div class="caso__txt"><span class="fase-tag">Detectado en fase 3</span><h3>Volkswagen Tiguan</h3><p>El vendedor, particular, no deja revisarlo en persona.</p><p class="hicimos"><b>Qué hacemos:</b> Si no se puede ver, no se compra.</p></div></article>
       </div>
       <div class="carr__nav"><div class="puntitos" aria-label="Ir a un caso"></div><div class="flechas"><button type="button" data-dir="-1" aria-label="Casos anteriores" aria-controls="pista-no"><svg><use href="#i-izq"/></svg></button><button type="button" data-dir="1" aria-label="Más casos" aria-controls="pista-no"><svg><use href="#i-der"/></svg></button></div></div>
     </div>
-    <details class="creditos"><summary>Fotos ilustrativas del modelo: créditos</summary><p>Wikimedia Commons. Porsche Cayenne, BMW X5 y Audi A6 Avant: Vauxford (<a href="https://creativecommons.org/licenses/by-sa/4.0/" rel="noopener">CC BY-SA 4.0</a>). Audi RS3: Alexandre Prevot (<a href="https://creativecommons.org/licenses/by-sa/2.0/" rel="noopener">CC BY-SA 2.0</a>). Mercedes Clase C: Charles from Port Chester (<a href="https://creativecommons.org/licenses/by/2.0/" rel="noopener">CC BY 2.0</a>). BMW 320d: EditorGeorge. Golf GTI: Alexander-93. Tiguan: Виталий Барсов (<a href="https://creativecommons.org/licenses/by-sa/4.0/" rel="noopener">CC BY-SA 4.0</a>). Fotos recortadas.</p></details>
   </div>
 </section>
 
