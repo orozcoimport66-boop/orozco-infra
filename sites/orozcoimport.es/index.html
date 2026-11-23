@@ -1162,10 +1162,11 @@
         </div>
       </div>
 
-      <!-- Campos ocultos UTM orgánico -->
-      <input type="hidden" id="oi-utm-source"   name="utm_source"   value="google" />
-      <input type="hidden" id="oi-utm-medium"   name="utm_medium"   value="organic" />
-      <input type="hidden" id="oi-utm-campaign" name="utm_campaign" value="home-seo" />
+      <!-- Campos ocultos UTM: vacíos. El canal lo deciden los UTM de la visita o la web de procedencia
+           (oi-captacion.js y n8n). Sin ninguno de los dos, el lead es Directo (antes se marcaba como Google orgánico). -->
+      <input type="hidden" id="oi-utm-source"   name="utm_source"   value="" />
+      <input type="hidden" id="oi-utm-medium"   name="utm_medium"   value="" />
+      <input type="hidden" id="oi-utm-campaign" name="utm_campaign" value="" />
       <input type="hidden" id="oi-utm-content"  name="utm_content"  value="" />
       <input type="hidden" id="oi-gclid"        name="gclid"        value="" />
 
@@ -2355,7 +2356,7 @@
 }
 @media (max-width: 480px) { .oi-doc__coche ul { grid-template-columns: 1fr 1fr 1fr; } .oi-perito__200 b { font-size: 48px; } }
 </style>
-<script src="/js/oi-captacion.js?v=6"></script>
+<script src="/js/oi-captacion.js?v=7"></script>
 <script>
 
   /* Form: lógica condicional */

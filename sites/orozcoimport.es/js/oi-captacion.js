@@ -7,14 +7,37 @@
  * 5. Guarda la web de procedencia (sin parámetros) para reconocer buscadores y asistentes de IA (ChatGPT, Perplexity…).
  * 6. window.oiEnviarLead(form, op): envía al webhook y solo redirige a gracias con respuesta 2xx.
  * 7. Guarda la última guía leída en la sesión (/guias/<slug>/) y la manda con el lead en «guia», sin tocar el canal.
+ * 8. Memoria de 30 días del último origen conocido (localStorage): una visita directa posterior no lo pisa.
+ * 9. Reconoce los navegadores internos de Instagram, Facebook y TikTok aunque no pasen la web de procedencia.
  */
 (function () {
   var KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid', 'fbclid'];
   var STORE = 'oi_atribucion';
   window.OI_WEBHOOK = 'https://n8n.orozcoimport.es/webhook/captacion';
 
+  // 8. Memoria de 30 días (23/11/2026): el último origen conocido (UTM o web de procedencia) se guarda
+  //    también en localStorage. Si la persona vuelve otro día escribiendo la dirección (sin origen),
+  //    el lead conserva de dónde vino. Una visita directa nunca pisa un origen conocido.
+  //    Solo guarda el canal (UTMs, gclid, fbclid y la web de procedencia), ningún dato personal.
+  var STORE_30 = 'oi_atribucion_30d', DIAS_30 = 30 * 24 * 3600 * 1000;
+  function leer30() {
+    try {
+      var x = JSON.parse(localStorage.getItem(STORE_30) || 'null');
+      if (x && x.t && (Date.now() - x.t) < DIAS_30 && x.a) return x.a;
+    } catch (e) {}
+    return {};
+  }
+  function guardar(a) {
+    try { sessionStorage.setItem(STORE, JSON.stringify(a)); } catch (e) {}
+    try { localStorage.setItem(STORE_30, JSON.stringify({ t: Date.now(), a: a })); } catch (e) {}
+  }
+  function conOrigen(a) { return !!(a && (a.referente || KEYS.some(function (k) { return a[k]; }))); }
   function leer() {
-    try { return JSON.parse(sessionStorage.getItem(STORE) || '{}') || {}; } catch (e) { return {}; }
+    var a = {};
+    try { a = JSON.parse(sessionStorage.getItem(STORE) || '{}') || {}; } catch (e) { a = {}; }
+    if (conOrigen(a)) return a;
+    var b = leer30();
+    return conOrigen(b) ? b : a;
   }
 
   var params = new URLSearchParams(window.location.search);
@@ -32,15 +55,24 @@
       if (propio(r.hostname) !== propio(window.location.hostname)) referente = (r.hostname + r.pathname).slice(0, 200);
     }
   } catch (e) {}
+  // 9. Navegadores internos de apps que no pasan la web de procedencia (23/11/2026): se reconocen por el
+  //    navegador. Instagram, Facebook y TikTok se identifican; la app de ChatGPT no de forma fiable.
+  if (!referente) {
+    var ua = navigator.userAgent || '';
+    if (/Instagram/i.test(ua)) referente = 'instagram.com/';
+    else if (/FBAN|FBAV|FB_IAB/i.test(ua)) referente = 'facebook.com/';
+    else if (/musical_ly|BytedanceWebview|TikTok/i.test(ua)) referente = 'tiktok.com/';
+  }
   if (hay) {
     nueva.landing = window.location.pathname;
     if (referente) nueva.referente = referente;
-    try { sessionStorage.setItem(STORE, JSON.stringify(nueva)); } catch (e) {}
+    guardar(nueva);
   } else if (referente) {
-    var previa = leer();
-    if (!previa.referente && !KEYS.some(function (k) { return previa[k]; })) {
-      try { sessionStorage.setItem(STORE, JSON.stringify({ referente: referente, landing: window.location.pathname })); } catch (e) {}
-    }
+    // Llega desde otra web sin UTM: es un origen nuevo y conocido, sustituye al anterior.
+    // Excepción: si en esta misma sesión ya había UTMs (p. ej. un clic de Google Ads), se respetan.
+    var sesion = {};
+    try { sesion = JSON.parse(sessionStorage.getItem(STORE) || '{}') || {}; } catch (e) {}
+    if (!KEYS.some(function (k) { return sesion[k]; })) guardar({ referente: referente, landing: window.location.pathname });
   }
 
   // 7. Guía leída (16/11/2026): la última guía visitada en la sesión viaja con el lead, venga de donde venga
