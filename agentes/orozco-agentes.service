@@ -1,0 +1,40 @@
+[Unit]
+Description=Orozco Import - motor de agentes (Claude)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=agentes
+Group=agentes
+WorkingDirectory=/opt/orozco-agentes
+EnvironmentFile=/etc/orozco-agentes/env
+Environment=NODE_ENV=production
+Environment=HOME=/var/lib/orozco-agentes
+Environment=WORK_DIR=/var/lib/orozco-agentes/trabajo
+Environment=PORT=8790
+Environment=TZ=Europe/Madrid
+ExecStart=/usr/bin/node /opt/orozco-agentes/motor.mjs
+Restart=on-failure
+RestartSec=10
+
+# Límites para no quitarle memoria a n8n
+MemoryHigh=1200M
+MemoryMax=1600M
+
+# Aislamiento: solo escribe en su carpeta de datos
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+CapabilityBoundingSet=
+ReadWritePaths=/var/lib/orozco-agentes
+
+[Install]
+WantedBy=multi-user.target
