@@ -9,11 +9,17 @@ window.dataLayer = window.dataLayer || [];
 (function () {
   var s = '';
   try { s = sessionStorage.getItem('oi_lead_stage') || ''; } catch (e) {}
+  var m = {};
+  try { m = JSON.parse(sessionStorage.getItem('oi_lead_meta') || '{}') || {}; } catch (e) {}
   var valores = { decided: 75, undecided: 37, evaluating: 0 };
   window.dataLayer.push({
     lead_stage: s || 'desconocido',
     lead_cuenta: s !== 'evaluating',
-    lead_valor: s in valores ? valores[s] : 50
+    lead_valor: s in valores ? valores[s] : 50,
+    // API de conversiones de Meta (MED-24): mismo event_id que el envío por servidor
+    lead_event_id: m.event_id || '',
+    lead_cualificado: m.cualificado === true,
+    lead_setting: m.setting === true
   });
 })();
 </script>

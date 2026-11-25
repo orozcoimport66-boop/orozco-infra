@@ -9,9 +9,12 @@
  * 7. Guarda la última guía leída en la sesión (/guias/<slug>/) y la manda con el lead en «guia», sin tocar el canal.
  * 8. Memoria de 30 días del último origen conocido (localStorage): una visita directa posterior no lo pisa.
  * 9. Reconoce los navegadores internos de Instagram, Facebook y TikTok aunque no pasen la web de procedencia.
+ * 10. API de conversiones de Meta (25/11/2026, Lab MED-24): cada envío lleva un event_id que comparte con el
+ *     píxel de la página de gracias (Meta deduplica navegador y servidor), las cookies _fbp y _fbc del píxel
+ *     y la URL de entrada. También guarda gbraid y wbraid (clics de Google en iPhone) para la fase de Google.
  */
 (function () {
-  var KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid', 'fbclid'];
+  var KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid', 'fbclid', 'gbraid', 'wbraid'];
   var STORE = 'oi_atribucion';
   window.OI_WEBHOOK = 'https://n8n.orozcoimport.es/webhook/captacion';
 
@@ -65,6 +68,8 @@
   }
   if (hay) {
     nueva.landing = window.location.pathname;
+    nueva.url = window.location.href.slice(0, 1000);
+    if (nueva.fbclid) nueva.fbclid_t = Date.now();
     if (referente) nueva.referente = referente;
     guardar(nueva);
   } else if (referente) {
@@ -184,8 +189,34 @@
     try { d.guia = sessionStorage.getItem('oi_guia') || ''; } catch (e) { d.guia = ''; }
     // Etapa del lead para la página de gracias (Tag Manager decide si cuenta como conversión).
     try { sessionStorage.setItem('oi_lead_stage', d.stage || ''); } catch (e) {}
+
+    // 10. API de conversiones de Meta. El event_id es el mismo en los reintentos del mismo formulario.
+    if (!form._oiEventId) form._oiEventId = nuevoId();
+    d.event_id = form._oiEventId;
+    d.fbp = galleta('_fbp');
+    d.fbc = galleta('_fbc') || (a.fbclid ? 'fb.1.' + (a.fbclid_t || Date.now()) + '.' + a.fbclid : '');
+    d.url_entrada = a.url || '';
+    // Mismas reglas que el panel (tipo_lead y es_lead_setting): A = 25.000 € o más sin estar valorando,
+    // Setting = A o B de 15.000 a 25.000 €.
+    var valorando = d.stage === 'evaluating';
+    var cualificado = !valorando && ['25-30', '30-40', 'gt40'].indexOf(d.budget) !== -1;
+    var setting = cualificado || (!valorando && ['15-20', '20-25'].indexOf(d.budget) !== -1);
+    try {
+      sessionStorage.setItem('oi_lead_meta', JSON.stringify({ event_id: d.event_id, cualificado: cualificado, setting: setting }));
+    } catch (e) {}
     return d;
   };
+
+  function galleta(nombre) {
+    var m = document.cookie.match(new RegExp('(?:^|; )' + nombre + '=([^;]*)'));
+    return m ? decodeURIComponent(m[1]) : '';
+  }
+  function nuevoId() {
+    try { if (window.crypto && crypto.randomUUID) return crypto.randomUUID(); } catch (e) {}
+    var s = '';
+    for (var i = 0; i < 32; i++) s += Math.floor(Math.random() * 16).toString(16);
+    return s.slice(0, 8) + '-' + s.slice(8, 12) + '-4' + s.slice(13, 16) + '-a' + s.slice(17, 20) + '-' + s.slice(20, 32);
+  }
 
   function trampa(form) {
     if (form.querySelector('input[name="website"]')) return;

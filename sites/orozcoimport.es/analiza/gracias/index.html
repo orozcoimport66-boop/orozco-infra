@@ -13,8 +13,10 @@ window.dataLayer = window.dataLayer || [];
 (function () {
   var s = '';
   try { s = sessionStorage.getItem('oi_lead_stage') || ''; } catch (e) {}
+  var m = {};
+  try { m = JSON.parse(sessionStorage.getItem('oi_lead_meta') || '{}') || {}; } catch (e) {}
   var valores = { decided: 75, undecided: 37, evaluating: 0 };
-  window.dataLayer.push({ lead_stage: s || 'desconocido', lead_cuenta: s !== 'evaluating', lead_valor: s in valores ? valores[s] : 50, lead_oferta: 'analiza' });
+  window.dataLayer.push({ lead_stage: s || 'desconocido', lead_cuenta: s !== 'evaluating', lead_valor: s in valores ? valores[s] : 50, lead_oferta: 'analiza', lead_event_id: m.event_id || '', lead_cualificado: m.cualificado === true, lead_setting: m.setting === true });
   if (!/^pre\.|localhost|127\.0\.0\.1/.test(location.hostname) && !/prueba=1/.test(location.search)) {
     window.dataLayer.push({ 'gtm.start': Date.now(), event: 'gtm.js' });
     var j = document.createElement('script'); j.async = true; j.src = 'https://www.googletagmanager.com/gtm.js?id=GTM-TR6JCZZQ';
