@@ -31,7 +31,7 @@ if [ ! -f "$CONF/env" ]; then
   [ -r /dev/tty ] || fail "Ejecuta el script desde una terminal para poder escribir las claves"
   printf '    Pega la clave de la API de Anthropic (motor-agentes-orozco) y pulsa Enter: '
   read -rs ANTH </dev/tty; echo
-  printf '    Pega la clave service_role de Supabase y pulsa Enter: '
+  printf '    Pega la clave secreta de Supabase (service_role o sb_secret_...) y pulsa Enter: '
   read -rs SUPK </dev/tty; echo
   case "$ANTH" in sk-ant-*) ;; *) fail "La clave de Anthropic no empieza por sk-ant-" ;; esac
   [ "${#SUPK}" -gt 40 ] || fail "La clave de Supabase parece incompleta"
@@ -57,7 +57,8 @@ ok "Código en $APP"
 
 log "5/6 Comprobando las claves"
 set -a; . "$CONF/env"; set +a
-code=$(curl -s -o /dev/null -w '%{http_code}' -H "apikey: $SUPABASE_SERVICE_KEY" -H "Authorization: Bearer $SUPABASE_SERVICE_KEY" "$SUPABASE_URL/rest/v1/agentes?select=id&limit=1")
+AUTH=(); case "$SUPABASE_SERVICE_KEY" in eyJ*) AUTH=(-H "Authorization: Bearer $SUPABASE_SERVICE_KEY") ;; esac
+code=$(curl -s -o /dev/null -w '%{http_code}' -H "apikey: $SUPABASE_SERVICE_KEY" "${AUTH[@]}" "$SUPABASE_URL/rest/v1/agentes?select=id&limit=1")
 [ "$code" = "200" ] || fail "Supabase responde $code con esa clave. Borra $CONF/env y vuelve a ejecutar el script."
 code=$(curl -s -o /dev/null -w '%{http_code}' -H "x-api-key: $ANTHROPIC_API_KEY" -H "anthropic-version: 2023-06-01" https://api.anthropic.com/v1/models)
 [ "$code" = "200" ] || fail "Anthropic responde $code con esa clave. Borra $CONF/env y vuelve a ejecutar el script."

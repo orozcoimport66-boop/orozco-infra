@@ -25,7 +25,8 @@ async function supa(ruta, { method = 'GET', body, prefer } = {}) {
     method,
     headers: {
       apikey: CLAVE,
-      Authorization: `Bearer ${CLAVE}`,
+      // Las claves antiguas (JWT) van también en Authorization. Las nuevas (sb_secret_…) solo en apikey.
+      ...(CLAVE.startsWith('eyJ') ? { Authorization: `Bearer ${CLAVE}` } : {}),
       'Content-Type': 'application/json',
       ...(prefer ? { Prefer: prefer } : {}),
     },
